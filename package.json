@@ -5,6 +5,7 @@
     "dependencies": {
       "@cycle/dom": "npm:@cycle/dom@^20.1.0",
       "@cycle/http": "npm:@cycle/http@^14.8.0",
+      "@cycle/isolate": "npm:@cycle/isolate@^3.2.0",
       "@cycle/run": "npm:@cycle/run@^4.1.0",
       "xstream": "npm:xstream@^11.1.0"
     },

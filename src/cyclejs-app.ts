@@ -1,8 +1,7 @@
 import { run } from "@cycle/run"
+import isolate from "@cycle/isolate"
 import { div, label, input, h2, makeDOMDriver } from "@cycle/dom"
 import xs from "xstream"
-
-// Reusable component (a slider input)
 
 function intent(domSource) {
   const changeValue$ = domSource.select('.slider').events('input').map(ev => ev.target.value)
@@ -34,6 +33,7 @@ function view(state$) {
   )
 }
 
+// Reusable component (a slider input).
 function labeledSlider(sources) {
   const props$ = sources.props
   const actions = intent(sources.DOM)
@@ -62,25 +62,15 @@ function main(sources) {
     init: 175
   })
 
-  // Pre-processing: limit scope of DOM sources based on specific selectors.
-  const weightDOMsource = sources.DOM.select('.weight')
-  const heightDOMsource = sources.DOM.select('.height')
+  // Pre-post-processing: limit scope of DOM sources based on specific selectors.
+  const weightSlider = isolate(labeledSlider, '.weight')
+  const heightSlider = isolate(labeledSlider, '.height')
 
   // Create two slider components targeting their specific DOM area.
-  const weightSinks = labeledSlider({...sources, DOM: weightDOMsource, props: weightProps$})
-  const heightSinks = labeledSlider({...sources, DOM: heightDOMsource, props: heightProps$})
+  const weightSinks = weightSlider({...sources, props: weightProps$})
+  const heightSinks = heightSlider({...sources, props: heightProps$})
 
-  // Post-processing: assign selectors to components.
-  const weightVDOM$ = weightSinks.DOM.map(vdom => {
-    vdom.sel += '.weight'
-    return vdom
-  })
-  const heightVDOM$ = heightSinks.DOM.map(vdom => {
-    vdom.sel += '.height'
-    return vdom
-  })
-
-  const vdom$ = xs.combine(weightVDOM$, heightVDOM$)
+  const vdom$ = xs.combine(weightSinks.DOM, heightSinks.DOM)
     .map(([weightVDOM, heightVDOM]) =>
       div([
         weightVDOM,
