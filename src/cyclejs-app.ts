@@ -46,6 +46,7 @@ function labeledSlider(sources) {
 }
 
 function main(sources) {
+  // Initial components' states.
   const weightProps$ = xs.of({
     label: 'Weight',
     unit: 'kg',
@@ -60,13 +61,42 @@ function main(sources) {
     max: 240,
     init: 175
   })
-  const weightSinks = labeledSlider({...sources, props: weightProps$})
-  const heightSinks = labeledSlider({...sources, props: heightProps$})
-  return weightSinks
+
+  // Pre-processing: limit scope of DOM sources based on specific selectors.
+  const weightDOMsource = sources.DOM.select('.weight')
+  const heightDOMsource = sources.DOM.select('.height')
+
+  // Create two slider components targeting their specific DOM area.
+  const weightSinks = labeledSlider({...sources, DOM: weightDOMsource, props: weightProps$})
+  const heightSinks = labeledSlider({...sources, DOM: heightDOMsource, props: heightProps$})
+
+  // Post-processing: assign selectors to components.
+  const weightVDOM$ = weightSinks.DOM.map(vdom => {
+    vdom.sel += '.weight'
+    return vdom
+  })
+  const heightVDOM$ = heightSinks.DOM.map(vdom => {
+    vdom.sel += '.height'
+    return vdom
+  })
+
+  const vdom$ = xs.combine(weightVDOM$, heightVDOM$)
+    .map(([weightVDOM, heightVDOM]) =>
+      div([
+        weightVDOM,
+        heightVDOM
+      ])
+    )
+
+  return {
+    DOM: vdom$
+  }
 }
 
+// Shared sources automatically injected within main() as "sources" as a result
+// of calling run(): allows for inheritance within the nested components.
 const drivers = {
-  DOM: makeDOMDriver('#main'),
+  DOM: makeDOMDriver('#main')
 }
 
 run(main, drivers);
