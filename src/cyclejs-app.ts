@@ -34,7 +34,7 @@ function view(state$) {
   )
 }
 
-function main(sources) {
+function labeledSlider(sources) {
   const props$ = sources.props
   const actions = intent(sources.DOM)
   const state$ = model(actions, props$)
@@ -45,15 +45,28 @@ function main(sources) {
   }
 }
 
-const drivers = {
-  DOM: makeDOMDriver('#main'),
-  props: () => xs.of({
+function main(sources) {
+  const weightProps$ = xs.of({
     label: 'Weight',
     unit: 'kg',
     min: 40,
     max: 150,
     init: 65
   })
+  const heightProps$ = xs.of({
+    label: 'Height',
+    unit: 'cm',
+    min: 140,
+    max: 240,
+    init: 175
+  })
+  const weightSinks = labeledSlider({...sources, props: weightProps$})
+  const heightSinks = labeledSlider({...sources, props: heightProps$})
+  return weightSinks
+}
+
+const drivers = {
+  DOM: makeDOMDriver('#main'),
 }
 
 run(main, drivers);
