@@ -39,6 +39,7 @@ SystemJS.config({
   ],
   map: {
     "@cycle/dom": "npm:@cycle/dom@20.1.0",
+    "@cycle/http": "npm:@cycle/http@14.8.0",
     "@cycle/run": "npm:@cycle/run@4.1.0",
     "assert": "npm:jspm-nodelibs-assert@0.2.1",
     "buffer": "npm:jspm-nodelibs-buffer@0.2.3",
@@ -46,17 +47,23 @@ SystemJS.config({
     "crypto": "npm:jspm-nodelibs-crypto@0.2.1",
     "events": "npm:jspm-nodelibs-events@0.2.2",
     "fs": "npm:jspm-nodelibs-fs@0.2.1",
+    "http": "npm:jspm-nodelibs-http@0.2.0",
+    "https": "npm:jspm-nodelibs-https@0.2.2",
     "module": "npm:jspm-nodelibs-module@0.2.1",
     "net": "npm:jspm-nodelibs-net@0.2.1",
     "os": "npm:jspm-nodelibs-os@0.2.2",
     "path": "npm:jspm-nodelibs-path@0.2.3",
     "process": "npm:jspm-nodelibs-process@0.2.1",
+    "querystring": "npm:jspm-nodelibs-querystring@0.2.2",
     "stream": "npm:jspm-nodelibs-stream@0.2.1",
     "string_decoder": "npm:jspm-nodelibs-string_decoder@0.2.2",
+    "tty": "npm:jspm-nodelibs-tty@0.2.1",
     "typescript": "npm:typescript@2.6.2",
+    "url": "npm:jspm-nodelibs-url@0.2.1",
     "util": "npm:jspm-nodelibs-util@0.2.2",
     "vm": "npm:jspm-nodelibs-vm@0.2.1",
-    "xstream": "npm:xstream@11.1.0"
+    "xstream": "npm:xstream@11.1.0",
+    "zlib": "npm:jspm-nodelibs-zlib@0.2.3"
   },
   packages: {
     "npm:typescript@2.6.2": {
@@ -407,6 +414,91 @@ SystemJS.config({
     "npm:cssauron2@2.0.3": {
       "map": {
         "through": "npm:through@2.3.8"
+      }
+    },
+    "npm:@cycle/http@14.8.0": {
+      "map": {
+        "@cycle/run": "npm:@cycle/run@4.1.0",
+        "xstream": "npm:xstream@11.1.0",
+        "superagent": "npm:superagent@3.7.0",
+        "@types/superagent": "npm:@types/superagent@3.5.6"
+      }
+    },
+    "npm:superagent@3.7.0": {
+      "map": {
+        "debug": "npm:debug@3.1.0",
+        "component-emitter": "npm:component-emitter@1.2.1",
+        "extend": "npm:extend@3.0.1",
+        "readable-stream": "npm:readable-stream@2.3.3",
+        "methods": "npm:methods@1.1.2",
+        "cookiejar": "npm:cookiejar@2.1.1",
+        "formidable": "npm:formidable@1.1.1",
+        "mime": "npm:mime@1.6.0",
+        "form-data": "npm:form-data@2.3.1",
+        "qs": "npm:qs@6.5.1"
+      }
+    },
+    "npm:debug@3.1.0": {
+      "map": {
+        "ms": "npm:ms@2.0.0"
+      }
+    },
+    "npm:form-data@2.3.1": {
+      "map": {
+        "asynckit": "npm:asynckit@0.4.0",
+        "combined-stream": "npm:combined-stream@1.0.5",
+        "mime-types": "npm:mime-types@2.1.17"
+      }
+    },
+    "npm:combined-stream@1.0.5": {
+      "map": {
+        "delayed-stream": "npm:delayed-stream@1.0.0"
+      }
+    },
+    "npm:mime-types@2.1.17": {
+      "map": {
+        "mime-db": "npm:mime-db@1.30.0"
+      }
+    },
+    "npm:@types/superagent@3.5.6": {
+      "map": {
+        "@types/node": "npm:@types/node@8.5.5"
+      }
+    },
+    "npm:jspm-nodelibs-http@0.2.0": {
+      "map": {
+        "http-browserify": "npm:stream-http@2.7.2"
+      }
+    },
+    "npm:stream-http@2.7.2": {
+      "map": {
+        "inherits": "npm:inherits@2.0.3",
+        "readable-stream": "npm:readable-stream@2.3.3",
+        "xtend": "npm:xtend@4.0.1",
+        "to-arraybuffer": "npm:to-arraybuffer@1.0.1",
+        "builtin-status-codes": "npm:builtin-status-codes@3.0.0"
+      }
+    },
+    "npm:jspm-nodelibs-url@0.2.1": {
+      "map": {
+        "url": "npm:url@0.11.0"
+      }
+    },
+    "npm:url@0.11.0": {
+      "map": {
+        "querystring": "npm:querystring@0.2.0",
+        "punycode": "npm:punycode@1.3.2"
+      }
+    },
+    "npm:jspm-nodelibs-zlib@0.2.3": {
+      "map": {
+        "browserify-zlib": "npm:browserify-zlib@0.1.4"
+      }
+    },
+    "npm:browserify-zlib@0.1.4": {
+      "map": {
+        "readable-stream": "npm:readable-stream@2.3.3",
+        "pako": "npm:pako@0.2.9"
       }
     }
   }
