@@ -6,8 +6,22 @@
     "experimentalDecorators": true,
     "rootDir": ".",
     "baseUrl": ".",
+    "paths": {
+      "@cycle/dom": [
+        "jspm_packages/npm/@cycle/dom@20.1.0"
+      ],
+      "@cycle/isolate": [
+        "jspm_packages/npm/@cycle/isolate@3.2.0"
+      ],
+      "@cycle/run": [
+        "jspm_packages/npm/@cycle/run@4.1.0"
+      ],
+      "xstream": [
+        "jspm_packages/npm/xstream@11.1.0"
+      ]
+    }
   },
   "files": [
-    "./src/app.ts"
+    "./src/cyclejs-app.ts"
   ]
 }
