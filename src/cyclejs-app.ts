@@ -21,7 +21,7 @@ function model(actions, props$) {
           max: props.max
         }
       })
-  }).flatten()
+  }).flatten().remember()
 }
 
 function view(state$) {
@@ -41,7 +41,8 @@ function labeledSlider(sources) {
   const vdom$ = view(state$)
 
   return {
-    DOM: vdom$
+    DOM: vdom$,
+    value: state$.map(state => state.value)
   }
 }
 
@@ -70,11 +71,19 @@ function main(sources) {
   const weightSinks = weightSlider({...sources, props: weightProps$})
   const heightSinks = heightSlider({...sources, props: heightProps$})
 
-  const vdom$ = xs.combine(weightSinks.DOM, heightSinks.DOM)
-    .map(([weightVDOM, heightVDOM]) =>
+  const bmi$ = xs.combine(weightSinks.value, heightSinks.value)
+    .map(([weightValue, heightValue]) => {
+      const heightMeters = heightValue * 0.01
+      const bmi = Math.round(weightValue / (heightMeters * heightMeters))
+      return bmi
+    })
+
+  const vdom$ = xs.combine(bmi$, weightSinks.DOM, heightSinks.DOM)
+    .map(([bmi, weightVDOM, heightVDOM]) =>
       div([
         weightVDOM,
-        heightVDOM
+        heightVDOM,
+        h2('BMI: ' + bmi)
       ])
     )
 
