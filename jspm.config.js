@@ -19,9 +19,15 @@ SystemJS.config({
     }
   },
   transpiler: "plugin-typescript",
+  typescriptOptions: true, // load TypeScript settings from tsconfig.json
   packages: {
     "cyclejs-app": {
       "main": "src/cyclejs-app.ts",
+      "map": { // TODO: find a way to automate this, don't want to hardcode all paths
+        "./model": "src/model.ts",
+        "./target_text": "src/target_text.ts",
+        "./actions/typing": "src/actions/typing.ts"
+      },
       "meta": {
         "*.ts": {
           "loader": "plugin-typescript"

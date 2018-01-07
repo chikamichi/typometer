@@ -1,43 +1,88 @@
+import xs from "xstream"
 import { run } from "@cycle/run"
 import isolate from "@cycle/isolate"
-import { div, p, input, makeDOMDriver } from "@cycle/dom"
-import xs from "xstream"
+import { div, p, span, input, ul, li, makeDOMDriver } from "@cycle/dom"
 
-// DOM WRITE: Display a checkbox and a on/off sentence
-// DOM READ: Toggling the checkbox should switch the sentence
+import TargetText from "./target_text"
+import * as Model from './model'
+import TypingAction from "./actions/typing"
 
+// Vélocimètre de frappe.
+// Détermine la précision instantanée et la vitesse moyenne de frappe d'un texte.
+//
+// DOM READ: frappe sur le clavier, début de frappe (début calculs), fin de frappe (texte correct)
+// DOM WRITE: vitesses instantanée et moyennée
+//
+// La précision instantanée correspond à une probabilité. La vitesse moyenne
+// intègre la gestion d'erreurs (erreurs corrigées ou laissées telles quelles).
+// Formules : https://www.speedtypingonline.com/typing-equations
+
+const target_text = new TargetText('Un texte facile à retaper.')
+
+// Intent: compute mutation proposals based on raw events.
 function intent(sources) {
-  return sources.DOM.select('.checkbox').events('change')
-    .map(ev => ev.target.checked).startWith(false)
+  const keydown$ = sources.DOM.select('document').events('keydown')
+
+  const char_attempt$ = keydown$
+    .filter(e => !/^(Control|Alt|Shift|Meta|Backspace).*/.test(e.code))
+
+  const char$ = char_attempt$
+    .map(e => e.key)
+
+  return char$
+    .map(char => {
+      const new_char_typed = new TypingAction
+      return new_char_typed.process(target_text.text, char)
+    })
+    // .debug('typing$')
 }
 
-function model(actions$) {
-  return actions$.map(toggled =>
-    toggled ? 'on' : 'off'
+// Model: mutate app state based on proposed mutation.
+// Elm/foldp & SAM inspired.
+function model(mutation_proposal$) {
+  return mutation_proposal$
+    .fold((model: Model.Singleton, mutation_proposal: Model.AppState) => {
+      // Basically auto-accept proposed mutations for now.
+      return Model.Singleton.set(mutation_proposal)
+    }, Model.Singleton.get())
+    // .debug('model')
+}
+
+// View: decorate app state and re-render in place.
+// SAM inspired.
+function view(app_state$) {
+  return app_state$
+    // .debug('app_state$')
+    .map(app_state => (new Model.Decorator(app_state)).decorate())
+    // .debug('decorated_state$')
+    // .map(decorated_state => decorated_state)
+    .map(attributes =>
+      div([
+        p('.original-text', target_text.wrap(attributes.valid_nb, (char, isValid) => {
+          if (isValid)
+            return span('.char.valid', char)
+          else
+            return span('.char', char)
+        })),
+        ul('.metrics', [
+          li('.accuracy', 'Accuracy: ' + attributes.accuracy + '%'),
+          li('.wpm', 'Net WPM: ' + attributes.wpm)
+        ])
+      ])
   )
 }
 
-function view(state$) {
-  return state$.map(state =>
-    div([
-      input('.checkbox', {attrs: {type: 'checkbox', checked: false}}),
-      p('The checkbox is ' + state)
-    ])
-  )
-}
-
+// Main: wire everything up with cyclic streams.
 function main(sources) {
-  const action$ = intent(sources)
-  const state$ = model(action$)
-  const vdom$ = view(state$)
-  const sinks = {
-    DOM: vdom$
+  const mutation_proposals = intent(sources)
+  const app_state$ = model(mutation_proposals)
+  const vtree$ = view(app_state$)
+  return {
+    DOM: vtree$
   }
-  return sinks
 }
 
-// Shared sources automatically injected within main() as "sources" as a result
-// of calling run(): allows for inheritance within the nested components.
+// Drivers: raw events streams hooked with the intent layer through main().
 const drivers = {
   DOM: makeDOMDriver('#main')
 }
