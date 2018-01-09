@@ -10,21 +10,20 @@ import TypingAction from "./actions/typing"
 // Vélocimètre de frappe.
 // Détermine la précision instantanée et la vitesse moyenne de frappe d'un texte.
 //
-// DOM READ: frappe sur le clavier, début de frappe (début calculs), fin de frappe (texte correct)
-// DOM WRITE: vitesses instantanée et moyennée
-//
-// La précision instantanée correspond à une probabilité. La vitesse moyenne
-// intègre la gestion d'erreurs (erreurs corrigées ou laissées telles quelles).
+// La précision instantanée est cumulative.
+// La vitesse moyenne intègre la gestion d'erreurs (erreurs corrigées ou
+// laissées telles quelles).
 // Formules : https://www.speedtypingonline.com/typing-equations
 
-const target_text = new TargetText('Un texte facile à retaper.')
+// TODO: allow user to set custom text.
+Model.Singleton.set({text: new TargetText('Un texte facile à retaper.')})
 
 // Intent: compute mutation proposals based on raw events.
 function intent(sources) {
   const keydown$ = sources.DOM.select('document').events('keydown')
 
   const char_attempt$ = keydown$
-    .filter(e => !/^(Control|Alt|Shift|Meta|Backspace).*/.test(e.code))
+    .filter(e => !/^(Control|Alt|Shift|Meta).*/.test(e.code))
 
   const char$ = char_attempt$
     .map(e => e.key)
@@ -32,7 +31,7 @@ function intent(sources) {
   return char$
     .map(char => {
       const new_char_typed = new TypingAction
-      return new_char_typed.process(target_text.text, char)
+      return new_char_typed.process(char)
     })
     // .debug('typing$')
 }
@@ -45,7 +44,7 @@ function model(mutation_proposal$) {
       // Basically auto-accept proposed mutations for now.
       return Model.Singleton.set(mutation_proposal)
     }, Model.Singleton.get())
-    // .debug('model')
+    .debug('model')
 }
 
 // View: decorate app state and re-render in place.
@@ -58,11 +57,13 @@ function view(app_state$) {
     // .map(decorated_state => decorated_state)
     .map(attributes =>
       div([
-        p('.original-text', target_text.wrap(attributes.valid_nb, (char, isValid) => {
-          if (isValid)
-            return span('.char.valid', char)
+        p('.original-text', Model.Singleton.get().attributes.text.wrap((char) => {
+          if (char.isValid)
+            return span('.char.valid', char.char)
+          else if (char.isError)
+            return span('.char.error', char.char)
           else
-            return span('.char', char)
+            return span('.char', char.char)
         })),
         ul('.metrics', [
           li('.accuracy', 'Accuracy: ' + attributes.accuracy + '%'),

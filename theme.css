@@ -2,3 +2,8 @@
   background: green;
   color: white;
 }
+
+.char.error {
+  background: red;
+  color: white;
+}

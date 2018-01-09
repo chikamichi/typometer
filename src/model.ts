@@ -1,17 +1,23 @@
-export type CurrentChar = string
+import TargetText from "./target_text"
+
+export type CurrentChar = string|undefined
 
 export interface AppState {
+  text: TargetText|undefined,
   current_char: CurrentChar,
   keystrokes_nb: number,
   valid_nb: number,
-  errors_nb: number
+  errors_nb: number,
+  error: string|undefined
 }
 
 export const INITIAL_APP_STATE = {
+  text: undefined,
   current_char: '',
   keystrokes_nb: 0,
   valid_nb: 0,
-  errors_nb: 0
+  errors_nb: 0,
+  error: undefined
 }
 
 
@@ -25,8 +31,9 @@ export class Singleton {
     this.attributes = attributes
   }
 
-  public static set(attributes: AppState) {
-    this._instance.attributes = attributes
+  public static set(attributes) {
+    this.get()
+    this._instance.attributes = {...this._instance.attributes, ...attributes}
     return this._instance
   }
 

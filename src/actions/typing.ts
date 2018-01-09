@@ -4,20 +4,40 @@ import * as Model from '../model'
 
 // TypingAction: handles actions related to the user typing text.
 export default class TypingAction {
-  static void() {
-    return Model.INITIAL_APP_STATE
+  // Compute an app state's mutation proposal.
+  process(char) {
+    if (char == 'Backspace') {
+      return this.process_backspace()
+    } else {
+      return this.process_letter(char)
+    }
   }
 
-  // Compute an app state's mutation proposal.
-  process(text, char) {
-    const dataset = Model.Singleton.get().attributes
-    let new_dataset = {}
-    new_dataset['keystrokes_nb'] = dataset.keystrokes_nb + 1
-    if (text[dataset.valid_nb] == char) {
-      new_dataset['valid_nb'] = dataset.valid_nb + 1
+  private process_letter(char) {
+    const app_state = Model.Singleton.get().attributes
+    let mutation = {}
+    mutation['keystrokes_nb'] = app_state.keystrokes_nb + 1
+    if (app_state.text.text[app_state.valid_nb] == char && app_state.error == undefined) {
+      mutation['valid_nb'] = app_state.valid_nb + 1
     } else {
-      new_dataset['errors_nb'] = dataset.errors_nb + 1
+      mutation['errors_nb'] = app_state.errors_nb + 1
+      mutation['error'] = app_state.error || ''
+      mutation['error'] += char
     }
-    return {...dataset, ...new_dataset}
+    return {...app_state, ...mutation}
+  }
+
+  private process_backspace() {
+    const app_state = Model.Singleton.get().attributes
+    let mutation = {}
+    mutation['keystrokes_nb'] = app_state.keystrokes_nb > 0 ? app_state.keystrokes_nb - 1 : 0
+    mutation['errors_nb'] = app_state.errors_nb > 0 ? app_state.errors_nb - 1 : 0
+    if (app_state.error) {
+      const new_error = app_state.error.substring(0, app_state.error.length-1)
+      mutation['error'] = new_error.length ? new_error : undefined
+    } else {
+      mutation['valid_nb'] = app_state.valid_nb > 0 ? app_state.valid_nb - 1 : 0
+    }
+    return {...app_state, ...mutation}
   }
 }
