@@ -12,7 +12,7 @@ sudo npm install -g gulp-cli jspm@beta http-server typescript
 # app-specific libs.
 jspm init # https://jspm.io/0.17-beta-guide/creating-a-project.html
 jspm install --dev plugin-typescript
-jspm install npm:xstream npm:@cycle/run npm:@cycle/dom npm:@cycle/http npm:@cycle/isolate
+jspm install npm:xstream npm:@cycle/run npm:@cycle/dom npm:@cycle/http npm:@cycle/isolate npm:classnames
 ```
 
 

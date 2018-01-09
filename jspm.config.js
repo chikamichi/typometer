@@ -19,11 +19,11 @@ SystemJS.config({
     }
   },
   transpiler: "plugin-typescript",
-  typescriptOptions: true, // load TypeScript settings from tsconfig.json
+  typescriptOptions: true,
   packages: {
     "cyclejs-app": {
       "main": "src/cyclejs-app.ts",
-      "map": { // TODO: find a way to automate this, don't want to hardcode all paths
+      "map": {
         "./model": "src/model.ts",
         "./target_text": "src/target_text.ts",
         "./actions/typing": "src/actions/typing.ts"
@@ -50,6 +50,7 @@ SystemJS.config({
     "@cycle/run": "npm:@cycle/run@4.1.0",
     "assert": "npm:jspm-nodelibs-assert@0.2.1",
     "buffer": "npm:jspm-nodelibs-buffer@0.2.3",
+    "classnames": "npm:classnames@2.2.5",
     "constants": "npm:jspm-nodelibs-constants@0.2.1",
     "crypto": "npm:jspm-nodelibs-crypto@0.2.1",
     "events": "npm:jspm-nodelibs-events@0.2.2",
@@ -469,7 +470,7 @@ SystemJS.config({
     },
     "npm:@types/superagent@3.5.6": {
       "map": {
-        "@types/node": "npm:@types/node@8.5.5"
+        "@types/node": "npm:@types/node@9.3.0"
       }
     },
     "npm:jspm-nodelibs-http@0.2.0": {

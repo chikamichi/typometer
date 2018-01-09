@@ -1,3 +1,7 @@
+.original-text {
+  display: inline-block;
+}
+
 .char.valid {
   background: green;
   color: white;
@@ -6,4 +10,12 @@
 .char.error {
   background: red;
   color: white;
+}
+
+.progress {
+  color: green;
+}
+
+.progress.wip {
+  display: none;
 }

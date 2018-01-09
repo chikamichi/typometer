@@ -1,10 +1,10 @@
 import TargetText from "./target_text"
 
-export type CurrentChar = string|undefined
-
 export interface AppState {
   text: TargetText|undefined,
-  current_char: CurrentChar,
+  start: Date|undefined,
+  stop: Date|undefined,
+  current_char: string|undefined,
   keystrokes_nb: number,
   valid_nb: number,
   errors_nb: number,
@@ -13,7 +13,9 @@ export interface AppState {
 
 export const INITIAL_APP_STATE = {
   text: undefined,
-  current_char: '',
+  start: undefined,
+  stop: undefined,
+  current_char: undefined,
   keystrokes_nb: 0,
   valid_nb: 0,
   errors_nb: 0,
@@ -31,14 +33,18 @@ export class Singleton {
     this.attributes = attributes
   }
 
-  public static set(attributes) {
+  static set(attributes) {
     this.get()
     this._instance.attributes = {...this._instance.attributes, ...attributes}
     return this._instance
   }
 
-  public static get() {
+  static get() {
     return this._instance || (this._instance = new this(INITIAL_APP_STATE));
+  }
+
+  isDone() {
+    return this.attributes.text.text.length == this.attributes.valid_nb
   }
 }
 
@@ -52,14 +58,26 @@ export class Decorator {
   }
 
   decorate() {
+    const a = this.model.attributes
     return {
-      ...this.model.attributes,
+      ...a,
       ...{
-        accuracy: (() => {
-          if (this.model.attributes.keystrokes_nb == 0) return 0
-          return Math.round(this.model.attributes.valid_nb / this.model.attributes.keystrokes_nb * 100)
-        })()
+        accuracy: this.compute_accuracy(),
+        done: (a.text.text.length == a.valid_nb),
+        wpm: this.compute_wpm()
       }
     }
+  }
+
+  private compute_accuracy() {
+    const a = this.model.attributes
+    if (a.keystrokes_nb == 0) return 0
+    return Math.round(a.valid_nb / a.keystrokes_nb * 100)
+  }
+
+  private compute_wpm() {
+    const a = this.model.attributes
+    if (!a.stop) return 0
+    return Math.round((a.keystrokes_nb / 5) / ((a.stop.getTime() - a.start.getTime()) / 1000 / 60))
   }
 }

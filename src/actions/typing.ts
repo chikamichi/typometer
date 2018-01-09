@@ -4,8 +4,18 @@ import * as Model from '../model'
 
 // TypingAction: handles actions related to the user typing text.
 export default class TypingAction {
+  readonly app_state: Model.Singleton
+
+  constructor() {
+    this.app_state = Model.Singleton.get()
+  }
+
   // Compute an app state's mutation proposal.
-  process(char) {
+  process(char?) {
+    if (this.app_state.isDone()) {
+      if (this.app_state.attributes.stop) return this.app_state.attributes
+      return {...this.app_state.attributes, ...{stop: new Date()}}
+    }
     if (char == 'Backspace') {
       return this.process_backspace()
     } else {
@@ -14,8 +24,10 @@ export default class TypingAction {
   }
 
   private process_letter(char) {
-    const app_state = Model.Singleton.get().attributes
     let mutation = {}
+    const app_state = this.app_state.attributes
+    if (!app_state.start)
+      mutation['start'] = new Date()
     mutation['keystrokes_nb'] = app_state.keystrokes_nb + 1
     if (app_state.text.text[app_state.valid_nb] == char && app_state.error == undefined) {
       mutation['valid_nb'] = app_state.valid_nb + 1
@@ -28,8 +40,8 @@ export default class TypingAction {
   }
 
   private process_backspace() {
-    const app_state = Model.Singleton.get().attributes
     let mutation = {}
+    const app_state = this.app_state.attributes
     mutation['keystrokes_nb'] = app_state.keystrokes_nb > 0 ? app_state.keystrokes_nb - 1 : 0
     mutation['errors_nb'] = app_state.errors_nb > 0 ? app_state.errors_nb - 1 : 0
     if (app_state.error) {
