@@ -1,4 +1,5 @@
 import xs from "xstream"
+import delay from 'xstream/extra/delay'
 import { run } from "@cycle/run"
 import isolate from "@cycle/isolate"
 import { div, p, span, input, ul, li, makeDOMDriver } from "@cycle/dom"
@@ -91,15 +92,24 @@ function view(app_state$) {
 
 // Compute any required side-effect as an internally triggered mutation proposal.
 function nap(app_state$) {
-  const compute_wpm = app_state$
+  const compute_wpm$ = app_state$
     .filter(_ => {
       return Model.Singleton.get().isDone() && !Model.Singleton.get().attributes.stop
     })
     .map(app_state => (new TypingAction).process())
 
+  const auto_reset$ = app_state$
+    .filter(_ => {
+      return Model.Singleton.get().isDone() && !Model.Singleton.get().attributes.stop
+    })
+    .compose(delay(2000))
+    .map(app_state => console.log('auto_reset'))
+
   // Combine with other side-effects if need be.
-  return xs.merge(compute_wpm, xs.empty())
-    .startWith(null)
+  return xs.merge(
+    compute_wpm$,
+    auto_reset$
+  ).startWith(null)
 }
 
 
