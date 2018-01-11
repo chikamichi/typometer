@@ -44,11 +44,11 @@ export default class TypingAction {
     return {...a, ...mutation}
   }
 
+  // Backspace only wipes out a typed character, valid or invalid, but does not
+  // alter cumulative metrics.
   private process_backspace() {
     let mutation = {}
     const a = this.app_state.attributes
-    mutation['keystrokes_nb'] = a.keystrokes_nb > 0 ? a.keystrokes_nb - 1 : 0
-    mutation['errors_nb'] = a.errors_nb > 0 ? a.errors_nb - 1 : 0
     if (a.error) {
       const new_error = a.error.substring(0, a.error.length-1)
       mutation['error'] = new_error.length ? new_error : undefined

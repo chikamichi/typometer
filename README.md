@@ -14,9 +14,6 @@ http-server -c-1 -S -C cert.pem -K key.pem -o # Go to https://0.0.0.0:8080/
 
 ## TODO
 
-* [app] Accuracy is rather useless as of now as it always ends up being 100%, it should be splitted in two:
-  * actual instant accuracy, which means the derivative over a range (time or number of chars?)
-  * averaged accuracy, ie. cumulative error rate
 * [app] WPM record to allow the user to compete against a ghost on next run
 * [app] better ghost behaviour would be to replicate typing rythm entirely
 * [app] fix `tabindex` or similar to allow keyboard-centric UX

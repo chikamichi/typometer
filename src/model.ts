@@ -117,7 +117,7 @@ export class Decorator {
   private compute_accuracy(attributes?: AppState): number {
     const a = attributes || this.model.attributes
     if (a.keystrokes_nb == 0) return 0
-    return Math.round(a.valid_nb / a.keystrokes_nb * 100)
+    return Math.round((1 - a.errors_nb / a.keystrokes_nb) * 100)
   }
 
   private compute_wpm(attributes?: AppState): number {
