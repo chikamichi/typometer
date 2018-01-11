@@ -12,7 +12,7 @@ export default class TypingAction {
     this.char = char
   }
 
-  // Compute an app state's mutation proposal.
+  // Compute an app state's mutation proposal after a valid key was pressed.
   process() {
     if (this.app_state.isDone()) {
       if (this.app_state.attributes.stop) return this.app_state.attributes
@@ -30,36 +30,35 @@ export default class TypingAction {
 
   private process_letter() {
     let mutation = {}
-    const app_state = this.app_state.attributes
-    if (!app_state.start)
+    const a = this.app_state.attributes
+    if (!a.start)
       mutation['start'] = new Date()
-    mutation['keystrokes_nb'] = app_state.keystrokes_nb + 1
-    if (app_state.text.text[app_state.valid_nb] == this.char && app_state.error == undefined) {
-      mutation['valid_nb'] = app_state.valid_nb + 1
+    mutation['keystrokes_nb'] = a.keystrokes_nb + 1
+    if (a.text.text[a.valid_nb] == this.char && a.error == undefined) {
+      mutation['valid_nb'] = a.valid_nb + 1
     } else {
-      mutation['errors_nb'] = app_state.errors_nb + 1
-      mutation['error'] = app_state.error || ''
+      mutation['errors_nb'] = a.errors_nb + 1
+      mutation['error'] = a.error || ''
       mutation['error'] += this.char
     }
-    return {...app_state, ...mutation}
+    return {...a, ...mutation}
   }
 
   private process_backspace() {
     let mutation = {}
-    const app_state = this.app_state.attributes
-    mutation['keystrokes_nb'] = app_state.keystrokes_nb > 0 ? app_state.keystrokes_nb - 1 : 0
-    mutation['errors_nb'] = app_state.errors_nb > 0 ? app_state.errors_nb - 1 : 0
-    if (app_state.error) {
-      const new_error = app_state.error.substring(0, app_state.error.length-1)
+    const a = this.app_state.attributes
+    mutation['keystrokes_nb'] = a.keystrokes_nb > 0 ? a.keystrokes_nb - 1 : 0
+    mutation['errors_nb'] = a.errors_nb > 0 ? a.errors_nb - 1 : 0
+    if (a.error) {
+      const new_error = a.error.substring(0, a.error.length-1)
       mutation['error'] = new_error.length ? new_error : undefined
     } else {
-      mutation['valid_nb'] = app_state.valid_nb > 0 ? app_state.valid_nb - 1 : 0
+      mutation['valid_nb'] = a.valid_nb > 0 ? a.valid_nb - 1 : 0
     }
-    return {...app_state, ...mutation}
+    return {...a, ...mutation}
   }
 
   private process_escape() {
-    console.log('action/new_char/process_escape')
     return Model.Singleton.clear()
   }
 }
