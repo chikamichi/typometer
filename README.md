@@ -1,8 +1,37 @@
-https://egghead.io/lessons/rxjs-separate-logic-from-effects-in-cycle-js
+Typometer
+=========
 
+**A silly micro-app to teach myself some FRP using Cycle.js.**
 
+First few commits are based upon https://egghead.io/lessons/rxjs-separate-logic-from-effects-in-cycle-js.
 
-Install stuff, including SystemJS (http://nervosax.com/2015/08/05/why-not-try-jspm-and-systemjs/):
+## Synopsis
+
+``` sh
+# Follow instructions under the "Installation" section, then:
+http-server -c-1 -S -C cert.pem -K key.pem -o # Go to https://0.0.0.0:8080/
+```
+
+## TODO
+
+* [app] Accuracy is rather useless as of now as it always ends up being 100%, it should be splitted in two:
+  * actual instant accuracy, which means the derivative over a range (time or number of chars?)
+  * averaged accuracy, ie. cumulative error rate
+* [app] WPM is not currently "net", cf. formula
+* [app] WPM record to allow the user to compete against a ghost on next run
+* [app] better ghost behaviour would be to replicate typing rythm entirely
+* [app] fix `tabindex` or similar to allow keyboard-centric UX
+* [app] upon editing the text:
+  * cache the memory stream in the browser for re-use
+  * reset records
+  * display cached streams to the user for re-use
+* [stack] create a production build by transpiling server-side, etc.
+
+## Installation
+
+Part of the experiment was to cover setting up a project with Typescript, ES6 and SystemJS.
+
+### 1. Install stuff, including SystemJS (http://nervosax.com/2015/08/05/why-not-try-jspm-and-systemjs/):
 
 ``` sh
 npm install --save-dev systemjs gulp gulp-typescript browserify tsify vinyl-source-stream
@@ -15,24 +44,34 @@ jspm install --dev plugin-typescript
 jspm install npm:xstream npm:@cycle/run npm:@cycle/dom npm:@cycle/http npm:@cycle/isolate npm:classnames
 ```
 
+And prepare index.html:
 
+``` html
+<!doctype html>
+<meta charset="utf-8">
+<script src="jspm_packages/system.js"></script>
+<script src="jspm.config.js"></script>
+<link rel="stylesheet" type="text/css" href="theme.css">
 
-Follow instructions at:
+<body class="main">
+  <script>
+    SystemJS.import('src/cyclejs-app.ts');
+  </script>
+</body>
+```
 
-* https://www.npmjs.com/package/jspm-dev-server
-* whatever I forgot
+### 2. Follow instructions at:
 
+* whatever I forgot to bookmark but did along the way… sorry ^^
 
+### 3. Generate cert.pem and key.pem
 
-Generate cert and key for http-server running with https:
+To be used by http-server running with https:
 
 ``` sh
 openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem
 ```
-
-
-
-Create tsconfig.js (useful for tsc manual compiling, should not be used though):
+### 4. Create tsconfig.js (useful for tsc manual compiling, should not be used though):
 
 ``` json
 {
@@ -50,9 +89,7 @@ Create tsconfig.js (useful for tsc manual compiling, should not be used though):
 }
 ```
 
-
-
-Adjust jspm.config.js:
+### 5. Adjust jspm.config.js:
 
 ``` json
 transpiler: "plugin-typescript",
@@ -68,8 +105,7 @@ packages: {
 }
 ```
 
-
-[Optional: Create gulpfile.js:]
+### 6. [Optional] Create gulpfile.js
 
 ``` js
 var gulp = require("gulp");
@@ -83,35 +119,16 @@ return tsProject.src()
 });
 ```
 
+### 7. Fill in app.ts with CycleJS code written in Typescript
 
+### 8. [Optional] Run gulp to compile TS to JS (ES5)
 
-Create index.html:
+Might help with debugging generated JS but shouldn't be needed as SystemJS will transpile in the browser in dev mode.
 
-``` html
-<!doctype html>
-<meta charset="utf-8">
-<script src="jspm_packages/system.js"></script>
+### 9. Run http-server
 
-<body>
-<div id="main"></div>
-<script>
-  SystemJS.import('src/app.ts');
-</script>
-</body>
-```
-
-
-
-Fill in app.ts with CycleJS code written using Typescript semantics.
-
-[Optional: Run gulp to compile TS to JS (ES5). Might help with debugging
-generated JS but shouldn't be needed as SystemJS will transpile in the browser
-in dev mode.]
-
-Run http-server to run the local web server at http://localhost:8080/:
+So as to run the local web server at https://localhost:8080/.
 
 ``` sh
 http-server -c-1 -S -C cert.pem -K key.pem -o
 ```
-
-[Optional: create a production build by transpiling server-side etc. TODO]
