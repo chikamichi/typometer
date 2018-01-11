@@ -34,9 +34,7 @@ export class Singleton {
   constructor(attributes: AppState) {
     this.attributes$ = xs.createWithMemory().startWith(attributes)
     this.attributes$.addListener({
-      next: (state) => this.attributes = state,
-      error: (err) => console.log(`AppState not persisted: ${err}`),
-      complete: () => console.log(`AppState gone.`)
+      next: (state) => this.attributes = state
     })
   }
 
@@ -48,11 +46,21 @@ export class Singleton {
   }
 
   static get() {
-    return this._instance || (this._instance = new this(INITIAL_APP_STATE));
+    this._instance || (this._instance = new this(INITIAL_APP_STATE));
+    return this._instance
   }
 
   isDone() {
     return this.attributes.text.text.length == this.attributes.valid_nb
+  }
+
+  static clear() {
+    const clear_state = {
+      ...INITIAL_APP_STATE,
+      ...{text: this._instance.attributes.text}
+    }
+    this._instance.attributes$.shamefullySendNext(clear_state)
+    return this._instance.attributes
   }
 }
 

@@ -20,26 +20,21 @@ import TypingAction from "./actions/typing"
 
 
 // TODO: allow user to set custom text.
-Model.Singleton.set({text: new TargetText('Un texte facile à retaper.')})
-// Model.Singleton.set({text: new TargetText('Un')})
+const input_text = 'Un texte'
+Model.Singleton.set({text: new TargetText(input_text)})
 
 
 
 // Intent: compute mutation proposals based on raw events.
-function intent(sources) {
-  const new_char$ = sources.DOM
+function intent(dom_source) {
+  const new_char$ = dom_source
     .select('document').events('keydown')
     .filter(e => !/^(Control|Alt|Shift|Meta).*/.test(e.code))
     .map(e => e.key)
 
-  const mutation_proposal$ = xs.combine(new_char$, sources.NAP)
-    .map(([new_char, side_effect]) => {
-      if (side_effect) {
-        return side_effect
-      } else {
-        const new_char_typed = new TypingAction
-        return new_char_typed.process(new_char)
-      }
+  const mutation_proposal$ = new_char$
+    .map(new_char => {
+      return (new TypingAction).process(new_char)
     })
 
   return mutation_proposal$
@@ -89,35 +84,51 @@ function view(app_state$) {
 }
 
 
-
-// Compute any required side-effect as an internally triggered mutation proposal.
+// next-action-predicate aka. internal side-effect handler.
+//
+// Computes any required side-effect and pushes it down the pipe.
+// A side-effect could be:
+// - a mutation proposal
+// - an emulated user-action (resulting in a mutation proposal)
+// - an effect on some external asset with no internal consequence whatsoever
+//
+// The last use-case is more suited to sources-less drivers so should be avoided.
+// Emulated user-action are better handled outside the intent() function due to
+// stream wiring. Therefore, such actions must be pre-processed here as a
+// mutation proposal and exposed as such.
 function nap(app_state$) {
+  // Typing is over but stats (model decoration) are still pending: trigger
+  // updates and re-rendering with a fake keypress.
   const compute_wpm$ = app_state$
     .filter(_ => {
-      return Model.Singleton.get().isDone() && !Model.Singleton.get().attributes.stop
+      return Model.Singleton.get().isDone()
+        && !Model.Singleton.get().attributes.stop
     })
     .map(app_state => (new TypingAction).process())
 
+  // Once everything is over, including stats computation/display, let's reset
+  // everything after a short delay so the user may retry.
   const auto_reset$ = app_state$
     .filter(_ => {
-      return Model.Singleton.get().isDone() && !Model.Singleton.get().attributes.stop
+      return Model.Singleton.get().isDone()
+        && Model.Singleton.get().attributes.stop
     })
     .compose(delay(2000))
-    .map(app_state => console.log('auto_reset'))
+    .map(app_state => Model.Singleton.clear())
 
-  // Combine with other side-effects if need be.
   return xs.merge(
     compute_wpm$,
     auto_reset$
-  ).startWith(null)
+  ).startWith(undefined)
 }
 
 
 
 // Main: wire everything up with cyclic streams.
+// Note: next-action-predicates bypass the intent() layer.
 function main(sources) {
-  const mutation_proposals = intent(sources)
-  const app_state$ = model(mutation_proposals)
+  const mutation_proposal$ = xs.merge(sources.NAP, intent(sources.DOM))
+  const app_state$ = model(mutation_proposal$)
   const vtree$ = view(app_state$)
   const nap$ = nap(app_state$)
   return {
