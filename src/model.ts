@@ -110,6 +110,10 @@ export class Decorator {
     }
   }
 
+  get word_length(): number {
+    return 5
+  }
+
   private compute_accuracy(attributes?: AppState): number {
     const a = attributes || this.model.attributes
     if (a.keystrokes_nb == 0) return 0
@@ -119,7 +123,9 @@ export class Decorator {
   private compute_wpm(attributes?: AppState): number {
     const a = attributes || this.model.attributes
     if (!a.stop) return 0
-    return Math.round((a.keystrokes_nb / 5) / ((a.stop.getTime() - a.start.getTime()) / 1000 / 60))
+    const nb_words = a.keystrokes_nb / 5 // bug, see https://github.com/chikamichi/typometer/issues/1
+    const elapsed = (a.stop.getTime() - a.start.getTime()) / 1000 / 60 // minutes
+    return Math.round(nb_words / elapsed)
   }
 
   // Fetch the max value for a specific attribute as cached over time.
