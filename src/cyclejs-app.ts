@@ -20,7 +20,7 @@ import TypingAction from "./actions/typing"
 
 
 // TODO: allow user to set custom text.
-const input_text = 'Un texte'
+const input_text = 'Un texte facile'
 Model.Singleton.set({text: new TargetText(input_text)})
 
 
@@ -56,6 +56,14 @@ function model(mutation_proposal) {
 
 
 
+// Tiny wrapper around classnames() to spit out . prefixed class names.
+// Ie. ".foo .bar" instead of "foo bar".
+function _classnames(...whatever) {
+  return classnames.call(this, whatever).split(' ').map(x => '.' + x).join(' ')
+}
+
+
+
 // View: decorate app state and re-render in place, while handling
 // next-action-predicate logic (internal side-effects).
 // SAM inspired.
@@ -73,11 +81,16 @@ function view(app_state$) {
             else
               return span('.char', char.char)
           })),
-          span(classnames('progress', {wip: !attributes.done}).split(' ').map(x => '.' + x).join(' '), ' Done!')
+          span(_classnames('progress', {wip: !attributes.done}), ' Done!')
         ]),
         ul('.metrics', [
-          li('.accuracy', 'Accuracy: ' + attributes.accuracy + '%'),
-          li('.wpm', 'Net WPM: ' + attributes.wpm + ' words/minute')
+          li('.accuracy', [
+            span('Accuracy: ' + attributes.accuracy + '%')
+          ]),
+          li('.wpm', [
+            span('Net WPM: ' + attributes.wpm + ' words/minute'),
+            span(_classnames({wip: !attributes.records.wpm}), ' (record: ' + attributes.records.wpm + ')')
+          ])
         ])
       ])
     )

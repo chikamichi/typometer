@@ -9,7 +9,11 @@ export interface AppState {
   keystrokes_nb: number,
   valid_nb: number,
   errors_nb: number,
-  error: string|undefined
+  error: string|undefined,
+  records: {
+    accuracy: number,
+    wpm: number
+  }|{}
 }
 
 export const INITIAL_APP_STATE = {
@@ -20,7 +24,8 @@ export const INITIAL_APP_STATE = {
   keystrokes_nb: 0,
   valid_nb: 0,
   errors_nb: 0,
-  error: undefined
+  error: undefined,
+  records: {}
 }
 
 
@@ -55,9 +60,13 @@ export class Singleton {
   }
 
   static clear() {
+    const records = (new Decorator(this._instance)).compute_records()
     const clear_state = {
       ...INITIAL_APP_STATE,
-      ...{text: this._instance.attributes.text}
+      ...{
+        text: this._instance.attributes.text,
+        records: records
+      }
     }
     this._instance.attributes$.shamefullySendNext(clear_state)
     return this._instance.attributes
@@ -80,20 +89,41 @@ export class Decorator {
       ...{
         accuracy: this.compute_accuracy(),
         done: (a.text.text.length == a.valid_nb),
-        wpm: this.compute_wpm()
+        wpm: this.compute_wpm(),
+        records: a.records
       }
     }
   }
 
-  private compute_accuracy() {
-    const a = this.model.attributes
+  private compute_accuracy(attributes?: AppState): number {
+    const a = attributes || this.model.attributes
     if (a.keystrokes_nb == 0) return 0
     return Math.round(a.valid_nb / a.keystrokes_nb * 100)
   }
 
-  private compute_wpm() {
-    const a = this.model.attributes
+  private compute_wpm(attributes?: AppState): number {
+    const a = attributes || this.model.attributes
     if (!a.stop) return 0
     return Math.round((a.keystrokes_nb / 5) / ((a.stop.getTime() - a.start.getTime()) / 1000 / 60))
+  }
+
+  public compute_records() {
+    const a$ = this.model.attributes$
+    const get_max = (key: string, f?: (attributes?: AppState) => number) => {
+      let record = 0;
+      a$
+        .fold((max, attributes) => {
+          const new_val = f ? f(attributes) : attributes[key]
+          return new_val > max ? new_val : max
+        }, 0)
+        .map(max => record = max)
+        .addListener({})
+      return record
+    }
+    const records = {
+      accuracy: get_max('accuracy', this.compute_accuracy),
+      wpm: get_max('wpm', this.compute_wpm)
+    }
+    return records
   }
 }

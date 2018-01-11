@@ -24,7 +24,6 @@ export default class TypingAction {
   }
 
   private process_letter(char) {
-    console.log('process_letter', char)
     let mutation = {}
     const app_state = this.app_state.attributes
     if (!app_state.start)
