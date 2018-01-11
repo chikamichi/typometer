@@ -78,7 +78,8 @@ function view(app_state$) {
         ]),
         ul('.ta-metrics', [
           li('.ta-metric__record-accuracy', [
-            span('Accuracy: ' + attributes.accuracy + '%')
+            span('Accuracy: ' + attributes.accuracy + '%'),
+            span(classnames({'.u-wip': !attributes.records.accuracy}), ' (best: ' + attributes.records.accuracy + '%)')
           ]),
           li('.ta-metric__record-wpm', [
             span('Net WPM: ' + attributes.wpm + ' words/minute'),
