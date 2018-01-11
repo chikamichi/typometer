@@ -19,7 +19,8 @@ import classnames from "classnames"
 
 import TargetText from "./target_text"
 import * as Model from './model'
-import { NewTextAction, TypingAction } from "./actions/typing"
+import NewTextAction from "./actions/new_text"
+import TypingAction from "./actions/typing"
 
 
 

@@ -26,6 +26,7 @@ SystemJS.config({
       "map": {
         "./model": "src/model.ts",
         "./target_text": "src/target_text.ts",
+        "./actions/new_text": "src/actions/new_text.ts",
         "./actions/typing": "src/actions/typing.ts"
       },
       "meta": {
