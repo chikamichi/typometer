@@ -29,9 +29,12 @@ h2 {
   width: 600px;
 }
 
+.ta-custom-text {
+  margin-top: 1em;
+}
+
 .ta-custom-text > textarea {
   display: block;
-  margin-top: 1em;
   padding: 0.5em 0.8em;
   width: 100%;
   resize: vertical;

@@ -85,7 +85,7 @@ function view(app_state$) {
           ])
         ]),
         div('.ta-custom-text', [
-          h2('Custom text:'),
+          h2('Enter some custom text:'),
           textarea({tabindex: 0}, [
             attributes.text
           ]),
