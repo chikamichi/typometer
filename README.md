@@ -17,15 +17,29 @@ http-server -c-1 -S -C cert.pem -K key.pem -o # Go to https://0.0.0.0:8080/
 * [app] Accuracy is rather useless as of now as it always ends up being 100%, it should be splitted in two:
   * actual instant accuracy, which means the derivative over a range (time or number of chars?)
   * averaged accuracy, ie. cumulative error rate
-* [app] WPM is not currently "net", cf. formula
 * [app] WPM record to allow the user to compete against a ghost on next run
 * [app] better ghost behaviour would be to replicate typing rythm entirely
 * [app] fix `tabindex` or similar to allow keyboard-centric UX
+* [app] fullfledged metrics/records:
+  * Key/minute
+  * WPM revisited to use a word size based on averaged corpus?
+  * Averaged accuracy
+  * Highest and lowest instant accuracy
+  * Words hit/total (ie. ok at first try)
+  * Total time
 * [app] upon editing the text:
   * cache the memory stream in the browser for re-use
   * reset records
   * display cached streams to the user for re-use
+* [app] exploit cached streams and current stream to graph stuff, compare…
+* [app?] add a "free-typing" mode where an error doesn't have to be fixed, ie. the user may keep on typing or may fix that one last incorrect letter
+* [app] using ghost tracking, gather metrics about typing: time-to-press, hit/miss, innacurate letters…
+* [app] embed a collection of text in French and English, possibly other (roman) languages
+* [app] bind Shift-Enter the same as Escape
+* [app] somehow ignore combination keys such as Ctrl+…
+* [app] ignore typing events when the textarea is focused (cache focus state in a memory-stream?)
 * [stack] create a production build by transpiling server-side, etc.
+* [stack] speed up dev feedback loop
 
 ## Installation
 
