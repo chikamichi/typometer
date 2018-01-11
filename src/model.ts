@@ -1,4 +1,5 @@
 import TargetText from "./target_text"
+import xs, { MemoryStream } from "xstream"
 
 export interface AppState {
   text: TargetText|undefined,
@@ -27,15 +28,22 @@ export const INITIAL_APP_STATE = {
 export class Singleton {
   private static _instance: Singleton;
 
-  attributes: AppState
+  attributes$: MemoryStream<AppState>
+  attributes: AppState // Last-known, current state. Acts as an getter/accessor.
 
   constructor(attributes: AppState) {
-    this.attributes = attributes
+    this.attributes$ = xs.createWithMemory().startWith(attributes)
+    this.attributes$.addListener({
+      next: (state) => this.attributes = state,
+      error: (err) => console.log(`AppState not persisted: ${err}`),
+      complete: () => console.log(`AppState gone.`)
+    })
   }
 
   static set(attributes) {
     this.get()
-    this._instance.attributes = {...this._instance.attributes, ...attributes}
+    // Don't want to import a fullfledged event emitter lib, so shamefully:
+    this._instance.attributes$.shamefullySendNext({...this._instance.attributes, ...attributes})
     return this._instance
   }
 
