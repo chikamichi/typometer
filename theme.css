@@ -1,21 +1,75 @@
-.original-text {
-  display: inline-block;
+* {
+  box-sizing: border-box;
 }
 
-.char.valid {
+html {
+  height: 100%;
+  background: beige;
+}
+
+.main {
+  display: block;
+  margin: 8px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.3em;
+  color: green;
+}
+
+h2 {
+  margin: 0;
+  font-size: 1em;
+}
+
+.typing-app {
+  margin: 0 auto;
+  padding: 1em;
+  width: 600px;
+}
+
+.ta-custom-text > textarea {
+  display: block;
+  margin-top: 1em;
+  padding: 0.5em 0.8em;
+  width: 100%;
+  resize: vertical;
+}
+
+.ta-content {
+  clear: left;
+  margin-top: 1px;
+}
+
+.ta-target-text {
+  display: inline-block;
+  padding: 0.3em 0.5em;
+  border: 1px solid green;
+  background: white;
+  width: 100%;
+}
+
+.ta-metrics {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ta-char--valid {
   background: green;
   color: white;
 }
 
-.char.error {
+.ta-char--error {
   background: red;
   color: white;
 }
 
-.progress {
+.ta-progress--done {
   color: green;
 }
 
-.wip {
+.u-wip {
   display: none;
 }
