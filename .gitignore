@@ -1,3 +1,5 @@
 localhost.*
 jspm_packages
 node_modules
+key.pem
+cert.pem
