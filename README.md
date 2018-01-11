@@ -14,7 +14,7 @@ http-server -c-1 -S -C cert.pem -K key.pem -o # Go to https://0.0.0.0:8080/
 
 ## TODO
 
-* [app] WPM record to allow the user to compete against a ghost on next run
+* [app] WPM record to allow the user to compete against an averaged ghost on next run
 * [app] better ghost behaviour would be to replicate typing rythm entirely
 * [app] fix `tabindex` or similar to allow keyboard-centric UX
 * [app] fullfledged metrics/records:
