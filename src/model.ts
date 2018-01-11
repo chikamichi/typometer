@@ -42,18 +42,12 @@ export class Singleton {
   private static _instance: Singleton;
 
   attributes$: MemoryStream<AppState> // History of states.
-  attributes: AppState // Last-known, current state. Acts as an getter/accessor.
 
   constructor(attributes: AppState) {
     this.attributes$ = xs.createWithMemory().startWith(attributes)
-    this.attributes$.addListener({
-      // TODO: could be replaced with get attributes() which would simply fetch
-      // the last value from the attributes$ memory-stream
-      next: (state) => this.attributes = state
-    })
   }
 
-  static set(attributes) {
+  public static set(attributes: object|AppState): Singleton {
     if (!attributes || !Object.keys(attributes).length)
       return this._instance
     this.get()
@@ -62,16 +56,12 @@ export class Singleton {
     return this._instance
   }
 
-  static get() {
+  public static get(): Singleton {
     this._instance || (this._instance = new this(INITIAL_APP_STATE));
     return this._instance
   }
 
-  isDone() {
-    return this.attributes.text.text.length == this.attributes.valid_nb
-  }
-
-  static clear(text?: TargetText) {
+  public static clear(text?: TargetText): AppState {
     const records = (new Decorator(this._instance)).compute_records()
     const clear_state = {
       ...INITIAL_APP_STATE,
@@ -82,6 +72,19 @@ export class Singleton {
     }
     this._instance.attributes$.shamefullySendNext(clear_state)
     return this._instance.attributes
+  }
+
+  public get attributes(): AppState {
+    let last
+    const last$ = this.attributes$.subscribe({
+      next: value => last = value
+    })
+    last$.unsubscribe
+    return last
+  }
+
+  public isDone(): boolean {
+    return this.attributes.text.text.length == this.attributes.valid_nb
   }
 }
 
