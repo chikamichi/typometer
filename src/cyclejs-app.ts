@@ -77,13 +77,29 @@ function view(app_state$) {
           span(classnames('.ta-progress .ta-progress--done', {'.u-wip': !attributes.done}), ' Done!')
         ]),
         ul('.ta-metrics', [
-          li('.ta-metric__record-accuracy', [
-            span('Accuracy: ' + attributes.accuracy + '%'),
-            span(classnames({'.u-wip': !attributes.records.accuracy}), ' (best: ' + attributes.records.accuracy + '%)')
+          li('.ta-metric  .ta-metric__record-accuracy', [
+            div('.ta-metric__last', [
+              'Accuracy:',
+              span('.ta-metric__last-value', attributes.accuracy),
+              '%'
+            ]),
+            div(classnames('.ta-metric__best', {'.u-wip': !attributes.records.accuracy}), [
+              '(best:',
+              span('.ta-metric__best-value', `${attributes.records.accuracy || '?'}%`),
+              ')'
+            ])
           ]),
-          li('.ta-metric__record-wpm', [
-            span('Net WPM: ' + attributes.wpm + ' words/minute'),
-            span(classnames({'.u-wip': !attributes.records.wpm}), ' (best: ' + attributes.records.wpm + ')')
+          li('.ta-metric  .ta-metric__record-wpm', [
+            div('.ta-metric__last', [
+              'Net WPM:',
+              span('.ta-metric__last-value', attributes.wpm),
+              'words/minute'
+            ]),
+            div(classnames('.ta-metric__best', {'.u-wip': !attributes.records.wpm}), [
+              '(best:',
+              span('.ta-metric__best-value', attributes.records.wpm || '?'),
+              ')'
+            ])
           ])
         ]),
         div('.ta-custom-text', [
