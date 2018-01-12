@@ -10,17 +10,19 @@
  *
  ***/
 
-import xs from "xstream"
+import xs, { Stream } from "xstream"
 import delay from 'xstream/extra/delay'
 import { run } from "@cycle/run"
 import isolate from "@cycle/isolate"
-import { h1, h2, div, p, span, input, textarea, ul, li, makeDOMDriver } from "@cycle/dom"
+import { h, h1, h2, div, p, span, input,
+  textarea, ul, li, makeDOMDriver, VNode } from "@cycle/dom"
 import classnames from "classnames"
 
 import TargetText from "./target_text"
 import * as Model from './model'
 import NewTextAction from "./actions/new_text"
 import TypingAction from "./actions/typing"
+import LiveText from "./components/live_text"
 
 
 
@@ -57,23 +59,20 @@ function model(mutation_proposal$) {
 }
 
 
+interface ViewSources {
+  app_state$: Stream<Model.AppState>,
+  live_text$: Stream<VNode>
+}
 
 // View: decorates app state and re-renders in place.
-function view(app_state$) {
-  return app_state$
-    .map(app_state => (new Model.Decorator(app_state)).decorate())
-    .map(attributes =>
+function view(sources: ViewSources) {
+  return xs.combine(sources.app_state$, sources.live_text$)
+    .map(([app_state, live_text]) => [(new Model.Decorator(app_state)).decorate(), live_text])
+    .map(([attributes, live_text]) =>
       div('.typing-app.ta', [
         h1('Try typing the following text as fast as possible:'),
         div('.ta-content', [
-          p('.ta-target-text', {tabindex: 0}, attributes.text.wrap((char) => {
-            if (char.isValid)
-              return span('.ta-char  .ta-char--valid', char.char)
-            else if (char.isError)
-              return span('.ta-char  .ta-char--error', char.char)
-            else
-              return span('.ta-char', char.char)
-          })),
+          h(live_text.sel, live_text.data, live_text.children),
           span(classnames('.ta-progress .ta-progress--done', {'.u-wip': !attributes.done}), ' Done!')
         ]),
         ul('.ta-metrics', [
@@ -158,7 +157,11 @@ function nap(app_state$) {
 function main(sources) {
   const mutation_proposal$ = xs.merge(sources.NAP, intent(sources.DOM))
   const app_state$ = model(mutation_proposal$)
-  const vtree$ = view(app_state$)
+  const live_text$ = isolate(LiveText)({app_state$: app_state$})
+  const vtree$ = view({
+    app_state$: app_state$,
+    live_text$: live_text$.DOM
+  })
   const nap$ = nap(app_state$)
   return {
     DOM: vtree$,
