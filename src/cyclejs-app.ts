@@ -24,7 +24,7 @@ import TypingAction from "./actions/typing"
 
 
 
-const default_text = 'salut la terre'
+const default_text = 'Salut la terre'
 Model.Singleton.set({text: new TargetText(default_text)})
 
 

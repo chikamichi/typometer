@@ -77,13 +77,22 @@ h2 {
   margin-left: 0.2em;
 }
 
+.ta-char {
+  padding: 0.1em;
+}
+
 .ta-char--valid {
-  background: green;
-  color: white;
+  background: green !important;
+  color: white !important;
 }
 
 .ta-char--error {
-  background: red;
+  background: red !important;
+  color: white !important;
+}
+
+.ta-char--replay {
+  background: lightgrey;
   color: white;
 }
 
