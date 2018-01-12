@@ -14,6 +14,7 @@ export interface AppState {
   keystrokes_nb: number,
   valid_nb: number,
   errors_nb: number,
+  replay_nb: number,
   error: string|undefined,
   records: TypingRecords|{}
 }
@@ -32,6 +33,7 @@ export const INITIAL_APP_STATE: AppState = {
   keystrokes_nb: 0,
   valid_nb: 0,
   errors_nb: 0,
+  replay_nb: 0,
   error: undefined,
   records: {}
 }
@@ -41,7 +43,9 @@ export const INITIAL_APP_STATE: AppState = {
 export class Singleton {
   private static _instance: Singleton;
 
-  attributes$: MemoryStream<AppState> // History of states.
+  attributes$: MemoryStream<AppState> // App states timeline.
+  // Note: one could turn that into a MemoryStream<MemoryStream>, so that each
+  // attempt gets its own timeline. Could come in handy to graph data.
 
   constructor(attributes: AppState) {
     this.attributes$ = xs.createWithMemory().startWith(attributes)
@@ -66,6 +70,7 @@ export class Singleton {
     const clear_state = {
       ...INITIAL_APP_STATE,
       ...{
+        // stop: new Date(),
         text: text || this._instance.attributes.text,
         records: records
       }
@@ -77,14 +82,23 @@ export class Singleton {
   public get attributes(): AppState {
     let last
     const last$ = this.attributes$.subscribe({
+      // A MemoryStream emits the last event upon subscribing.
       next: value => last = value
     })
     last$.unsubscribe
     return last
   }
 
+  public hasJustStarted(): boolean {
+    return this.attributes.keystrokes_nb == 1
+  }
+
   public isDone(): boolean {
     return this.attributes.text.text.length == this.attributes.valid_nb
+  }
+
+  public hasJustStopped(): boolean {
+    return this.attributes.start == undefined && this.attributes.stop != undefined
   }
 }
 
@@ -122,9 +136,13 @@ export class Decorator {
 
   private compute_wpm(attributes?: AppState): number {
     const a = attributes || this.model.attributes
-    if (!a.stop) return 0
+    if (!a.start || !a.stop) return 0
+    // nb_words takes into account errors, as keystrokes_nb does not distinguish
+    // between valid and invalid characters. This is by design so the WPM is
+    // an accurate estimate of efficiency: less errors => better wpm, at
+    // constant time.
     const nb_words = a.keystrokes_nb / 5 // bug, see https://github.com/chikamichi/typometer/issues/1
-    const elapsed = (a.stop.getTime() - a.start.getTime()) / 1000 / 60 // minutes
+    const elapsed = (a.stop.getTime() - a.start.getTime()) / 1000.0 / 60.0 // ms -> mn
     return Math.round(nb_words / elapsed)
   }
 

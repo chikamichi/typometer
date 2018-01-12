@@ -28,7 +28,8 @@ SystemJS.config({
         "./target_text": "src/target_text.ts",
         "./actions/new_text": "src/actions/new_text.ts",
         "./actions/typing": "src/actions/typing.ts",
-        "./components/live_text": "src/components/live_text.ts"
+        "./components/live_text": "src/components/live_text.ts",
+        "./components/replay_typing": "src/components/replay_typing.ts"
       },
       "meta": {
         "*.ts": {

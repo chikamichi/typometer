@@ -23,10 +23,12 @@ import * as Model from './model'
 import NewTextAction from "./actions/new_text"
 import TypingAction from "./actions/typing"
 import LiveText from "./components/live_text"
+import ReplayTyping from "./components/replay_typing"
 
 
 
-const default_text = 'Salut la terre'
+
+const default_text = 'Un toto tout petit'
 Model.Singleton.set({text: new TargetText(default_text)})
 
 
@@ -39,6 +41,7 @@ function intent(dom_source) {
 
   const new_char$ = dom_source
     .select('document').events('keydown')
+    .filter(e => !/^(Dead)/.test(e.key))
     .filter(e => !/^(Tab|Control|Alt|Shift|Meta).*/.test(e.code))
     .map(e => new TypingAction(e.key))
 
@@ -157,7 +160,8 @@ function nap(app_state$) {
 function main(sources) {
   const mutation_proposal$ = xs.merge(sources.NAP, intent(sources.DOM))
   const app_state$ = model(mutation_proposal$)
-  const live_text$ = isolate(LiveText)({app_state$: app_state$})
+  const replay$ = isolate(ReplayTyping)({app_state$: app_state$})
+  const live_text$ = isolate(LiveText)({app_state$: app_state$, replay$: replay$})
   const vtree$ = view({
     app_state$: app_state$,
     live_text$: live_text$.DOM

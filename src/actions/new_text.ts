@@ -12,7 +12,6 @@ export default class NewTextAction {
 
   process() {
     const new_text = new TargetText(this.text)
-    console.log('action/new_text')
     Model.Singleton.clear(new_text)
   }
 }
