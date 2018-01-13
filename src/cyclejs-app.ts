@@ -36,12 +36,12 @@ Model.Singleton.set({text: new TargetText(default_text)})
 
 
 // Intent: computes mutation proposals based on raw events.
-function intent(dom_source) {
-  const new_text$ = dom_source
+function intent(sources) {
+  const new_text$ = sources.DOM
     .select('.ta-custom-text').events('change')
     .map(e => new NewTextAction(e.target.value.trim()))
 
-  const new_char$ = dom_source
+  const new_char$ = sources.DOM
     .select('document').events('keydown')
     .filter(e => !/^(Dead)/.test(e.key))
     .filter(e => !/^(Tab|Control|Alt|Shift|Meta).*/.test(e.code))
@@ -175,18 +175,25 @@ function nap(app_state$) {
 // Main: wires everything up using circular streams.
 // Note: next-action-predicates bypass the intent() layer by design.
 function main(sources) {
-  const mutation_proposal$ = xs.merge(sources.NAP, intent(sources.DOM))
-  const app_state$ = model(mutation_proposal$)
+  let app_state$ = xs.create()
+  const action$ = intent({...sources, ...{app_state$: app_state$}})
+  const mutation_proposal$ = xs.merge(sources.NAP, action$)
+
+  app_state$.imitate(model(mutation_proposal$))
+
   const custom_text$ = isolate(CustomText)({app_state$: app_state$})
   const replay$ = isolate(ReplayTyping)({app_state$: app_state$, DOM: sources.DOM})
   const live_text$ = isolate(LiveText)({app_state$: app_state$, replay$: replay$})
+
   const vtree$ = view({
     app_state$: app_state$,
     custom_text$: custom_text$.DOM,
     live_text$: live_text$.DOM,
     replay$: replay$.DOM
   })
+
   const nap$ = nap(app_state$)
+
   return {
     DOM: vtree$,
     NAP: nap$ // next-action-predicate aka. internal side-effects
