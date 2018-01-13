@@ -181,7 +181,7 @@ function main(sources) {
 
   app_state$.imitate(model(mutation_proposal$))
 
-  const custom_text$ = isolate(CustomText)({app_state$: app_state$})
+  const custom_text$ = isolate(CustomText)({app_state$: app_state$, DOM: sources.DOM})
   const replay$ = isolate(ReplayTyping)({app_state$: app_state$, DOM: sources.DOM})
   const live_text$ = isolate(LiveText)({app_state$: app_state$, replay$: replay$})
 
