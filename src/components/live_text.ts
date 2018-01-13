@@ -1,7 +1,5 @@
 import xs, { Stream } from "xstream"
-import VNode from "@cycle/dom"
 import { h, p, span, VNode } from "@cycle/dom"
-import isolate from "@cycle/isolate"
 import classnames from "classnames"
 
 import { AppState, Singleton } from "../model"

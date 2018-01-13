@@ -18,10 +18,12 @@ import { h, h1, h2, div, p, span, input,
   textarea, ul, li, makeDOMDriver, VNode } from "@cycle/dom"
 import classnames from "classnames"
 
-import TargetText from "./target_text"
+import TargetText from "./models/target_text"
 import * as Model from './model'
 import NewTextAction from "./actions/new_text"
 import TypingAction from "./actions/typing"
+
+import CustomText from "./components/custom_text"
 import LiveText from "./components/live_text"
 import ReplayTyping from "./components/replay_typing"
 
@@ -64,15 +66,25 @@ function model(mutation_proposal$) {
 
 interface ViewSources {
   app_state$: Stream<Model.AppState>,
+  custom_text$: Stream<VNode>,
   live_text$: Stream<VNode>,
   replay$: Stream<VNode>
 }
 
 // View: decorates app state and re-renders in place.
 function view(sources: ViewSources) {
-  return xs.combine(sources.app_state$, sources.live_text$, sources.replay$)
-    .map(([app_state, live_text, replay]) => [(new Model.Decorator(app_state)).decorate(), live_text, replay])
-    .map(([attributes, live_text, replay]) =>
+  return xs.combine(
+    sources.app_state$,
+    sources.custom_text$,
+    sources.live_text$,
+    sources.replay$
+  ).map(([app_state, ...remainder]) => [(new Model.Decorator(app_state)).decorate(), ...remainder])
+   .map(([
+     attributes,
+     custom_text,
+     live_text,
+     replay
+   ]) =>
       div('.typing-app.ta', [
         h1('Try typing the following text as fast as possible:'),
         h(replay.sel, replay.data, replay.children),
@@ -106,12 +118,7 @@ function view(sources: ViewSources) {
             ])
           ])
         ]),
-        div('.ta-custom-text', [
-          h2('Enter some custom text:'),
-          textarea({tabindex: 0}, [
-            attributes.text
-          ]),
-        ])
+        h(custom_text.sel, custom_text.data, custom_text.children)
       ])
     )
 }
@@ -147,11 +154,19 @@ function nap(app_state$) {
         && Model.Singleton.get().attributes.stop
     })
     .compose(delay(2000))
-    .map(app_state => Model.Singleton.clear())
+    .map(_ => Model.Singleton.clear())
+
+  // User has stopped, must reset state.
+  const manual_reset$ = app_state$
+    .filter(_ => {
+      return Model.Singleton.get().hasStopped()
+    })
+    .map(_ => Model.Singleton.clear())
 
   return xs.merge(
     compute_wpm$,
-    auto_reset$
+    auto_reset$,
+    manual_reset$
   ).startWith(undefined)
 }
 
@@ -162,10 +177,12 @@ function nap(app_state$) {
 function main(sources) {
   const mutation_proposal$ = xs.merge(sources.NAP, intent(sources.DOM))
   const app_state$ = model(mutation_proposal$)
+  const custom_text$ = isolate(CustomText)({app_state$: app_state$})
   const replay$ = isolate(ReplayTyping)({app_state$: app_state$, DOM: sources.DOM})
   const live_text$ = isolate(LiveText)({app_state$: app_state$, replay$: replay$})
   const vtree$ = view({
     app_state$: app_state$,
+    custom_text$: custom_text$.DOM,
     live_text$: live_text$.DOM,
     replay$: replay$.DOM
   })

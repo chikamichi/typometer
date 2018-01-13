@@ -1,5 +1,6 @@
 import xs from "xstream"
-import * as Model from "./model"
+
+import * as Model from "../model"
 
 export default class TargetText {
   text: string

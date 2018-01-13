@@ -25,9 +25,10 @@ SystemJS.config({
       "main": "src/cyclejs-app.ts",
       "map": {
         "./model": "src/model.ts",
-        "./target_text": "src/target_text.ts",
+        "./models/target_text": "src/models/target_text.ts",
         "./actions/new_text": "src/actions/new_text.ts",
         "./actions/typing": "src/actions/typing.ts",
+        "./components/custom_text": "src/components/custom_text.ts",
         "./components/live_text": "src/components/live_text.ts",
         "./components/replay_typing": "src/components/replay_typing.ts"
       },

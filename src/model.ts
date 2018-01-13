@@ -1,4 +1,4 @@
-import TargetText from "./target_text"
+import TargetText from "./models/target_text"
 import xs, { MemoryStream } from "xstream"
 
 export interface TypingRecords {
@@ -65,14 +65,28 @@ export class Singleton {
     return this._instance
   }
 
-  public static clear(text?: TargetText): AppState {
+  public static stop() {
+    return {
+      ...this._instance.attributes,
+      ...{
+        stop: new Date()
+      }
+    }
+  }
+
+  public static clear(text?: TargetText, opts = {}): AppState {
+    const options = {
+      ...{
+        records: true
+      },
+      opts
+    }
     const records = (new Decorator(this._instance)).compute_records()
     const clear_state = {
       ...INITIAL_APP_STATE,
       ...{
-        // stop: new Date(),
         text: text || this._instance.attributes.text,
-        records: records
+        records: options.records ? records : {}
       }
     }
     this._instance.attributes$.shamefullySendNext(clear_state)
@@ -96,22 +110,23 @@ export class Singleton {
 
   public isRunning(): boolean {
     const a = this.attributes
-    return a.start && !a.stop
+    return !!a.start && !a.stop
   }
 
   public hasJustStarted(): boolean {
     const a = this.attributes
-    return a.keystrokes_nb == 1
+    return !!a.start && a.keystrokes_nb == 1
   }
 
   public isDone(): boolean {
     const a = this.attributes
-    return a.text.text.length == a.valid_nb
+    return a.text.text.length == a.valid_nb && !a.stop
   }
 
   public hasStopped(): boolean {
     const a = this.attributes
-    return a.start && !!a.stop
+    const res = !!a.start && !!a.stop
+    return res
   }
 }
 

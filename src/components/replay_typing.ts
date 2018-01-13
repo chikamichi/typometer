@@ -30,96 +30,126 @@ interface Sources {
 }
 
 class TypingBeat {
+  period: number // ms
+  counter: number
+  _uuid: number
+
   // TODO: take in an AppState and use start/stop metrics to compute the ideal
-  // rythm
-  constructor() {
+  // rythm to compete against own previous run's replay
+  // => but that would be averaged, it'd be more interesting to have a replica
+  // of rythm on top of mean speed => different technic required
+  constructor(wpm) {
+    // TODO: make 5 a global, WORD_LENGTH
+    this.period = Math.round(60000 / (wpm * 5))
+    this.counter = 0
   }
 
   get producer() {
     return {
-      start: function(listener) {
-        this.counter = 0
+      start: listener => {
         listener.next(this.counter++)
-        this.id = setInterval(() => {
+        this._uuid = setInterval(() => {
           listener.next(this.counter++)
-        }, 120)
+        }, this.period)
       },
-      stop: function() {
-        clearInterval(this.id)
-      },
-      id: 0
+      stop: () => {
+        clearInterval(this._uuid)
+      }
     }
   }
 }
 
 function view(sources) {
-  const beat$ = sources.DOM
-    .select('.ta-replay__range').events('input')
-    .map(e => e.target.value)
-    .startWith(1000)
-
-  const app_new$ = sources.app_state$
-    .map(app_state => app_state.isNew())
-
-  return xs.combine(beat$, app_new$)
-    .map(([beat, app_new]) =>
+  return xs.combine(sources.app_state$, sources.wpm$)
+    .map(([app_state, wpm]) =>
       div('.ta-replay', [
-        input('.ta-replay__range', {attrs: {type: 'range', min: 10, max: 5000, step: 50, disabled: !app_new}}),
-        div('.ta-replay__speed', beat + 'ms')
+        input('.ta-replay__range', {
+          attrs: {
+            type: 'range',
+            min: 1,
+            max: 250,
+            disabled: !app_state.isNew()
+          }
+        }),
+        div('.ta-replay__speed', wpm + 'WPM')
       ])
     )
 }
 
+function BeatManager(sources) {
+  const wpm$ = sources.DOM
+    .select('.ta-replay__range').events('input')
+    .map(e => e.target.value)
+    .startWith(32) // 1000 ms period ie. 1 char/s
+
+  const run$ = sources.app_state$
+    .filter(app_state => app_state.isNew())
+
+  const beat$$ = xs.combine(wpm$, run$)
+    .map(([wpm, _]) => {
+      const beat = new TypingBeat(wpm)
+      return xs.create(beat.producer)
+    })
+
+  return {
+    WPM: wpm$,
+    BEAT: beat$$
+  }
+}
+
 export default function ReplayTyping(sources: Sources) {
-  // subscription pointer to a specific run's replay (internal source)
-  let source = {unsubscribe: () => {}}
-  // singleton-replay exposed as sink
+  const {BEAT: beat$$, WPM: wpm$} = BeatManager(sources)
+  // A replay "Null Object" to start with.
+  let source = xs.create()
+  // A subscription pointer to a specific run's replay (internal source).
+  let subscription = source.subscribe({})
+  // The component's sink exposing replay ticks.
   const replay$ = xs.create()
 
+  function emit_tick(event) {
+    replay$.shamefullySendNext(event + 1) // index is 1-based
+  }
+
+  beat$$.addListener({
+    next: new_beat => {
+      subscription.unsubscribe()
+      source = new_beat // imitate?
+    }
+  })
+
+  // replay$ will emit |---1---2---3---> on a regular basis, as configured by
+  // the replay WPM setting.
   replay$.addListener({
     next: i => Singleton.set({replay_nb: i})
   })
 
-  // Prepare previous run's replay$ upon user starting a new run.
-  // Note: replay$ to be actually started upon TargetText subscribing to it.
+  // Upon the user getting started, fire up current replay.
   sources.app_state$
     .filter(app_state => app_state.hasJustStarted())
     .addListener({
-      next: app_state => {
-        // TODO: replay replay$ with a periodic stream based on text, start, stop
-        // replay$ should stop once done, so actually use a Producer, defining
-        // start and stop.
-        // It means we need to have access to the previous run start and stop
-        // metrics. I guess the simplest is to simply cache previous run's
-        // metrics entirely in the current state; or a dedicated stream could
-        // be used (memory-stream).
-        const beat = new TypingBeat().producer
-        source = xs.create(beat).subscribe({
-          next: event => replay$.shamefullySendNext(event + 1) // index is 1-based
+      next: _ => {
+        subscription = source.subscribe({
+          next: emit_tick
         })
       }
     })
 
-  // Stop current replay upon user succeeding or cancelling.
+  // Upon the user succeeding or cancelling, stop current replay.
   sources.app_state$
     .filter(app_state => app_state.hasStopped())
     .addListener({
-      next: app_state => source.unsubscribe()
-    })
-
-  // Stop current replay upon reaching the end of the text.
-  replay$
-    .filter(tick => tick == Singleton.get().attributes.text.text.length)
-    .addListener({
-      next: app_state => source.unsubscribe()
+      next: _ => {
+        source.shamefullySendComplete()
+        subscription.unsubscribe()
+      }
     })
 
   // TODO:
-  // - allow changing the beat only when AppState is stopped (filter)
-  // - disable input while AppState is not stopped
-  // - fix default value which does not render correctly
   // - upon changing the beat, rebuild a producer and rebuild the source stream
-  const vdom$ = view(sources)
+  // - express beat in WPM
+  // - fix default value which does not render correctly
+  // - add metric: % faster than beat
+  const vdom$ = view({...sources, ...{wpm$: wpm$}})
 
   return {
     TICKS: replay$,
