@@ -20,12 +20,13 @@ d'avoir tout le temps le dernier a et le dernier r, pour reconstruire la vue.
 */
 
 import xs, { Stream } from "xstream"
-import VNode from "@cycle/dom"
+import { div, input, VNode } from "@cycle/dom"
 
 import { AppState, Singleton } from "../model"
 
 interface Sources {
-  app_state$: Stream<AppState>
+  app_state$: Stream<AppState>,
+  DOM: Stream<VNode>
 }
 
 class TypingBeat {
@@ -49,6 +50,24 @@ class TypingBeat {
       id: 0
     }
   }
+}
+
+function view(sources) {
+  const beat$ = sources.DOM
+    .select('.ta-replay__range').events('input')
+    .map(e => e.target.value)
+    .startWith(1000)
+
+  const app_new$ = sources.app_state$
+    .map(app_state => app_state.isNew())
+
+  return xs.combine(beat$, app_new$)
+    .map(([beat, app_new]) =>
+      div('.ta-replay', [
+        input('.ta-replay__range', {attrs: {type: 'range', min: 10, max: 5000, step: 50, disabled: !app_new}}),
+        div('.ta-replay__speed', beat + 'ms')
+      ])
+    )
 }
 
 export default function ReplayTyping(sources: Sources) {
@@ -83,7 +102,7 @@ export default function ReplayTyping(sources: Sources) {
 
   // Stop current replay upon user succeeding or cancelling.
   sources.app_state$
-    .filter(app_state => app_state.hasJustStopped())
+    .filter(app_state => app_state.hasStopped())
     .addListener({
       next: app_state => source.unsubscribe()
     })
@@ -95,7 +114,15 @@ export default function ReplayTyping(sources: Sources) {
       next: app_state => source.unsubscribe()
     })
 
+  // TODO:
+  // - allow changing the beat only when AppState is stopped (filter)
+  // - disable input while AppState is not stopped
+  // - fix default value which does not render correctly
+  // - upon changing the beat, rebuild a producer and rebuild the source stream
+  const vdom$ = view(sources)
+
   return {
-    TICKS: replay$
+    TICKS: replay$,
+    DOM: vdom$
   }
 }

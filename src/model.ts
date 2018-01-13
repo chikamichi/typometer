@@ -89,16 +89,29 @@ export class Singleton {
     return last
   }
 
+  public isNew(): boolean {
+    const a = this.attributes
+    return !a.start && !a.stop
+  }
+
+  public isRunning(): boolean {
+    const a = this.attributes
+    return a.start && !a.stop
+  }
+
   public hasJustStarted(): boolean {
-    return this.attributes.keystrokes_nb == 1
+    const a = this.attributes
+    return a.keystrokes_nb == 1
   }
 
   public isDone(): boolean {
-    return this.attributes.text.text.length == this.attributes.valid_nb
+    const a = this.attributes
+    return a.text.text.length == a.valid_nb
   }
 
-  public hasJustStopped(): boolean {
-    return this.attributes.start == undefined && this.attributes.stop != undefined
+  public hasStopped(): boolean {
+    const a = this.attributes
+    return a.start && !!a.stop
   }
 }
 
