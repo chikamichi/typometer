@@ -37,9 +37,9 @@ Model.Singleton.set({text: new TargetText(default_text)})
 
 // Intent: computes mutation proposals based on raw events.
 function intent(sources) {
-  const new_text$ = sources.DOM
-    .select('.ta-custom-text').events('change')
-    .map(e => new NewTextAction(e.target.value.trim()))
+  const new_text$ = sources.CUSTOM_TEXT
+    .filter(e => e.type == 'custom_text.edited')
+    .map(e => new NewTextAction(e.data))
 
   const new_char$ = sources.DOM
     .select('document').events('keydown')
@@ -176,12 +176,14 @@ function nap(app_state$) {
 // Note: next-action-predicates bypass the intent() layer by design.
 function main(sources) {
   let app_state$ = xs.create()
-  const action$ = intent({...sources, ...{app_state$: app_state$}})
+  let custom_text_bus$ = xs.create()
+  const action$ = intent({...sources, ...{app_state$: app_state$, CUSTOM_TEXT: custom_text_bus$}})
   const mutation_proposal$ = xs.merge(sources.NAP, action$)
 
   app_state$.imitate(model(mutation_proposal$))
 
   const custom_text$ = isolate(CustomText)({app_state$: app_state$, DOM: sources.DOM})
+  custom_text_bus$.imitate(custom_text$.BUS)
   const replay$ = isolate(ReplayTyping)({app_state$: app_state$, DOM: sources.DOM})
   const live_text$ = isolate(LiveText)({app_state$: app_state$, replay$: replay$})
 

@@ -74,7 +74,7 @@ export class Singleton {
     }
   }
 
-  public static clear(text?: TargetText, opts = {}): AppState {
+  public static clear_mutation(text?: TargetText, opts = {}): AppState {
     const options = {
       ...{
         records: true
@@ -82,13 +82,17 @@ export class Singleton {
       opts
     }
     const records = (new Decorator(this._instance)).compute_records()
-    const clear_state = {
+    return {
       ...INITIAL_APP_STATE,
       ...{
         text: text || this._instance.attributes.text,
         records: options.records ? records : {}
       }
     }
+  }
+
+  public static clear(text?: TargetText, opts = {}): AppState {
+    const clear_state = this.clear_mutation(text, opts)
     this._instance.attributes$.shamefullySendNext(clear_state)
     return this._instance.attributes
   }
