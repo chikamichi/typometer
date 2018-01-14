@@ -15,7 +15,8 @@ function build_char(char): VNode {
   const kls = classnames('.ta-char', {
     '.ta-char--valid': char.isValid,
     '.ta-char--error': char.isError,
-    '.ta-char--replay': char.isReplayed
+    '.ta-char--replay': char.isReplayed,
+    '.ta-char--next': char.isNext
   })
   return span(kls, char.char)
 }

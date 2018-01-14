@@ -1,5 +1,5 @@
 import xs, { Stream } from "xstream"
-import { div, h2, textarea, VNode } from "@cycle/dom"
+import { div, h2, input, textarea, label, VNode } from "@cycle/dom"
 import classnames from "classnames"
 
 import { AppState } from "../model"
@@ -39,8 +39,9 @@ function view(sources) {
   return xs.combine(sources.focus_state$, sources.app_state$)
     .map(([focus_state, app_state]) =>
       div('.ta-custom-text', [
-        h2('Enter some custom text:'),
-        textarea({tabindex: 0}, [
+        label({attrs: {for: "ta-custom-text"}}, 'Edit text'),
+        input('.ta-custom-text__toggler', {attrs: {type: "checkbox", style: "display: none;", id: "ta-custom-text", checked: "checked"}}),
+        textarea({attrs: {rows: 5, tabindex: 0}}, [
           app_state.attributes.text
         ])
       ])

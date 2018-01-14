@@ -20,7 +20,7 @@ d'avoir tout le temps le dernier a et le dernier r, pour reconstruire la vue.
 */
 
 import xs, { Stream } from "xstream"
-import { div, input, VNode } from "@cycle/dom"
+import { div, span, a, input, h3, VNode } from "@cycle/dom"
 
 import { AppState, Singleton } from "../model"
 
@@ -62,23 +62,30 @@ class TypingBeat {
 function view(sources) {
   return xs.combine(sources.app_state$, sources.wpm$)
     .map(([app_state, wpm]) =>
-      div('.ta-replay', [
-        input('.ta-replay__range', {
-          attrs: {
-            type: 'range',
-            min: 1,
-            max: 250,
-            disabled: !app_state.isNew()
-          }
-        }),
-        div('.ta-replay__speed', wpm + 'WPM')
+      div('.ta-setting  .ta-replay-settings', [
+        h3([
+          a({attrs: {href: "https://en.wikipedia.org/wiki/Words_per_minute", target: "_blank"}}, [
+            span({attrs: {title: "Words per minute"}}, 'WPM'),
+          ])
+      ]),
+        div('.ta-setting-slider', [
+          input('.ta-slider  .ta-setting__slider  .ta-replay-settings__range', {
+            attrs: {
+              type: 'range',
+              min: 1,
+              max: 250,
+              disabled: !app_state.isNew()
+            }
+          }),
+          span('.ta-setting__value  .ta-replay-settings__speed', wpm)
+        ])
       ])
     )
 }
 
 function BeatManager(sources) {
   const wpm$ = sources.DOM
-    .select('.ta-replay__range').events('input')
+    .select('.ta-replay-settings__range').events('input')
     .map(e => e.target.value)
     .startWith(32) // 1000 ms period ie. 1 char/s
 

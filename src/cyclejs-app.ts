@@ -15,7 +15,8 @@ import delay from 'xstream/extra/delay'
 import { run } from "@cycle/run"
 import isolate from "@cycle/isolate"
 import { h, h1, h2, div, p, span, input,
-  textarea, ul, li, makeDOMDriver, VNode } from "@cycle/dom"
+  textarea, ul, li, table, thead, tbody, tr, th, td,
+  makeDOMDriver, VNode } from "@cycle/dom"
 import classnames from "classnames"
 
 import TargetText from "./models/target_text"
@@ -30,7 +31,7 @@ import ReplayTyping from "./components/replay_typing"
 
 
 
-const default_text = 'Un toto tout petit'
+const default_text = "Ils se trouvaient dans la salle de radio - dont l'appareillage, par mille détails subtils, donnait déjà l'impression d'être démodé pour être resté inutilisé pendant dix ans avant leur arrivée. Oui, dix ans, sur le plan technique, cela comptait énormément. Il suffisait de comparer Speedy au modèle de 2005. Mais on en était arrivé au stade où les robots se perfectionnaient à une allure ultrarapide. Powell posa un doigt hésitant sur une surface métallique qui avait conservé son poli. L'atmosphère d’abandon qui imprégnait tous les objets contenus dans la pièce - et la Station tout entière - avait quelque chose d’infiniment déprimant."
 Model.Singleton.set({text: new TargetText(default_text)})
 
 
@@ -83,43 +84,55 @@ function view(sources: ViewSources) {
      attributes,
      custom_text,
      live_text,
-     replay
+     replay_settings
    ]) =>
       div('.typing-app.ta', [
-        h1('Try typing the following text as fast as possible:'),
-        h(replay.sel, replay.data, replay.children),
-        div('.ta-content', [
-          h(live_text.sel, live_text.data, live_text.children),
-          span(classnames('.ta-progress .ta-progress--done', {'.u-wip': !attributes.done}), ' Done!')
-        ]),
-        ul('.ta-metrics', [
-          li('.ta-metric  .ta-metric__record-accuracy', [
-            div('.ta-metric__last', [
-              'Accuracy:',
-              span('.ta-metric__last-value', attributes.accuracy),
-              '%'
-            ]),
-            div(classnames('.ta-metric__best', {'.u-wip': !attributes.records.accuracy}), [
-              '(best:',
-              span('.ta-metric__best-value', `${attributes.records.accuracy || '?'}%`),
-              ')'
-            ])
-          ]),
-          li('.ta-metric  .ta-metric__record-wpm', [
-            div('.ta-metric__last', [
-              'Net WPM:',
-              span('.ta-metric__last-value', attributes.wpm),
-              'words/minute'
-            ]),
-            div(classnames('.ta-metric__best', {'.u-wip': !attributes.records.wpm}), [
-              '(best:',
-              span('.ta-metric__best-value', attributes.records.wpm || '?'),
-              ')'
-            ])
+        div('.ta-side', [
+          h1('.ta-title', 'typometer'),
+          div('.ta-settings', [
+            h2('Settings'),
+            h(replay_settings.sel, replay_settings.data, replay_settings.children),
           ])
-        ]),
-        h(custom_text.sel, custom_text.data, custom_text.children)
-      ])
+        ]), // .ta-side
+
+        div('.ta-main', [
+
+          div('.ta-header', [
+
+            table('.ta-metrics', [
+              thead('.ta-metrics__types', [
+                tr([
+                  th('Metrics:'),
+                  th('Accuracy'),
+                  th('WPM')
+                ])
+              ]),
+              tbody('.ta-metrics__values', [
+                tr('.ta-metrics__best', [
+                  td('.ta-metrics__best-value', 'Best:'),
+                  td('.ta-metric  .ta-metric--accuracy  .ta-metric__best-value  .ta-metric__best-value--accuracy', attributes.records.accuracy + '%'),
+                  td('.ta-metric  .ta-metric--wpm  .ta-metric__best-value  .ta-metric__best-value--wpm', attributes.records.wpm)
+                ]),
+                tr('.ta-metrics__current', [
+                  td('.ta-metrics__current-value', 'Current:'),
+                  td('.ta-metric  .ta-metric--accuracy  .ta-metric__current-value  .ta-metric__current-value--accuracy', attributes.accuracy + '%'),
+                  td('.ta-metric  .ta-metric--wpm  .ta-metric__current-value  .ta-metric__current-value--wpm', attributes.wpm),
+                ])
+              ])
+            ])
+
+            // div(classnames('.ta-progress .ta-progress--done', {'.u-wip': !attributes.done}), ' Done!')
+
+          ]), // .ta-header
+
+          div('.ta-content', [
+            h(live_text.sel, live_text.data, live_text.children),
+            h(custom_text.sel, custom_text.data, custom_text.children)
+          ]), // .ta-content
+
+        ]) // .ta-main
+
+      ]) // .ta
     )
 }
 

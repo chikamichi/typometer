@@ -12,17 +12,18 @@ export default class TargetText {
   // TODO: the logic in as_stream() and wrap() doesn't really belong to
   // TargetText: it's all about making the text live, so LiveText instead?
   as_stream() {
-    const app_state = Model.Singleton.get().attributes
+    const a = Model.Singleton.get().attributes
     const tuples = []
-    for (let char of this.text.substring(0,app_state.valid_nb))
+    for (let char of this.text.substring(0,a.valid_nb))
       tuples.push({char: char, isValid: true, isError: false})
-    if (app_state.error)
-      for (let char of app_state.error)
+    if (a.error)
+      for (let char of a.error)
         tuples.push({char: char, isValid: false, isError: true})
-    for (let char of this.text.substring(app_state.valid_nb,this.text.length))
+    for (let char of this.text.substring(a.valid_nb,this.text.length))
      tuples.push({char: char, isValid: false, isError: false})
     tuples.forEach((tuple, index) => {
-      tuple['isReplayed'] = index < app_state.replay_nb + (app_state.error ? app_state.error.length : 0)
+      tuple['isReplayed'] = index < a.replay_nb + (a.error ? a.error.length : 0)
+      tuple['isNext'] = a.keystrokes_nb == 0 ? index == 0 : index == a.valid_nb + (a.error||'').length
     })
     return xs.fromArray(tuples)
   }
