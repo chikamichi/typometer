@@ -18,12 +18,10 @@ http-server -c-1 -S -C cert.pem -K key.pem -o # Go to https://0.0.0.0:8080/
 
 #### Internal
 
-* Use [cycle-onionify](https://github.com/staltz/cycle-onionify) to handle app's global state and components' inner state.
 * Implement a buffer for character detection, to solve combined characters issues: ^e should be detected as ê, same for ï, etc.
 
 #### User experience
 
-* Do not compute records upon cancelling (ESC).
 * Fix `tabindex` (or use a different technic) to allow for a fullfledged keyboard-centric UX.
 * Self-replay: add an option to replicate own typing rythm entirely.
 * Expand metrics/records — some requiring updated-while-typing computations:

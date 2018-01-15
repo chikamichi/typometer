@@ -1,76 +1,83 @@
 import xs from "xstream"
 
-import * as Model from "model"
+import Model from "model"
+import { AppState } from "types"
+import { INITIAL_APP_STATE } from "utils"
+
+
+function processLetter(char: string, state: AppState): AppState {
+  let m = state.metrics
+  let t = state.text
+  let metricsMutation = {}
+  const S = Model(state)
+
+  // if (!m.start) // first char was typed!
+  if (S.isNew())
+    metricsMutation['start'] = new Date()
+
+  if (S.isDone())
+    metricsMutation['stop'] = new Date()
+
+  metricsMutation['current_char'] = char
+  metricsMutation['keystrokes_nb'] = m.keystrokes_nb + 1
+
+  // TODO: hide in Model getters to improve readibility
+  if (t.raw[m.valid_nb] == char && m.error == undefined) {
+    metricsMutation['valid_nb'] = m.valid_nb + 1
+  } else {
+    metricsMutation['errors_nb'] = m.errors_nb + 1
+    metricsMutation['error'] = m.error || ''
+    metricsMutation['error'] += char
+  }
+
+  const metrics = {...m, ...metricsMutation}
+  return {...state, metrics}
+}
+
+
+// Backspace only wipes out a typed character, valid or invalid, but does not
+// alter cumulative metrics.
+function processBackspace(state: AppState): AppState {
+  let m = state.metrics
+  let t = state.text
+  let metricsMutation = {}
+
+  if (m.error) {
+    const new_error = m.error.substring(0, m.error.length-1)
+    metricsMutation['error'] = new_error.length ? new_error : undefined
+  } else {
+    metricsMutation['valid_nb'] = m.valid_nb > 0 ? m.valid_nb - 1 : 0
+  }
+
+  const metrics = {...m, ...metricsMutation}
+  return {...state, metrics}
+}
+
+
+function processEscape(state: AppState): AppState {
+  let t = state.text
+
+  return {
+    ...INITIAL_APP_STATE,
+    ...{
+      text: {
+        ...INITIAL_APP_STATE.text,
+        raw: t.raw
+      }
+    }
+  }
+}
+
 
 // TypingAction: handles actions related to the user typing text.
-export default class TypingAction {
-  readonly app_state: Model.Singleton
-  char: string
-
-
-  constructor(char?: string) {
-    this.app_state = Model.Singleton.get()
-    this.char = char
-  }
-
-
-  // Compute an app state's mutation proposal after a valid key was pressed.
-  process() {
-    switch (this.char) {
-      case 'Backspace':
-        return this.process_backspace()
-      case 'Escape':
-        return this.process_escape()
-      default:
-        return this.process_letter()
-    }
-  }
-
-
-  private process_letter() {
-    let mutation = {}
-    const a = this.app_state.attributes
-
-    // if (!a.start) // first char was typed!
-    if (this.app_state.isNew())
-      mutation['start'] = new Date()
-
-    if (this.app_state.isDone())
-      mutation['stop'] = new Date()
-
-    mutation['keystrokes_nb'] = a.keystrokes_nb + 1
-
-    // TODO: hide in Model getters to improve readibility
-    if (a.text.text[a.valid_nb] == this.char && a.error == undefined) {
-      mutation['valid_nb'] = a.valid_nb + 1
-    } else {
-      mutation['errors_nb'] = a.errors_nb + 1
-      mutation['error'] = a.error || ''
-      mutation['error'] += this.char
-    }
-
-    return {...a, ...mutation}
-  }
-
-
-  // Backspace only wipes out a typed character, valid or invalid, but does not
-  // alter cumulative metrics.
-  private process_backspace() {
-    let mutation = {}
-    const a = this.app_state.attributes
-
-    if (a.error) {
-      const new_error = a.error.substring(0, a.error.length-1)
-      mutation['error'] = new_error.length ? new_error : undefined
-    } else {
-      mutation['valid_nb'] = a.valid_nb > 0 ? a.valid_nb - 1 : 0
-    }
-
-    return {...a, ...mutation}
-  }
-
-
-  private process_escape() {
-    return Model.Singleton.stop()
+// Compute an app state's mutation proposal after a valid key was pressed.
+export default function TypingAction(char: string, state: AppState): AppState {
+  switch (char) {
+    case 'Backspace':
+      return processBackspace(state)
+    case 'Escape':
+      return processEscape(state)
+    default:
+      return processLetter(char, state)
   }
 }

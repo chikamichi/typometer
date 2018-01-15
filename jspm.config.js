@@ -32,6 +32,14 @@ SystemJS.config({
     "app/components/Core": {
       "defaultExtension": "ts",
       "main": "index.ts"
+    },
+    "app/components/CustomText": {
+      "defaultExtension": "ts",
+      "main": "index.ts"
+    },
+    "app/components/LiveText": {
+      "defaultExtension": "ts",
+      "main": "index.ts"
     }
   }
 });
