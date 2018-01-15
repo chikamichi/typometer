@@ -52,7 +52,6 @@ http-server -c-1 -S -C cert.pem -K key.pem -o # Go to https://0.0.0.0:8080/
 
 ### Stack
 
-* Fix SystemJS-related hassle of declaring each and every file in jspm.config.js
 * Import CSS and assets using SystemJS?
 * Create a production build by transpiling server-side, etc.
 * Speed up dev feedback loop @see JSPM.
