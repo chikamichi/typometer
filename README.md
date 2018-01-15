@@ -64,14 +64,17 @@ Part of the experiment was to cover setting up a project with Typescript, ES6 an
 ### 1. Install stuff, including SystemJS (http://nervosax.com/2015/08/05/why-not-try-jspm-and-systemjs/):
 
 ``` sh
-npm install --save-dev systemjs gulp gulp-typescript browserify tsify vinyl-source-stream
-sudo npm install -g gulp-cli jspm@beta http-server typescript
+# Global depedencies, for reuse across projects. Could be installed locally as well.
+sudo npm install -g gulp-cli http-server typescript
 
-# For we are gonna use Typescript, let's switch from npm to jspm for
-# app-specific libs.
+# Project's dev stack is installed with npm.
+sudo npm install -g gulp-cli http-server typescript
+npm install --save-dev systemjs jspm@beta gulp gulp-typescript browserify tsify vinyl-source-stream
+
+# Project's runtime (browser) dependencies are installed with JSPM (see below).
 jspm init # https://jspm.io/0.17-beta-guide/creating-a-project.html
 jspm install --dev plugin-typescript
-jspm install npm:xstream npm:@cycle/run npm:@cycle/dom npm:@cycle/http npm:@cycle/isolate npm:classnames
+jspm install npm:xstream npm:@cycle/run npm:@cycle/dom npm:@cycle/http npm:@cycle/isolate npm:cycle-onionify npm:classnames
 ```
 
 And prepare index.html:
@@ -90,8 +93,33 @@ And prepare index.html:
 </body>
 ```
 
+[SystemJS](https://github.com/systemjs/systemjs), a universal *module loader*, allows for importing ES6 modules (aka. ECMAScript 2015 native modules): `export Foo` => `import Foo from "bar"`. For those modules are written in TypeScript, the `typescript` transpiler gets installed as well as a plugin.
+
+Dependencies required to run the app in the browser are handled with [JSPM](https://jspm.io/), a browser-oriented *package manager* which works with SystemJS (v0.17.x-beta.y is used).
+
+JSPM brings automated in-browser transpilation: upon loading the app, source code gets transpiled from TypeScript to browser-compliant JS.
+
+The overall logic is as follow:
+
+```
+ES6 TypeScript module
+          |
+      [SystemJS]
+          |
+          v
+   ES6 JS transpile
+          |
+        [JSPM]
+          |
+          v
+   ES5 JS (browser)
+```
+
+A production, pre-transpiled build may be generated so that all modules/assets are compiled into a single, optimized bundle.
+
 ### 2. Follow instructions at:
 
+* https://github.com/buzinas/tslint-eslint-rules#usage
 * whatever I forgot to bookmark but did along the way… sorry ^^
 
 ### 3. Generate cert.pem and key.pem

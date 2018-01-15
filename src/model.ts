@@ -1,4 +1,4 @@
-import TargetText from "./models/target_text"
+import TargetText from "models/target_text"
 import xs, { MemoryStream } from "xstream"
 
 export interface TypingRecords {

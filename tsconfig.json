@@ -1,13 +1,17 @@
 {
   "compilerOptions": {
     "target": "es2015",
-    "module": "commonjs",
-    "removeComments": true,
+    "moduleResolution": "node",
+    "removeComments": false,
     "sourceMap": true,
-    "rootDir": ".",
-    "baseUrl": "."
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   },
-  "include": [
-    "./src"
+  "exclude": [
+    "node_modules",
+    "jspm_packages"
   ]
 }

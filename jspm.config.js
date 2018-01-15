@@ -1,16 +1,17 @@
 SystemJS.config({
+  baseURL: ".",
   browserConfig: {
     "paths": {
       "github:": "/jspm_packages/github/",
       "npm:": "/jspm_packages/npm/",
-      "cyclejs-app/": "/src/"
+      "app/": "/src/"
     }
   },
   nodeConfig: {
     "paths": {
       "github:": "jspm_packages/github/",
       "npm:": "jspm_packages/npm/",
-      "cyclejs-app/": "src/"
+      "app/": "/src/"
     }
   },
   devConfig: {
@@ -19,24 +20,18 @@ SystemJS.config({
     }
   },
   transpiler: "plugin-typescript",
-  typescriptOptions: true,
+  typescriptOptions: {
+    tsconfig: "/tsconfig.json"
+  },
   packages: {
-    "cyclejs-app": {
-      "main": "src/cyclejs-app.ts",
-      "map": {
-        "./model": "src/model.ts",
-        "./models/target_text": "src/models/target_text.ts",
-        "./actions/new_text": "src/actions/new_text.ts",
-        "./actions/typing": "src/actions/typing.ts",
-        "./components/custom_text": "src/components/custom_text.ts",
-        "./components/live_text": "src/components/live_text.ts",
-        "./components/replay_typing": "src/components/replay_typing.ts"
-      },
-      "meta": {
-        "*.ts": {
-          "loader": "plugin-typescript"
-        }
-      }
+    "app/": {
+      "defaultExtension": "ts"
+    },
+    // tsconfig.json's moduleResolution set to "node" should take care of that,
+    // but for some reason it does not: TODO investigate
+    "app/components/Core": {
+      "defaultExtension": "ts",
+      "main": "index.ts"
     }
   }
 });
@@ -57,6 +52,7 @@ SystemJS.config({
     "classnames": "npm:classnames@2.2.5",
     "constants": "npm:jspm-nodelibs-constants@0.2.1",
     "crypto": "npm:jspm-nodelibs-crypto@0.2.1",
+    "cycle-onionify": "npm:cycle-onionify@5.0.0",
     "events": "npm:jspm-nodelibs-events@0.2.2",
     "fs": "npm:jspm-nodelibs-fs@0.2.1",
     "http": "npm:jspm-nodelibs-http@0.2.0",
@@ -109,7 +105,7 @@ SystemJS.config({
         "pbkdf2": "npm:pbkdf2@3.0.14",
         "public-encrypt": "npm:public-encrypt@4.0.0",
         "randomfill": "npm:randomfill@1.0.3",
-        "randombytes": "npm:randombytes@2.0.5",
+        "randombytes": "npm:randombytes@2.0.6",
         "browserify-sign": "npm:browserify-sign@4.0.4"
       }
     },
@@ -137,7 +133,7 @@ SystemJS.config({
     },
     "npm:diffie-hellman@5.0.2": {
       "map": {
-        "randombytes": "npm:randombytes@2.0.5",
+        "randombytes": "npm:randombytes@2.0.6",
         "bn.js": "npm:bn.js@4.11.8",
         "miller-rabin": "npm:miller-rabin@4.0.1"
       }
@@ -155,7 +151,7 @@ SystemJS.config({
     "npm:public-encrypt@4.0.0": {
       "map": {
         "create-hash": "npm:create-hash@1.1.3",
-        "randombytes": "npm:randombytes@2.0.5",
+        "randombytes": "npm:randombytes@2.0.6",
         "bn.js": "npm:bn.js@4.11.8",
         "browserify-rsa": "npm:browserify-rsa@4.0.1",
         "parse-asn1": "npm:parse-asn1@5.1.0"
@@ -163,7 +159,7 @@ SystemJS.config({
     },
     "npm:randomfill@1.0.3": {
       "map": {
-        "randombytes": "npm:randombytes@2.0.5",
+        "randombytes": "npm:randombytes@2.0.6",
         "safe-buffer": "npm:safe-buffer@5.1.1"
       }
     },
@@ -195,11 +191,6 @@ SystemJS.config({
         "inherits": "npm:inherits@2.0.3",
         "safe-buffer": "npm:safe-buffer@5.1.1",
         "buffer-xor": "npm:buffer-xor@1.0.3"
-      }
-    },
-    "npm:randombytes@2.0.5": {
-      "map": {
-        "safe-buffer": "npm:safe-buffer@5.1.1"
       }
     },
     "npm:evp_bytestokey@1.0.3": {
@@ -246,7 +237,7 @@ SystemJS.config({
     "npm:browserify-rsa@4.0.1": {
       "map": {
         "bn.js": "npm:bn.js@4.11.8",
-        "randombytes": "npm:randombytes@2.0.5"
+        "randombytes": "npm:randombytes@2.0.6"
       }
     },
     "npm:miller-rabin@4.0.1": {
@@ -511,6 +502,18 @@ SystemJS.config({
       "map": {
         "readable-stream": "npm:readable-stream@2.3.3",
         "pako": "npm:pako@0.2.9"
+      }
+    },
+    "npm:cycle-onionify@5.0.0": {
+      "map": {
+        "@cycle/run": "npm:@cycle/run@4.1.0",
+        "@cycle/isolate": "npm:@cycle/isolate@3.2.0",
+        "xstream": "npm:xstream@11.1.0"
+      }
+    },
+    "npm:randombytes@2.0.6": {
+      "map": {
+        "safe-buffer": "npm:safe-buffer@5.1.1"
       }
     }
   }

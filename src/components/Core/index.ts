@@ -1,39 +1,23 @@
-/***
- * Typometer — typing-abilities speedometer
- *
- * Tracks instant accuracy and averaged speed on any text:
- * - instant accuracy is refined as you type.
- * - averaged speed is expressed as Words per minute, with a hardcoded
- *   convention of 5 letters per word.
- *
- * Formula: https://www.speedtypingonline.com/typing-equations
- *
- ***/
-
+import classnames from "classnames"
 import xs, { Stream } from "xstream"
-import delay from 'xstream/extra/delay'
-import { run } from "@cycle/run"
+import delay from "xstream/extra/delay"
 import isolate from "@cycle/isolate"
 import { h, h1, h2, div, p, span, input,
   textarea, ul, li, table, thead, tbody, tr, th, td,
-  makeDOMDriver, VNode } from "@cycle/dom"
-import classnames from "classnames"
+  VNode } from "@cycle/dom"
 
-import TargetText from "./models/target_text"
-import * as Model from './model'
-import NewTextAction from "./actions/new_text"
-import TypingAction from "./actions/typing"
+import * as Model from "model"
+import TargetText from "models/target_text"
+import NewTextAction from "actions/new_text"
+import TypingAction from "actions/typing"
 
-import CustomText from "./components/custom_text"
-import LiveText from "./components/live_text"
-import ReplayTyping from "./components/replay_typing"
-
-
+import CustomText from "components/custom_text"
+import LiveText from "components/live_text"
+import ReplayTyping from "components/replay_typing"
 
 
 const default_text = "Ils se trouvaient dans la salle de radio - dont l'appareillage, par mille détails subtils, donnait déjà l'impression d'être démodé pour être resté inutilisé pendant dix ans avant leur arrivée. Oui, dix ans, sur le plan technique, cela comptait énormément. Il suffisait de comparer Speedy au modèle de 2005. Mais on en était arrivé au stade où les robots se perfectionnaient à une allure ultrarapide. Powell posa un doigt hésitant sur une surface métallique qui avait conservé son poli. L'atmosphère d’abandon qui imprégnait tous les objets contenus dans la pièce - et la Station tout entière - avait quelque chose d’infiniment déprimant."
 Model.Singleton.set({text: new TargetText(default_text)})
-
 
 
 // Intent: computes mutation proposals based on raw events.
@@ -54,7 +38,6 @@ function intent(sources) {
 }
 
 
-
 // Model: mutates app state based on proposed mutation.
 function model(mutation_proposal$) {
   return mutation_proposal$
@@ -64,13 +47,13 @@ function model(mutation_proposal$) {
     })
 }
 
-
 interface ViewSources {
   app_state$: Stream<Model.AppState>,
   custom_text$: Stream<VNode>,
   live_text$: Stream<VNode>,
   replay$: Stream<VNode>
 }
+
 
 // View: decorates app state and re-renders in place.
 function view(sources: ViewSources) {
@@ -184,10 +167,10 @@ function nap(app_state$) {
 }
 
 
-
 // Main: wires everything up using circular streams.
 // Note: next-action-predicates bypass the intent() layer by design.
-function main(sources) {
+export default function Core(sources) {
+  // TODO: sources.onion.state$
   let app_state$ = xs.create()
   let custom_text_bus$ = xs.create()
   const action$ = intent({...sources, ...{app_state$: app_state$, CUSTOM_TEXT: custom_text_bus$}})
@@ -214,25 +197,3 @@ function main(sources) {
     NAP: nap$ // next-action-predicate aka. internal side-effects
   }
 }
-
-
-
-// The NAP driver is merely a proxy for pre-computed side-effects aka. triggered
-// mutation proposals.
-function makeNAPDriver() {
-  return function NAPDriver(side_effect$) {
-    return side_effect$
-  }
-}
-
-
-
-// Drivers: raw events streams hooked with the intent layer through main().
-const drivers = {
-  DOM: makeDOMDriver('.main'),
-  NAP: makeNAPDriver()
-}
-
-
-
-run(main, drivers);

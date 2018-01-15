@@ -22,7 +22,7 @@ d'avoir tout le temps le dernier a et le dernier r, pour reconstruire la vue.
 import xs, { Stream } from "xstream"
 import { div, span, a, input, h3, VNode } from "@cycle/dom"
 
-import { AppState, Singleton } from "../model"
+import { AppState, Singleton } from "model"
 
 interface Sources {
   app_state$: Stream<AppState>,

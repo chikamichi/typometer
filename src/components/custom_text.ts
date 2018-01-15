@@ -2,7 +2,7 @@ import xs, { Stream } from "xstream"
 import { div, h2, input, textarea, label, VNode } from "@cycle/dom"
 import classnames from "classnames"
 
-import { AppState } from "../model"
+import { AppState } from "model"
 
 
 interface Sources {

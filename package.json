@@ -8,6 +8,7 @@
       "@cycle/isolate": "npm:@cycle/isolate@^3.2.0",
       "@cycle/run": "npm:@cycle/run@^4.1.0",
       "classnames": "npm:classnames@^2.2.5",
+      "cycle-onionify": "npm:cycle-onionify@^5.0.0",
       "xstream": "npm:xstream@^11.1.0"
     },
     "devDependencies": {
@@ -78,6 +79,7 @@
     "browserify": "^14.5.0",
     "gulp": "^3.9.1",
     "gulp-typescript": "^3.2.3",
+    "jspm": "^0.17.0-beta.47",
     "jspm-dev-server": "^0.4.1",
     "systemjs": "^0.20.19",
     "tsify": "^3.0.4",

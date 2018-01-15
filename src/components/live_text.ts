@@ -2,7 +2,7 @@ import xs, { Stream } from "xstream"
 import { h, p, span, VNode } from "@cycle/dom"
 import classnames from "classnames"
 
-import { AppState, Singleton } from "../model"
+import { AppState, Singleton } from "model"
 
 interface Sources {
   app_state$: Stream<AppState>,

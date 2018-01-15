@@ -1,6 +1,6 @@
 import xs from "xstream"
 
-import * as Model from '../model'
+import * as Model from "model"
 
 // TypingAction: handles actions related to the user typing text.
 export default class TypingAction {
