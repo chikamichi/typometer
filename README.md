@@ -22,7 +22,6 @@ http-server -c-1 -S -C cert.pem -K key.pem -o # Go to https://0.0.0.0:8080/
 
 #### User experience
 
-* Fix `tabindex` (or use a different technic) to allow for a fullfledged keyboard-centric UX.
 * Self-replay: add an option to replicate own typing rythm entirely.
 * Expand metrics/records — some requiring updated-while-typing computations:
   * Longest perfect accuracy series

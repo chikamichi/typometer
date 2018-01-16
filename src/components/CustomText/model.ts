@@ -13,7 +13,7 @@ export default function model(actions): Stream<Reducer> {
       }
       return {
         ...state,
-        text: text
+        text
       }
     })
 
@@ -25,12 +25,26 @@ export default function model(actions): Stream<Reducer> {
       }
       return {
         ...INITIAL_APP_STATE,
-        text: text
+        text
       }
     })
 
+  const toggleEditor$ = actions.toggleEditor$
+    .map(toggling => function openEditor(state) {
+      const text = {
+        ...state.text,
+        editing: toggling
+      }
+      return {
+        ...state,
+        text
+      }
+    })
+
+
   return xs.merge(
     focusChange$,
-    blur$
+    blur$,
+    toggleEditor$
   )
 }
