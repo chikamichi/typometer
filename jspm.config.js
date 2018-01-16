@@ -40,6 +40,10 @@ SystemJS.config({
     "app/components/LiveText": {
       "defaultExtension": "ts",
       "main": "index.ts"
+    },
+    "app/components/Metrics": {
+      "defaultExtension": "ts",
+      "main": "index.ts"
     }
   }
 });

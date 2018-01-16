@@ -4,11 +4,11 @@ import { h, h1, h2, div, table, thead, tbody, tr, th, td } from "@cycle/dom"
 
 import { AppState, Sources, Sinks, Reducer } from "types"
 import { INITIAL_APP_STATE } from "utils"
-import TargetText from "models/target_text"
-// import NewTextAction from "actions/new_text"
+import Model from "model"
 
 import CustomText from "components/CustomText"
 import LiveText from "components/LiveText"
+import Metrics from "components/Metrics"
 // import ReplayTyping from "components/replay_typing"
 
 
@@ -29,11 +29,9 @@ function model(actions) {
 
 // View: decorates app state and re-renders in place.
 // TODO: add metricsVDom$
-function view(liveTextVDom$, customTextVDom$) {
-  return xs.combine(liveTextVDom$, customTextVDom$)
-    .map(([liveText, customText]) => {
-    // TODO: decorate
-//   ).map(([app_state, ...remainder]) => [(new Model.Decorator(app_state)).decorate(), ...remainder])
+function view(liveTextVDom$, customTextVDom$, metricsVDom$) {
+  return xs.combine(liveTextVDom$, customTextVDom$, metricsVDom$)
+    .map(([liveText, customText, metrics]) => {
       return div('.typing-app.ta', [
         div('.ta-side', [
           h1('.ta-title', 'typometer'),
@@ -46,28 +44,7 @@ function view(liveTextVDom$, customTextVDom$) {
         div('.ta-main', [
 
           div('.ta-header', [
-
-            table('.ta-metrics', [
-              thead('.ta-metrics__types', [
-                tr([
-                  th('Metrics:'),
-                  th('Accuracy'),
-                  th('WPM')
-                ])
-              ]),
-              // tbody('.ta-metrics__values', [
-              //   tr('.ta-metrics__best', [
-              //     td('.ta-metrics__best-value', 'Best:'),
-              //     td('.ta-metric  .ta-metric--accuracy  .ta-metric__best-value  .ta-metric__best-value--accuracy', attributes.records.accuracy + '%'),
-              //     td('.ta-metric  .ta-metric--wpm  .ta-metric__best-value  .ta-metric__best-value--wpm', attributes.records.wpm)
-              //   ]),
-              //   tr('.ta-metrics__current', [
-              //     td('.ta-metrics__current-value', 'Current:'),
-              //     td('.ta-metric  .ta-metric--accuracy  .ta-metric__current-value  .ta-metric__current-value--accuracy', attributes.accuracy + '%'),
-              //     td('.ta-metric  .ta-metric--wpm  .ta-metric__current-value  .ta-metric__current-value--wpm', attributes.wpm),
-              //   ])
-              // ])
-            ])
+            metrics
 
             // div(classnames('.ta-progress .ta-progress--done', {'.u-wip': !attributes.done}), ' Done!')
 
@@ -167,22 +144,33 @@ export default function Core(sources: Sources): Sinks {
   const parentReducer$ = model(actions)
   const napReducer$ = nap(state$)
 
+  // CustomText
   const CustomTextLens = {
     get: (state) => state,
-    set: (prevState, componentState) => componentState
+    set: (_, componentState) => componentState
   }
   const customTextSinks = isolate(CustomText, {onion: CustomTextLens})(sources)
 
+  // LiveText
   const LiveTextLens = {
     get: (state) => state,
-    set: (prevState, componentState) => componentState
+    set: (_, componentState) => componentState
   }
   const liveTextSinks = isolate(LiveText, {onion: LiveTextLens})(sources)
 
+  // Metrics
+  const MetricsLens = {
+    get: (state) => state,
+    set: (_, componentState) => componentState
+  }
+  const metricsSinks = isolate(Metrics, {onion: MetricsLens})(sources)
+
   const componentsReducer$ = xs.merge(
     customTextSinks.onion,
-    liveTextSinks.onion
+    liveTextSinks.onion,
+    metricsSinks.onion
   )
+
   const reducer$ = xs.merge(
     parentReducer$,
     napReducer$,
@@ -191,7 +179,8 @@ export default function Core(sources: Sources): Sinks {
 
   const vdom$ = view(
     liveTextSinks.DOM,
-    customTextSinks.DOM
+    customTextSinks.DOM,
+    metricsSinks.DOM
   )
 
   return {

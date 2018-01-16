@@ -1,5 +1,4 @@
 import Model from "model"
-import TargetText from "models/target_text"
 
 import { Sources, Sinks } from "types"
 import intent from "./intent"

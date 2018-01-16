@@ -5,6 +5,7 @@ import classnames from "classnames"
 import { AppState, Sources, Sinks, Reducer, CharState } from "types"
 import TargetText from "models/target_text"
 import TypingAction from "actions/typing"
+import Model from "model"
 
 // interface Sources {
 //   app_state$: Stream<AppState>,
@@ -29,14 +30,15 @@ function build_char(char: CharState): VNode {
 function intent(sources: Sources) {
   return {
     newChar$: sources.DOM
-    .select('document').events('keydown')
-    .filter(e => !/^(Dead)/.test(e.key))
-    .filter(e => !/^(Tab|Control|Alt|Shift|Meta).*/.test(e.code))
-    .map(e => e.key)
+      .select('document').events('keydown')
+      .debug()
+      .filter(e => !/^(Dead)/.test(e.key))
+      .filter(e => !/^(Tab|Control|Alt|Shift|Meta).*/.test(e.code))
+      .map(e => e.key)
   }
 }
-//
-//
+
+
 function model(actions): Stream<Reducer> {
   return actions.newChar$
     .map(newChar => {

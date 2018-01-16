@@ -48,8 +48,12 @@ export interface CharState {
   isReplayed: boolean
 }
 
-export interface DecoratedAppState extends AppState {
+export interface DecoratedRunMetrics extends RunMetrics {
   accuracy: number,
   wpm: number,
   done: boolean
+}
+
+export interface DecoratedAppState extends AppState {
+  metrics: DecoratedRunMetrics
 }
