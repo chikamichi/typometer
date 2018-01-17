@@ -12,51 +12,6 @@ First few commits are based upon https://egghead.io/lessons/rxjs-separate-logic-
 http-server -c-1 -S -C cert.pem -K key.pem -o # Go to https://0.0.0.0:8080/
 ```
 
-## TODO
-
-### App
-
-#### Internal
-
-* Compute run's metrics using models/records.ts (rename to models/Records.ts), providing state$.currentLast() as the stream to fold over
-* Implement a buffer for character detection, to solve combined characters issues: ^e should be detected as ê, same for ï, etc.
-* Bug: when the editor is open, clicking anywhere but in the textarea closes and updates the text
-
-#### User experience
-
-* Self-replay: add an option to replicate own typing rythm entirely.
-* Expand metrics/records — some requiring updated-while-typing computations:
-  * Longest perfect accuracy series
-  * Words (actual words) hit/total (ie. words nailed on first try)
-  * Total time
-  * Mean time-to-press (how much time before the user typed the next character)
-  * Most frequent innacurate characters
-  * % faster/slower than beat
-* Cache text with at least one try:
-  * Cache the app state in the browser for re-use (could be an heavy object, better done in a backend db).
-  * Add a UI for the user to browse through saved states and reuse them in the app.
-* Turn current app state stream into graphs.
-* [maybe?] Add a "free-typing" mode where an error doesn't have to be fixed, ie. the user may keep on typing or may fix that one last incorrect letter. No WPM/records computed I guess.
-* [maybe?] Embed a collection of text in French and English, possibly other (roman) languages.
-* Bind Shift-Enter the same as Escape.
-* Somehow ignore combination keys such as Ctrl+…
-* Challenge / gameplay mode:
-  * During replay, set a marker at first previous error, possibly at next error, etc.
-  * Limit number of (real) words displayed in advance.
-  * On/off voice over.
-* CSS Light theme: use black on beige for .ta-content
-* Allow toggling the sidebar. Folded sidebar should simply show setting name with value on top, and "t" as the main logo.
-* Rework Edit mode: simply edit in place. Set the same font styling in the textarea, just change the theming. Move the "Edit text" CTA to the top-right corner, like a tab. Use it to convey the fact Edit mode is active.
-* WPM setting should convey insights: what is a low, average, good, excellent WPM? What is the world-record? Once we have a history of personnal record, also display how far behind/above the current WPM is, in percentage.
-* Using document.hasFocus(), toggle carret blinking.
-* Clear "Best" metrics (records)
-
-### Stack
-
-* Import CSS and assets using SystemJS?
-* Create a production build by transpiling server-side, etc.
-* Speed up dev feedback loop @see JSPM.
-
 ## Installation
 
 Part of the experiment was to cover setting up a project with Typescript, ES6 and SystemJS.
