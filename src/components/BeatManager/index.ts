@@ -13,8 +13,8 @@ export default function BeatManager(sources) {
     .filter(state => Model(state).isNew() || Model(state).isSuccess())
 
   const beat$$ = xs.combine(wpm$, run$)
-    .map(([wpm, _]) => {
-      const beat = new TypingBeat(wpm)
+    .map(([wpm, state]) => {
+      const beat = new TypingBeat(wpm, state.text.raw.length)
       return xs.create(beat.producer)
     })
 
