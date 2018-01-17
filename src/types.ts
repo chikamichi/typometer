@@ -30,6 +30,7 @@ export interface RunMetrics {
 }
 
 export interface TypingRecords {
+  pending: boolean,
   accuracy: number,
   wpm: number
 }

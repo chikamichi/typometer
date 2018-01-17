@@ -57,13 +57,12 @@ class SuperState {
     if (this.isNew())
       metricsMutation['start'] = new Date()
 
-
     if (this.isValidChar(char)) {
       metricsMutation['valid_nb'] = m.valid_nb + 1
 
-      if (this.isAboutDone()) {
+      if (this.isAboutDone())
         metricsMutation['stop'] = new Date()
-      }
+
     } else {
       metricsMutation['errors_nb'] = m.errors_nb + 1
       metricsMutation['error'] = m.error || ''
@@ -141,6 +140,10 @@ class SuperState {
     return !!m.start && !!m.stop // !! Date -> boolean logic
   }
 
+  public hasNoStats(): boolean {
+    return this.state.records.pending
+  }
+
   // Running, has error(s).
   public hasError(): boolean {
     const m = this.state.metrics
@@ -180,16 +183,16 @@ export class Decorator {
 
   // private compute_accuracy(attributes?: AppState): number {
   // const a = attributes || this.model
-  private compute_accuracy(): number {
-    const m = this.model
+  private compute_accuracy(state?: AppState): number {
+    const m = state || this.model
     if (m.isNew()) return 0
     return Math.round((1 - m.state.metrics.errors_nb / m.state.metrics.keystrokes_nb) * 100)
   }
 
   // private compute_wpm(attributes?: AppState): number {
   //   const a = attributes || this.model
-  private compute_wpm(): number {
-    const m = this.model
+  private compute_wpm(state?: AppState): number {
+    const m = state || this.model
     if (!m.hasStopped()) return 0
     // nb_words takes into account errors, as keystrokes_nb does not distinguish
     // between valid and invalid characters. This is by design so the WPM is
@@ -222,7 +225,7 @@ export class Decorator {
   //   record$.unsubscribe()
   //   return record
   // }
-  //
+
   // public compute_records(): TypingRecords {
   //   return {
   //     accuracy: this.get_max('accuracy', this.compute_accuracy),

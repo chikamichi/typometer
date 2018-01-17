@@ -28,6 +28,10 @@ function processEscape(state: AppState): AppState {
       text: {
         ...INITIAL_APP_STATE.text,
         raw: t.raw
+      },
+      records: {
+        ...state.records,
+        pending: true
       }
     }
   }
