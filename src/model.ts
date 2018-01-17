@@ -113,22 +113,37 @@ class SuperState {
   //   return !!this.state.start && this.state.keystrokes_nb == 1
   // }
 
+  // Basically done successfully and halted, but on next "frame" update.
+  // Useful in edge cases.
   public isAboutDone(): boolean {
     const t = this.state.text
     const m = this.state.metrics
     return t.raw.length == m.valid_nb + 1 && !m.stop
   }
 
-  public isDone(): boolean {
+  // Done successfully and halted.
+  public isSuccess(): boolean {
     const t = this.state.text
     const m = this.state.metrics
-    return t.raw.length == m.valid_nb && !m.stop
+    return t.raw.length == m.valid_nb
   }
 
+  // Done successfully but not yet halted.
+  public isDone(): boolean {
+    const m = this.state.metrics
+    return this.isSuccess() && !m.stop
+  }
+
+  // Halted, no matter the outcome.
   public hasStopped(): boolean {
     const m = this.state.metrics
-    const res = !!m.start && !!m.stop // !! Date -> boolean logic
-    return res
+    return !!m.start && !!m.stop // !! Date -> boolean logic
+  }
+
+  // Running, has error(s).
+  public hasError(): boolean {
+    const m = this.state.metrics
+    return !!m.error
   }
 
   public decorate(): DecoratedAppState {

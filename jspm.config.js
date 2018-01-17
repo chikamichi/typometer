@@ -33,6 +33,10 @@ SystemJS.config({
       "defaultExtension": "ts",
       "main": "index.ts"
     },
+    "app/components/Content": {
+      "defaultExtension": "ts",
+      "main": "index.ts"
+    },
     "app/components/CustomText": {
       "defaultExtension": "ts",
       "main": "index.ts"

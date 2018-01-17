@@ -44,7 +44,8 @@
 
 * {
   box-sizing: border-box;
-  font-family: 'Roboto'
+  font-family: 'Roboto';
+  outline: none;
 }
 
 html {
@@ -110,6 +111,16 @@ a, a:visited {
   color: white;
 }
 
+.ta-main .ta-text-status--success {
+  background: darkslategray;
+  transition: background-color 0.3s;
+}
+
+.ta-main .ta-text-status--failed {
+  background: darkred;
+  transition: background-color 5s;
+}
+
 .ta-header {
   padding: 10px;
   background: white;
@@ -132,7 +143,6 @@ a, a:visited {
 .ta-target-text {
   flex-grow: 1;
   margin: 0;
-  outline: none;
 }
 
 .ta-custom-text {
@@ -140,8 +150,14 @@ a, a:visited {
   opacity: 0.6;
 }
 
+.ta-custom-text__edit {
+  margin-bottom: 0;
+  font-size: 1.2em;
+}
+
 .ta-custom-text > textarea {
   display: none;
+  margin-top: 1em;
   padding: 0.5em 0.8em;
   width: 100%;
   resize: vertical;
@@ -157,9 +173,6 @@ a, a:visited {
 .ta-custom-text > textarea:focus {
   opacity: 1;
 }
-
-/* TODO: implement in JS of course */
-/*.ta-custom-text__toggler:checked + textarea { display: none; }*/
 
 .ta-metrics {
   font-size: 0.75em;

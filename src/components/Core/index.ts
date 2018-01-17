@@ -1,13 +1,11 @@
 import xs from "xstream"
 import isolate from "@cycle/isolate"
-import { h, h1, h2, div, table, thead, tbody, tr, th, td } from "@cycle/dom"
+import { h1, h2, div } from "@cycle/dom"
 
-import { AppState, Sources, Sinks, Reducer } from "types"
+import { AppState, Sources, Sinks } from "types"
 import { INITIAL_APP_STATE } from "utils"
-import Model from "model"
 
-import CustomText from "components/CustomText"
-import LiveText from "components/LiveText"
+import Content from "components/Content"
 import Metrics from "components/Metrics"
 // import ReplayTyping from "components/replay_typing"
 
@@ -28,10 +26,9 @@ function model(actions) {
 }
 
 // View: decorates app state and re-renders in place.
-// TODO: add metricsVDom$
-function view(liveTextVDom$, customTextVDom$, metricsVDom$) {
-  return xs.combine(liveTextVDom$, customTextVDom$, metricsVDom$)
-    .map(([liveText, customText, metrics]) => {
+function view(contentVDom$, metricsVDom$) {
+  return xs.combine(contentVDom$, metricsVDom$)
+    .map(([content, metrics]) => {
       return div('.typing-app.ta', [
         div('.ta-side', [
           h1('.ta-title', 'typometer'),
@@ -50,10 +47,7 @@ function view(liveTextVDom$, customTextVDom$, metricsVDom$) {
 
           ]), // .ta-header
 
-          div('.ta-content', [
-            liveText,
-            customText
-          ]), // .ta-content
+          content
 
         ]) // .ta-main
 
@@ -144,19 +138,12 @@ export default function Core(sources: Sources): Sinks {
   const parentReducer$ = model(actions)
   const napReducer$ = nap(state$)
 
-  // CustomText
-  const CustomTextLens = {
+  // Content
+  const ContentLens = {
     get: (state) => state,
     set: (_, componentState) => componentState
   }
-  const customTextSinks = isolate(CustomText, {onion: CustomTextLens})(sources)
-
-  // LiveText
-  const LiveTextLens = {
-    get: (state) => state,
-    set: (_, componentState) => componentState
-  }
-  const liveTextSinks = isolate(LiveText, {onion: LiveTextLens})(sources)
+  const contentSinks = isolate(Content, {onion: ContentLens})(sources)
 
   // Metrics
   const MetricsLens = {
@@ -166,8 +153,7 @@ export default function Core(sources: Sources): Sinks {
   const metricsSinks = isolate(Metrics, {onion: MetricsLens})(sources)
 
   const componentsReducer$ = xs.merge(
-    customTextSinks.onion,
-    liveTextSinks.onion,
+    contentSinks.onion,
     metricsSinks.onion
   )
 
@@ -178,8 +164,7 @@ export default function Core(sources: Sources): Sinks {
   )
 
   const vdom$ = view(
-    liveTextSinks.DOM,
-    customTextSinks.DOM,
+    contentSinks.DOM,
     metricsSinks.DOM
   )
 

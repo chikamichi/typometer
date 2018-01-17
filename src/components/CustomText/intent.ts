@@ -7,7 +7,7 @@ export default function intent(domSource: DOMSource) {
     .filter(e => (e.key == "F2") || (e.key == "Enter" && e.ctrlKey))
 
   const toggleEditorByClicking$ = domSource
-    .select('.toto').events('click')
+    .select('.ta-custom-text__edit').events('click')
 
   return {
     focus$: domSource.select('textarea').events('focus').mapTo(true),

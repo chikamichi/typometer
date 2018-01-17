@@ -26,7 +26,6 @@ function build_char(char: CharState): VNode {
 }
 
 
-// TODO: extract newChar intent from Core to this component
 function intent(sources: Sources) {
   return {
     newChar$: sources.DOM
