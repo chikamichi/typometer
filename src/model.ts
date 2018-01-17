@@ -11,38 +11,6 @@ class SuperState {
     this.state = state
   }
 
-  // public stop() {
-  //   return {
-  //     ...this.state,
-  //     ...{
-  //       stop: new Date()
-  //     }
-  //   }
-  // }
-
-  // public clear_mutation(text?: TargetText, opts = {}): AppState {
-  //   const options = {
-  //     ...{
-  //       records: true
-  //     },
-  //     opts
-  //   }
-  //   const records = (new Decorator(this.state)).compute_records()
-  //   return {
-  //     ...INITIAL_APP_STATE,
-  //     ...{
-  //       text: text || this.state.text,
-  //       records: options.records ? records : {}
-  //     }
-  //   }
-  // }
-
-  // public clear(text?: TargetText, opts = {}): AppState {
-  //   const clear_state = this.clear_mutation(text, opts)
-  //   this.state$.shamefullySendNext(clear_state)
-  //   return this.state
-  // }
-
   public newCharMutation(char: string): AppState {
     let m = this.state.metrics
     let metricsMutation = {}
@@ -177,20 +145,12 @@ export class Decorator {
     }
   }
 
-  // get word_length(): number {
-  //   return 5
-  // }
-
-  // private compute_accuracy(attributes?: AppState): number {
-  // const a = attributes || this.model
   private compute_accuracy(state?: AppState): number {
     const m = state || this.model
     if (m.isNew()) return 0
     return Math.round((1 - m.state.metrics.errors_nb / m.state.metrics.keystrokes_nb) * 100)
   }
 
-  // private compute_wpm(attributes?: AppState): number {
-  //   const a = attributes || this.model
   private compute_wpm(state?: AppState): number {
     const m = state || this.model
     if (!m.hasStopped()) return 0
@@ -202,34 +162,4 @@ export class Decorator {
     const elapsed = (m.state.metrics.stop.getTime() - m.state.metrics.start.getTime()) / 1000.0 / 60.0 // ms -> mn
     return Math.round(nb_words / elapsed)
   }
-
-  // Fetch the max value for a specific attribute as cached over time.
-  // Decoration attributes are dynamically computed.
-  // private get_max(key: string, f?: (attributes?: AppState) => number): number {
-  //   const a$ = this.model.attributes$
-  //   let record, last
-  //   const last$ = a$
-  //     .fold((_, attributes) => attributes.records[key], 0)
-  //     .subscribe({next: value => last = value})
-  //   // It's important to unsubscribe ie. destroy stream$ otherwise the
-  //   // computation would be triggered each time a new event is forwarded by
-  //   // this.model.attributes$, with multiple stream$ objects piling up as
-  //   // compute_record() is called.
-  //   last$.unsubscribe()
-  //   const record$ = a$
-  //     .fold((max, attributes) => {
-  //       const new_val = f ? f(attributes) : attributes[key]
-  //       return new_val > max ? new_val : max
-  //     }, last || 0)
-  //     .subscribe({next: value => record = value})
-  //   record$.unsubscribe()
-  //   return record
-  // }
-
-  // public compute_records(): TypingRecords {
-  //   return {
-  //     accuracy: this.get_max('accuracy', this.compute_accuracy),
-  //     wpm: this.get_max('wpm', this.compute_wpm)
-  //   }
-  // }
 }
