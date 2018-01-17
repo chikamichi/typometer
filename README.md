@@ -18,7 +18,9 @@ http-server -c-1 -S -C cert.pem -K key.pem -o # Go to https://0.0.0.0:8080/
 
 #### Internal
 
+* Compute run's metrics using models/records.ts (rename to models/Records.ts), providing state$.currentLast() as the stream to fold over
 * Implement a buffer for character detection, to solve combined characters issues: ^e should be detected as ê, same for ï, etc.
+* Bug: when the editor is open, clicking anywhere but in the textarea closes and updates the text
 
 #### User experience
 
@@ -47,6 +49,7 @@ http-server -c-1 -S -C cert.pem -K key.pem -o # Go to https://0.0.0.0:8080/
 * Rework Edit mode: simply edit in place. Set the same font styling in the textarea, just change the theming. Move the "Edit text" CTA to the top-right corner, like a tab. Use it to convey the fact Edit mode is active.
 * WPM setting should convey insights: what is a low, average, good, excellent WPM? What is the world-record? Once we have a history of personnal record, also display how far behind/above the current WPM is, in percentage.
 * Using document.hasFocus(), toggle carret blinking.
+* Clear "Best" metrics (records)
 
 ### Stack
 
