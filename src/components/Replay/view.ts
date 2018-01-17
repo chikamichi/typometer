@@ -9,7 +9,7 @@ export default function view(sources) {
     .map(([state, wpm]) => [Model(state), wpm])
     .map(([state, wpm]) =>
       div('.ta-setting  .ta-replay-settings', [
-        h3([
+        h3('.ta-setting__title', [
           a({attrs: {href: "https://en.wikipedia.org/wiki/Words_per_minute", target: "_blank"}}, [
             span({attrs: {title: "Words per minute"}}, 'WPM'),
           ])
@@ -19,7 +19,7 @@ export default function view(sources) {
             attrs: {
               type: 'range',
               min: 1,
-              max: 250,
+              max: 150,
               disabled: !state.isNew()
             }
           }),
