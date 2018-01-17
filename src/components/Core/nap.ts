@@ -3,7 +3,7 @@ import delay from "xstream/extra/delay"
 
 import { AppState, Reducer } from "types"
 import Model from "model"
-import Records from "models/records"
+import Records from "models/Records"
 
 // Next-action-predicate aka. internal side-effect handler.
 //
