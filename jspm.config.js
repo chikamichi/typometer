@@ -48,6 +48,14 @@ SystemJS.config({
     "app/components/Metrics": {
       "defaultExtension": "ts",
       "main": "index.ts"
+    },
+    "app/components/BeatManager": {
+      "defaultExtension": "ts",
+      "main": "index.ts"
+    },
+    "app/components/Replay": {
+      "defaultExtension": "ts",
+      "main": "index.ts"
     }
   }
 });

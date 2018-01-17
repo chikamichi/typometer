@@ -1,15 +1,16 @@
 import xs from "xstream"
 import { h1, h2, div } from "@cycle/dom"
 
-export default function view(contentVDom$, metricsVDom$) {
-  return xs.combine(contentVDom$, metricsVDom$)
-    .map(([content, metrics]) => {
+export default function view(contentVDom$, replayVDom$, metricsVDom$) {
+  return xs.combine(contentVDom$, replayVDom$, metricsVDom$)
+    .map(([content, replaySettings, metrics]) => {
       return div('.typing-app.ta', [
         div('.ta-side', [
           h1('.ta-title', 'typometer'),
           div('.ta-settings', [
             h2('Settings'),
             // h(replay_settings.sel, replay_settings.data, replay_settings.children),
+            replaySettings
           ])
         ]), // .ta-side
 

@@ -29,6 +29,7 @@ http-server -c-1 -S -C cert.pem -K key.pem -o # Go to https://0.0.0.0:8080/
   * Total time
   * Mean time-to-press (how much time before the user typed the next character)
   * Most frequent innacurate characters
+  * % faster/slower than beat
 * Cache text with at least one try:
   * Cache the app state in the browser for re-use (could be an heavy object, better done in a backend db).
   * Add a UI for the user to browse through saved states and reuse them in the app.

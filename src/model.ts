@@ -109,9 +109,10 @@ class SuperState {
   // }
 
   // // Upon first character
-  // public hasJustStarted(): boolean {
-  //   return !!this.state.start && this.state.keystrokes_nb == 1
-  // }
+  public hasJustStarted(): boolean {
+    const m = this.state.metrics
+    return !!m.start && m.keystrokes_nb == 1
+  }
 
   // Basically done successfully and halted, but on next "frame" update.
   // Useful in edge cases.
@@ -150,9 +151,8 @@ class SuperState {
     return (new Decorator(this)).decorate()
   }
 }
-//
-//
-//
+
+
 export class Decorator {
   model: SuperState
 
