@@ -2,7 +2,7 @@ import classnames from "classnames"
 import { p, span, Stream, VNode } from "@cycle/dom"
 
 import { AppState, CharState } from "types"
-import TargetText from "models/target_text"
+import TargetText from "models/TargetText"
 
 
 function build_char(char: CharState): VNode {

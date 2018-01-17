@@ -1,6 +1,6 @@
 import xs from "xstream"
 
-import TargetText from "models/target_text"
+import TargetText from "models/TargetText"
 import Model from "model"
 
 export default class NewTextAction {
