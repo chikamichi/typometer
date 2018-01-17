@@ -8,7 +8,7 @@ export default function model(actions): Stream<Reducer> {
   const focusChange$ = actions.focus$
     .map(_ => function focusChange(state) {
       const text = {
-        ...INITIAL_APP_STATE.text,
+        ...state.text,
         editing: true
       }
       return {
@@ -40,7 +40,6 @@ export default function model(actions): Stream<Reducer> {
         text
       }
     })
-
 
   return xs.merge(
     focusChange$,
