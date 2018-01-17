@@ -12,22 +12,18 @@
 
 import { makeDOMDriver } from "@cycle/dom"
 import { run } from "@cycle/run"
+import onionify from "cycle-onionify"
 
 import Core from "components/Core"
 
 
-// The NAP driver is merely a proxy for pre-computed side-effects aka. triggered
-// mutation proposals.
-function makeNAPDriver() {
-  return function NAPDriver(side_effect$) {
-    return side_effect$
-  }
-}
+const main = onionify(Core)
+
 
 // Drivers: raw events streams hooked with the intent layer through main().
 const drivers = {
-  DOM: makeDOMDriver('.main'),
-  NAP: makeNAPDriver()
+  DOM: makeDOMDriver('.main')
 }
 
-run(Core, drivers);
+
+run(main, drivers);

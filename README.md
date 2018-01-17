@@ -18,13 +18,10 @@ http-server -c-1 -S -C cert.pem -K key.pem -o # Go to https://0.0.0.0:8080/
 
 #### Internal
 
-* Use [cycle-onionify](https://github.com/staltz/cycle-onionify) to handle app's global state and components' inner state.
 * Implement a buffer for character detection, to solve combined characters issues: ^e should be detected as ê, same for ï, etc.
 
 #### User experience
 
-* Do not compute records upon cancelling (ESC).
-* Fix `tabindex` (or use a different technic) to allow for a fullfledged keyboard-centric UX.
 * Self-replay: add an option to replicate own typing rythm entirely.
 * Expand metrics/records — some requiring updated-while-typing computations:
   * Longest perfect accuracy series
@@ -32,6 +29,7 @@ http-server -c-1 -S -C cert.pem -K key.pem -o # Go to https://0.0.0.0:8080/
   * Total time
   * Mean time-to-press (how much time before the user typed the next character)
   * Most frequent innacurate characters
+  * % faster/slower than beat
 * Cache text with at least one try:
   * Cache the app state in the browser for re-use (could be an heavy object, better done in a backend db).
   * Add a UI for the user to browse through saved states and reuse them in the app.

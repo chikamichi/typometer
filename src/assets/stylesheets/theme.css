@@ -44,7 +44,8 @@
 
 * {
   box-sizing: border-box;
-  font-family: 'Roboto'
+  font-family: 'Roboto';
+  outline: none;
 }
 
 html {
@@ -86,8 +87,18 @@ a, a:visited {
   font-size: 0.75em;
 }
 
+.ta-setting {
+  display: flex;
+}
+
+.ta-setting__title {
+  margin: 0;
+  padding-right: 1em;
+}
+
 .ta-setting-slider {
   display: flex;
+  flex-grow: 1;
 }
 
 .ta-setting__slider {
@@ -96,6 +107,7 @@ a, a:visited {
 
 .ta-setting__value {
   min-width: 3em;
+  padding-left: 1em;
   vertical-align: sub;
   font-weight: bold;
   font-size: 1.2em;
@@ -108,6 +120,16 @@ a, a:visited {
   flex-direction: column;
   background: #1E1E1E;
   color: white;
+}
+
+.ta-main .ta-text-status--success {
+  background: darkslategray;
+  transition: background-color 0.3s;
+}
+
+.ta-main .ta-text-status--failed {
+  background: darkred;
+  transition: background-color 5s;
 }
 
 .ta-header {
@@ -139,8 +161,14 @@ a, a:visited {
   opacity: 0.6;
 }
 
+.ta-custom-text__edit {
+  margin-bottom: 0;
+  font-size: 1.2em;
+}
+
 .ta-custom-text > textarea {
-  display: block;
+  display: none;
+  margin-top: 1em;
   padding: 0.5em 0.8em;
   width: 100%;
   resize: vertical;
@@ -149,12 +177,13 @@ a, a:visited {
   color: white;
 }
 
+.ta-custom-text.active > textarea {
+  display: block;
+}
+
 .ta-custom-text > textarea:focus {
   opacity: 1;
 }
-
-/* TODO: implement in JS of course */
-.ta-custom-text__toggler:checked + textarea { display: none; }
 
 .ta-metrics {
   font-size: 0.75em;
@@ -239,6 +268,10 @@ input[type=range].ta-slider {
   -webkit-appearance: none;
   width: 100%;
   margin: 8.55px 0;
+  transition: opacity 0.2s linear;
+}
+input[type=range].ta-slider:disabled {
+  opacity: 0.3;
 }
 input[type=range].ta-slider:focus {
   outline: none;

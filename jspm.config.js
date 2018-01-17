@@ -32,6 +32,30 @@ SystemJS.config({
     "app/components/Core": {
       "defaultExtension": "ts",
       "main": "index.ts"
+    },
+    "app/components/Content": {
+      "defaultExtension": "ts",
+      "main": "index.ts"
+    },
+    "app/components/CustomText": {
+      "defaultExtension": "ts",
+      "main": "index.ts"
+    },
+    "app/components/LiveText": {
+      "defaultExtension": "ts",
+      "main": "index.ts"
+    },
+    "app/components/Metrics": {
+      "defaultExtension": "ts",
+      "main": "index.ts"
+    },
+    "app/components/BeatManager": {
+      "defaultExtension": "ts",
+      "main": "index.ts"
+    },
+    "app/components/Replay": {
+      "defaultExtension": "ts",
+      "main": "index.ts"
     }
   }
 });
