@@ -1,11 +1,7 @@
-import xs, { Stream } from "xstream"
-import { h, p, span, VNode } from "@cycle/dom"
-import classnames from "classnames"
-
-import { AppState, Sources, Sinks, Reducer, CharState } from "types"
-import TargetText from "models/target_text"
-import TypingAction from "actions/typing"
-import Model from "model"
+import { Sources, Sinks } from "types"
+import intent from "./intent"
+import model from "./model"
+import view from "./view"
 
 // interface Sources {
 //   app_state$: Stream<AppState>,
@@ -13,47 +9,6 @@ import Model from "model"
 //     TICKS: Stream<number>
 //   }
 // }
-
-
-function build_char(char: CharState): VNode {
-  const kls = classnames('.ta-char', {
-    '.ta-char--valid': char.isValid,
-    '.ta-char--error': char.isError,
-    '.ta-char--replay': char.isReplayed,
-    '.ta-char--next': char.isNext
-  })
-  return span(kls, char.char)
-}
-
-
-function intent(sources: Sources) {
-  return {
-    newChar$: sources.DOM
-      .select('document').events('keydown')
-      .filter(e => !/^(Dead|F2)/.test(e.key))
-      .filter(e => !/^(Tab|Control|Alt|Shift|Meta).*/.test(e.code))
-      .map(e => e.key)
-  }
-}
-
-
-function model(actions): Stream<Reducer> {
-  return actions.newChar$
-    .map(newChar => {
-      return function newCharReducer(prevState) {
-        return TypingAction(newChar, prevState)
-      }
-    })
-}
-
-
-function view(state$: Stream<AppState>): Stream<VNode> {
-  return state$.map(state => {
-    const text = new TargetText(state.text.raw, state)
-    const chars = text.wrap(build_char)
-    return p('.ta-target-text', {attrs: {tabindex: 0}}, chars)
-  })
-}
 
 
 export default function LiveText(sources: Sources): Sinks {
