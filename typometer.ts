@@ -14,7 +14,7 @@ import { makeDOMDriver } from "@cycle/dom"
 import { run } from "@cycle/run"
 import onionify from "cycle-onionify"
 
-import Core from "components/Core"
+import Core from "typometer/components/Core"
 
 
 const main = onionify(Core)

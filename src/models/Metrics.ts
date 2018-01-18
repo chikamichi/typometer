@@ -1,7 +1,7 @@
 import { Stream } from "@cycle/dom"
 
-import { AppState, TypingRecords } from "types"
-import Model from "model"
+import { AppState, TypingRecords } from "typometer/types"
+import Model from "typometer/model"
 
 
 export default { // Metrics

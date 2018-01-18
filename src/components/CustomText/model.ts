@@ -1,7 +1,7 @@
 import xs, { Stream } from "xstream"
 
-import { Reducer } from "types"
-import { INITIAL_APP_STATE } from "utils"
+import { Reducer } from "typometer/types"
+import { INITIAL_APP_STATE } from "typometer/utils"
 
 
 export default function model(actions): Stream<Reducer> {

@@ -1,9 +1,9 @@
 import xs, { Stream } from "xstream"
 import delay from "xstream/extra/delay"
 
-import { AppState, Reducer } from "types"
-import Model from "model"
-import Metrics from "models/Metrics"
+import { AppState, Reducer } from "typometer/types"
+import Model from "typometer/model"
+import Metrics from "typometer/models/Metrics"
 
 
 // Next-action-predicate aka. internal side-effect handler.

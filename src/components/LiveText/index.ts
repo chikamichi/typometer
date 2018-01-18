@@ -1,4 +1,4 @@
-import { Sources, Sinks } from "types"
+import { Sources, Sinks } from "typometer/types"
 import intent from "./intent"
 import model from "./model"
 import view from "./view"

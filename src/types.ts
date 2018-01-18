@@ -1,5 +1,7 @@
 import { DOMSource, Stream, VNode } from "@cycle/dom"
-import { AppState } from "types"
+
+import { AppState } from "typometer/types"
+
 
 type Reducer = (prev?: AppState) => AppState | undefined
 

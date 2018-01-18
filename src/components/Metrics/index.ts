@@ -1,7 +1,7 @@
 import xs from "xstream"
-import Model from "model"
 
-import { Sources, Sinks } from "types"
+import Model from "typometer/model"
+import { Sources, Sinks } from "typometer/types"
 import view from "./view"
 
 
