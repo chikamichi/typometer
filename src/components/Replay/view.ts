@@ -1,7 +1,7 @@
 import xs from "xstream"
 import { div, span, h3, a, input } from "@cycle/dom"
 
-import Model from "typometer/model"
+import Model from "typometer/models/Model"
 
 
 export default function view(sources) {

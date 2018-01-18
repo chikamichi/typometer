@@ -2,7 +2,7 @@ import xs from "xstream"
 import isolate from "@cycle/isolate"
 
 import { Sources, Sinks } from "typometer/types"
-import Model from "typometer/model"
+import Model from "typometer/models/Model"
 import CustomText from "typometer/components/CustomText"
 import LiveText from "typometer/components/LiveText"
 import view from "./view"

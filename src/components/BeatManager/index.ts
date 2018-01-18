@@ -1,6 +1,6 @@
 import xs from "xstream"
 
-import Model from "typometer/model"
+import Model from "typometer/models/Model"
 import TypingBeat from "typometer/models/TypingBeat"
 
 export default function BeatManager(sources) {

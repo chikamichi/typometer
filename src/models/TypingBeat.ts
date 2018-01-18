@@ -1,3 +1,6 @@
+import { WORD_LENGTH } from "typometer/utils"
+
+
 export default class TypingBeat {
   period: number // ms
   duration: number
@@ -9,8 +12,7 @@ export default class TypingBeat {
   // => but that would be averaged, it'd be more interesting to have a replica
   // of rythm on top of mean speed => different technic required
   constructor(wpm, duration) {
-    // TODO: make 5 a global, WORD_LENGTH
-    this.period = Math.round(60000 / (wpm * 5))
+    this.period = Math.round(60000 / (wpm * WORD_LENGTH))
     this.duration = duration // expressed in "characters" unit
     this.counter = 0
   }

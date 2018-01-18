@@ -1,7 +1,8 @@
 import { Stream } from "@cycle/dom"
 
+import { WORD_LENGTH } from "typometer/utils"
 import { AppState, TypingRecords } from "typometer/types"
-import Model from "typometer/model"
+import Model from "typometer/models/Model"
 
 
 export default { // Metrics
@@ -45,7 +46,7 @@ function computeAccuracy(state: AppState): number {
 function computeWPM(state?: AppState): number {
   const model = Model(state)
   if (!model.isSuccess()) return 0
-  const nb_words = state.metrics.keystrokes_nb / 5
+  const nb_words = state.metrics.keystrokes_nb / WORD_LENGTH
   const elapsed = (state.metrics.stop.getTime() - state.metrics.start.getTime()) / 1000.0 / 60.0 // ms -> mn
   return Math.round(nb_words / elapsed)
 }
