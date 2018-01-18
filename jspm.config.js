@@ -22,7 +22,7 @@ SystemJS.config({
   },
   transpiler: "plugin-typescript",
   typescriptOptions: {
-    "tsconfig": "/tsconfig.json"
+    "tsconfig": true
   },
   packages: {
     "typometer": {
