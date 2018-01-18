@@ -1,8 +1,8 @@
 import xs, { Stream } from "xstream"
 
-import { Sources, Sinks } from "types"
-import Model from "model"
-import BeatManager from "components/BeatManager"
+import { Sources, Sinks } from "typometer/types"
+import Model from "typometer/model"
+import BeatManager from "typometer/components/BeatManager"
 import view from "./view"
 
 

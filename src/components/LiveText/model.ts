@@ -1,7 +1,7 @@
 import { Stream } from "xstream"
 
-import { Reducer } from "types"
-import TypingAction from "actions/TypingAction"
+import { Reducer } from "typometer/types"
+import TypingAction from "typometer/actions/TypingAction"
 
 
 export default function model(actions): Stream<Reducer> {

@@ -1,7 +1,7 @@
 import xs from "xstream"
 
-import { AppState, DecoratedAppState } from "types"
-import Metrics from "models/Metrics"
+import { AppState, DecoratedAppState } from "typometer/types"
+import Metrics from "typometer/models/Metrics"
 
 
 export default function Model(state) {

@@ -1,17 +1,18 @@
 SystemJS.config({
   baseURL: ".",
+  paths: {
+    "typometer/": "src/"
+  },
   browserConfig: {
     "paths": {
       "github:": "/jspm_packages/github/",
-      "npm:": "/jspm_packages/npm/",
-      "app/": "/src/"
+      "npm:": "/jspm_packages/npm/"
     }
   },
   nodeConfig: {
     "paths": {
       "github:": "jspm_packages/github/",
-      "npm:": "jspm_packages/npm/",
-      "app/": "/src/"
+      "npm:": "jspm_packages/npm/"
     }
   },
   devConfig: {
@@ -21,39 +22,38 @@ SystemJS.config({
   },
   transpiler: "plugin-typescript",
   typescriptOptions: {
-    tsconfig: "/tsconfig.json"
+    "tsconfig": true
   },
   packages: {
-    "app/": {
+    "typometer": {
+      "main": "typometer.ts",
       "defaultExtension": "ts"
     },
-    // tsconfig.json's moduleResolution set to "node" should take care of that,
-    // but for some reason it does not: TODO investigate
-    "app/components/Core": {
+    "typometer/components/Core": {
       "defaultExtension": "ts",
       "main": "index.ts"
     },
-    "app/components/Content": {
+    "typometer/components/Content": {
       "defaultExtension": "ts",
       "main": "index.ts"
     },
-    "app/components/CustomText": {
+    "typometer/components/CustomText": {
       "defaultExtension": "ts",
       "main": "index.ts"
     },
-    "app/components/LiveText": {
+    "typometer/components/LiveText": {
       "defaultExtension": "ts",
       "main": "index.ts"
     },
-    "app/components/Metrics": {
+    "typometer/components/Metrics": {
       "defaultExtension": "ts",
       "main": "index.ts"
     },
-    "app/components/BeatManager": {
+    "typometer/components/BeatManager": {
       "defaultExtension": "ts",
       "main": "index.ts"
     },
-    "app/components/Replay": {
+    "typometer/components/Replay": {
       "defaultExtension": "ts",
       "main": "index.ts"
     }

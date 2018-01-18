@@ -1,4 +1,4 @@
-import { Sources } from "types"
+import { Sources } from "typometer/types"
 
 export default function intent(sources: Sources) {
   return {

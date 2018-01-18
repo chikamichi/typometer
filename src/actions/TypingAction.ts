@@ -1,8 +1,8 @@
 import xs from "xstream"
 
-import Model from "model"
-import { AppState } from "types"
-import { INITIAL_APP_STATE } from "utils"
+import Model from "typometer/model"
+import { AppState } from "typometer/types"
+import { INITIAL_APP_STATE } from "typometer/utils"
 
 
 export default function TypingAction(char: string, state: AppState): AppState {

@@ -1,8 +1,8 @@
 import classnames from "classnames"
 import { p, span, Stream, VNode } from "@cycle/dom"
 
-import { AppState, CharState } from "types"
-import TargetText from "models/TargetText"
+import { AppState, CharState } from "typometer/types"
+import TargetText from "typometer/models/TargetText"
 
 
 function build_char(char: CharState): VNode {

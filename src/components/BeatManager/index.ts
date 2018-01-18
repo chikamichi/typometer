@@ -1,7 +1,7 @@
 import xs from "xstream"
 
-import Model from "model"
-import TypingBeat from "models/TypingBeat"
+import Model from "typometer/model"
+import TypingBeat from "typometer/models/TypingBeat"
 
 export default function BeatManager(sources) {
   const wpm$ = sources.DOM

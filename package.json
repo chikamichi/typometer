@@ -1,7 +1,7 @@
 {
   "jspm": {
-    "name": "cyclejs-app",
-    "main": "cyclejs-app.js",
+    "name": "typometer",
+    "main": "typometer.js",
     "dependencies": {
       "@cycle/dom": "npm:@cycle/dom@^20.1.0",
       "@cycle/http": "npm:@cycle/http@^14.8.0",

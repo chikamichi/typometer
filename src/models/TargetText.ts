@@ -1,6 +1,6 @@
 import xs, { Stream } from "xstream"
 
-import { AppState, CharState } from "types"
+import { AppState, CharState } from "typometer/types"
 
 export default class TargetText {
   text: string

@@ -1,10 +1,10 @@
 import xs from "xstream"
 import isolate from "@cycle/isolate"
 
-import { Sources, Sinks } from "types"
-import Model from "model"
-import CustomText from "components/CustomText"
-import LiveText from "components/LiveText"
+import { Sources, Sinks } from "typometer/types"
+import Model from "typometer/model"
+import CustomText from "typometer/components/CustomText"
+import LiveText from "typometer/components/LiveText"
 import view from "./view"
 
 
