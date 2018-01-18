@@ -11,20 +11,6 @@ import view from "./view"
 export default function LiveText(sources: Sources): Sinks {
   const state$ = sources.onion.state$
 
-  const textStatusKO$ = state$
-    .map(state => {
-      const model = Model(state)
-      return !!model.hasError()
-    })
-    .startWith(false)
-
-  const textStatusOK$ = state$
-    .map(state => {
-      const model = Model(state)
-      return !!model.isSuccess()
-    })
-    .startWith(false)
-
   // CustomText
   const CustomTextLens = {
     get: (state) => state,
@@ -45,8 +31,6 @@ export default function LiveText(sources: Sources): Sinks {
   )
 
   const vdom$ = view(
-    textStatusKO$,
-    textStatusOK$,
     liveTextSinks.DOM,
     customTextSinks.DOM
   )

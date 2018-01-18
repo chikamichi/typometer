@@ -11,7 +11,7 @@ export default function view(state$: Stream<AppState>): Stream<VNode> {
       return table('.ta-metrics', [
         thead('.ta-metrics__types', [
           tr([
-            th('Metrics:'),
+            th(),
             th('Accuracy'),
             th('WPM')
           ])

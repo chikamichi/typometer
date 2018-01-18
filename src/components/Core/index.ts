@@ -2,6 +2,7 @@ import xs from "xstream"
 import isolate from "@cycle/isolate"
 
 import { Sources, Sinks } from "typometer/types"
+import Model from "typometer/models/Model"
 import Content from "typometer/components/Content"
 import Replay from "typometer/components/Replay"
 import Metrics from "typometer/components/Metrics"
@@ -15,6 +16,27 @@ export default function Core(sources: Sources): Sinks {
   const state$ = sources.onion.state$
   const parentReducer$ = model()
   const napReducer$ = nap(state$)
+
+  const textStatusOK$ = state$
+    .map(state => {
+      const model = Model(state)
+      return !!model.isSuccess()
+    })
+    .startWith(false)
+
+  const textStatusKO$ = state$
+    .map(state => {
+      const model = Model(state)
+      return !!model.hasError()
+    })
+    .startWith(false)
+
+  const textStatusEditing$ = state$
+    .map(state => {
+      const model = Model(state)
+      return !!model.textBeingEdited()
+    })
+    .startWith(false)
 
   // Content
   const ContentLens = {
@@ -53,6 +75,9 @@ export default function Core(sources: Sources): Sinks {
   )
 
   const vdom$ = view(
+    textStatusEditing$,
+    textStatusKO$,
+    textStatusOK$,
     contentSinks.DOM,
     replaySinks.DOM,
     metricsSinks.DOM

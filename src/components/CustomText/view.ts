@@ -15,7 +15,7 @@ export default function view(state$: Stream<AppState>): Stream<VNode> {
             }
           }
         }, [
-          h2('.ta-custom-text__edit', 'Edit text'),
+          // h2('.ta-custom-text__edit', 'Edit text'),
           textarea({attrs: {rows: 5, tabindex: 0}}, [
             state.text.raw
           ])

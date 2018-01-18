@@ -22,7 +22,7 @@ const main = onionify(Core)
 
 // Drivers: raw events streams hooked with the intent layer through main().
 const drivers = {
-  DOM: makeDOMDriver('.main')
+  DOM: makeDOMDriver('.ta-app')
 }
 
 
