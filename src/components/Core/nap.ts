@@ -3,7 +3,7 @@ import delay from "xstream/extra/delay"
 
 import { AppState, Reducer } from "types"
 import Model from "model"
-import Records from "models/Records"
+import Metrics from "models/Metrics"
 
 
 // Next-action-predicate aka. internal side-effect handler.
@@ -23,15 +23,16 @@ export default function nap(state$): Stream<Reducer> {
     // NOTE: we're interested in inspecting state$ upon a specific event from
     // state$ being emitted, which leaves the possibility state$ itself will
     // have evolved between the moment the triggering event is filtered against
-    // below and the moment state$ is processed within Records(). Shouldn't be
-    // a problem really for we're computing records, but let's be aware of that
-    // and the potential need for a better strategy/fix here.
+    // below and the moment state$ is processed within Metrics.Records().
+    // It shouldn't be a problem really for we're computing records, but let's
+    // be aware of that potential pitfall and the likely need for a better
+    // strategy/fix here.
     .filter(state => {
       const model = Model(state)
       return model.isSuccess() && model.hasNoStats()
     })
     .compose(delay(0)) // Fancy seeing you here, setTimeout(0).
-    .map(_ => Records(state$))
+    .map(_ => Metrics.Records(state$))
     .map(records => {
       return (prevState: AppState) => {
         return {

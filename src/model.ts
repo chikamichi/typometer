@@ -1,8 +1,13 @@
+import xs from "xstream"
+
 import { AppState, DecoratedAppState } from "types"
+import Metrics from "models/Metrics"
+
 
 export default function Model(state) {
   return new SuperState(state)
 }
+
 
 class SuperState {
   state: AppState
@@ -119,7 +124,17 @@ class SuperState {
   }
 
   public decorate(): DecoratedAppState {
-    return (new Decorator(this)).decorate()
+    // return (new Decorator(this)).decorate()
+    const newMetrics = Metrics.Current(this.state)
+    const metrics = {
+      ...this.state.metrics,
+      accuracy: newMetrics.accuracy,
+      wpm: newMetrics.wpm
+    }
+    return {
+      ...this.state,
+      metrics
+    }
   }
 }
 

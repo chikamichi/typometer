@@ -1,15 +1,23 @@
 import { Stream } from "@cycle/dom"
+
 import { AppState, TypingRecords } from "types"
 import Model from "model"
 
-// TODO: at the end of a run:
-// - compute run's metrics with Records(state$.last()) (basically)
-// - compute overall metrics with Records(state$)
-export default function Records(state$: Stream<AppState>): TypingRecords {
-  return {
-    pending: false,
-    accuracy: getMax(state$, 'accuracy', computeAccuracy),
-    wpm: getMax(state$, 'wpm', computeWPM)
+
+export default { // Metrics
+  Records: function(state$: Stream<AppState>): TypingRecords {
+    return {
+      pending: false,
+      accuracy: getMax(state$, 'accuracy', computeAccuracy),
+      wpm: getMax(state$, 'wpm', computeWPM)
+    }
+  },
+
+  Current: function(state: AppState): TypingRecords {
+    return {
+      accuracy: computeAccuracy(state),
+      wpm: computeWPM(state)
+    }
   }
 }
 
@@ -30,7 +38,7 @@ function getMax(state$, metric: string, f?: (attributes?: AppState) => number): 
 
 function computeAccuracy(state: AppState): number {
   const model = Model(state)
-  if (!model.isSuccess()) return 0
+  if (model.isNew()) return 0
   return Math.round((1 - state.metrics.errors_nb / state.metrics.keystrokes_nb) * 100)
 }
 

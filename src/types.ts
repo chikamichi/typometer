@@ -31,8 +31,8 @@ export interface RunMetrics {
 
 export interface TypingRecords {
   pending: boolean,
-  accuracy: number,
-  wpm: number
+  accuracy: number|undefined,
+  wpm: number|undefined
 }
 
 export interface AppState {
