@@ -1,7 +1,7 @@
 import { Stream } from "xstream"
 import { h, div, h2, input, textarea, label, VNode } from "@cycle/dom"
 
-import { AppState } from "types"
+import { AppState } from "typometer/types"
 
 export default function view(state$: Stream<AppState>): Stream<VNode> {
   return state$

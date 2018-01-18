@@ -1,7 +1,7 @@
 import xs from "xstream"
 
-import Model from "model"
-import TypingBeat from "models/TypingBeat"
+import Model from "typometer/model"
+import TypingBeat from "typometer/models/TypingBeat"
 
 export default function BeatManager(sources) {
   const wpm$ = sources.DOM
@@ -13,8 +13,8 @@ export default function BeatManager(sources) {
     .filter(state => Model(state).isNew() || Model(state).isSuccess())
 
   const beat$$ = xs.combine(wpm$, run$)
-    .map(([wpm, _]) => {
-      const beat = new TypingBeat(wpm)
+    .map(([wpm, state]) => {
+      const beat = new TypingBeat(wpm, state.text.raw.length)
       return xs.create(beat.producer)
     })
 

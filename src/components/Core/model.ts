@@ -1,7 +1,7 @@
 import xs from "xstream"
 
-import { AppState } from "types"
-import { INITIAL_APP_STATE } from "utils"
+import { AppState } from "typometer/types"
+import { INITIAL_APP_STATE } from "typometer/utils"
 
 // Model: map actions to state reducers.
 export default function model() {

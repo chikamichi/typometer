@@ -17,6 +17,5 @@ export default function intent(domSource: DOMSource) {
 
     toggleEditor$: xs.merge(toggleEditorWithKeyboard$, toggleEditorByClicking$)
       .fold((toggling, _) => (!toggling), false)
-    }
-
+  }
 }

@@ -1,5 +1,7 @@
 import { DOMSource, Stream, VNode } from "@cycle/dom"
-import { AppState } from "types"
+
+import { AppState } from "typometer/types"
+
 
 type Reducer = (prev?: AppState) => AppState | undefined
 
@@ -31,8 +33,8 @@ export interface RunMetrics {
 
 export interface TypingRecords {
   pending: boolean,
-  accuracy: number,
-  wpm: number
+  accuracy: number|undefined,
+  wpm: number|undefined
 }
 
 export interface AppState {

@@ -1,14 +1,14 @@
 import xs, { Stream } from "xstream"
 
-import { Reducer } from "types"
-import { INITIAL_APP_STATE } from "utils"
+import { Reducer } from "typometer/types"
+import { INITIAL_APP_STATE } from "typometer/utils"
 
 
 export default function model(actions): Stream<Reducer> {
   const focusChange$ = actions.focus$
     .map(_ => function focusChange(state) {
       const text = {
-        ...INITIAL_APP_STATE.text,
+        ...state.text,
         editing: true
       }
       return {
@@ -40,7 +40,6 @@ export default function model(actions): Stream<Reducer> {
         text
       }
     })
-
 
   return xs.merge(
     focusChange$,

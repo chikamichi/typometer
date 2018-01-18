@@ -1,8 +1,8 @@
 import { Stream } from "xstream"
 import { table, thead, tbody, tr, th, td, VNode } from "@cycle/dom"
 
-import { AppState } from "types"
-import Model from "model"
+import { AppState } from "typometer/types"
+import Model from "typometer/model"
 
 export default function view(state$: Stream<AppState>): Stream<VNode> {
   return state$

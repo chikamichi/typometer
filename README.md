@@ -75,6 +75,7 @@ A production, pre-transpiled build may be generated so that all modules/assets a
 ### 2. Follow instructions at:
 
 * https://github.com/buzinas/tslint-eslint-rules#usage
+* https://facebook.github.io/watchman/docs/install.html
 * whatever I forgot to bookmark but did along the way… sorry ^^
 
 ### 3. Generate cert.pem and key.pem
