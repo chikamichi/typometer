@@ -53,8 +53,7 @@ export interface CharState {
 
 export interface DecoratedRunMetrics extends RunMetrics {
   accuracy: number,
-  wpm: number,
-  done: boolean
+  wpm: number
 }
 
 export interface DecoratedAppState extends AppState {

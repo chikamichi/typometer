@@ -2,7 +2,7 @@ import { Stream } from "xstream"
 import { table, thead, tbody, tr, th, td, VNode } from "@cycle/dom"
 
 import { AppState } from "typometer/types"
-import Model from "typometer/model"
+import Model from "typometer/models/Model"
 
 export default function view(state$: Stream<AppState>): Stream<VNode> {
   return state$

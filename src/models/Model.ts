@@ -4,7 +4,9 @@ import { AppState, DecoratedAppState } from "typometer/types"
 import Metrics from "typometer/models/Metrics"
 
 
-export default function Model(state) {
+// Main "model" for the app, ie. wraps the raw app state, exposing methods for
+// state management (mutators, accessors…).
+export default function Model(state: AppState): SuperState {
   return new SuperState(state)
 }
 
@@ -12,7 +14,7 @@ export default function Model(state) {
 class SuperState {
   state: AppState
 
-  constructor(state) {
+  constructor(state: AppState) {
     this.state = state
   }
 
@@ -46,7 +48,7 @@ class SuperState {
     return {...this.state, metrics}
   }
 
-  public eraseCharMutation() {
+  public eraseCharMutation(): AppState {
     let m = this.state.metrics
     let metricsMutation = {}
 
@@ -124,7 +126,6 @@ class SuperState {
   }
 
   public decorate(): DecoratedAppState {
-    // return (new Decorator(this)).decorate()
     const newMetrics = Metrics.Current(this.state)
     const metrics = {
       ...this.state.metrics,
@@ -135,46 +136,5 @@ class SuperState {
       ...this.state,
       metrics
     }
-  }
-}
-
-
-export class Decorator {
-  model: SuperState
-
-  constructor(model: SuperState) {
-    this.model = model
-  }
-
-  public decorate(): DecoratedAppState {
-    const m = this.model
-    const metrics = {
-      ...m.state.metrics,
-      accuracy: this.compute_accuracy(),
-      done: m.isDone() || m.hasStopped(),
-      wpm: this.compute_wpm(),
-    }
-    return {
-      ...m.state,
-      metrics
-    }
-  }
-
-  private compute_accuracy(state?: AppState): number {
-    const m = state || this.model
-    if (m.isNew()) return 0
-    return Math.round((1 - m.state.metrics.errors_nb / m.state.metrics.keystrokes_nb) * 100)
-  }
-
-  private compute_wpm(state?: AppState): number {
-    const m = state || this.model
-    if (!m.hasStopped()) return 0
-    // nb_words takes into account errors, as keystrokes_nb does not distinguish
-    // between valid and invalid characters. This is by design so the WPM is
-    // an accurate estimate of efficiency: less errors => better wpm, at
-    // constant time.
-    const nb_words = m.state.metrics.keystrokes_nb / 5 // bug, see https://github.com/chikamichi/typometer/issues/1
-    const elapsed = (m.state.metrics.stop.getTime() - m.state.metrics.start.getTime()) / 1000.0 / 60.0 // ms -> mn
-    return Math.round(nb_words / elapsed)
   }
 }

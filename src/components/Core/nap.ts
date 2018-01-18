@@ -2,7 +2,7 @@ import xs, { Stream } from "xstream"
 import delay from "xstream/extra/delay"
 
 import { AppState, Reducer } from "typometer/types"
-import Model from "typometer/model"
+import Model from "typometer/models/Model"
 import Metrics from "typometer/models/Metrics"
 
 
