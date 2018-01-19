@@ -19,9 +19,11 @@ export default function model(actions): Stream<Reducer> {
 
   const blur$ = actions.blur$
     .map(newText => function blur(_) {
+      newText = newText.trim()
+      if (!newText.length) return INITIAL_APP_STATE
       const text = {
         ...INITIAL_APP_STATE.text,
-        raw: newText.trim()
+        raw: newText
       }
       return {
         ...INITIAL_APP_STATE,
