@@ -2,6 +2,7 @@ import xs, { Stream } from "xstream"
 
 import { Reducer } from "typometer/types"
 import { INITIAL_APP_STATE } from "typometer/utils"
+import Model from "typometer/models/Model"
 
 
 export default function model(actions): Stream<Reducer> {
@@ -33,6 +34,8 @@ export default function model(actions): Stream<Reducer> {
 
   const toggleEditor$ = actions.toggleEditor$
     .map(toggling => function openEditor(state) {
+      const model = Model(state)
+      if (!model.isNew()) return state
       const text = {
         ...state.text,
         editing: toggling
