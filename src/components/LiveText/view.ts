@@ -20,6 +20,9 @@ export default function view(state$: Stream<AppState>): Stream<VNode> {
   return state$.map(state => {
     const text = new TargetText(state.text.raw, state)
     const chars = text.wrap(build_char)
-    return p('.ta-target-text', {attrs: {tabindex: 0}}, chars)
+    return p('.ta-target-text', {
+      style: {display: state.text.editing ? 'none' : 'initial' },
+      attrs: {tabindex: 0}
+    }, chars)
   })
 }

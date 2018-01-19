@@ -1,15 +1,11 @@
 import xs, { Stream } from "xstream"
 import { div, VNode } from "@cycle/dom"
 
-export default function view(textStatusKO$, textStatusOK$, liveTextVDom$, customTextVDom$): Stream<VNode> {
-  return xs.combine(textStatusKO$, textStatusOK$, liveTextVDom$, customTextVDom$)
-    .map(([textStatusKO, textStatusOK, liveText, customText]) => {
+export default function view(liveTextVDom$, customTextVDom$): Stream<VNode> {
+  return xs.combine(liveTextVDom$, customTextVDom$)
+    .map(([liveText, customText]) => {
       return div('.ta-content', {
-        attrs: {tabindex: 0},
-        class: {
-          'ta-text-status--failed': textStatusKO,
-          'ta-text-status--success': textStatusOK
-        }
+        attrs: {tabindex: 0}
       }, [
         liveText,
         customText

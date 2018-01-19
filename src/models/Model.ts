@@ -109,6 +109,10 @@ class SuperState {
     return this.isSuccess() && !m.stop
   }
 
+  public textBeingEdited(): boolean {
+    return this.state.text.editing
+  }
+
   // Halted, no matter the outcome.
   public hasStopped(): boolean {
     const m = this.state.metrics

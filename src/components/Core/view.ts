@@ -1,32 +1,35 @@
 import xs from "xstream"
-import { h1, h2, div } from "@cycle/dom"
+import { h1, p, div } from "@cycle/dom"
 
-export default function view(contentVDom$, replayVDom$, metricsVDom$) {
-  return xs.combine(contentVDom$, replayVDom$, metricsVDom$)
-    .map(([content, replaySettings, metrics]) => {
-      return div('.typing-app.ta', [
-        div('.ta-side', [
-          h1('.ta-title', 'typometer'),
-          div('.ta-settings', [
-            h2('Settings'),
-            // h(replay_settings.sel, replay_settings.data, replay_settings.children),
-            replaySettings
-          ])
-        ]), // .ta-side
+import { APP_TITLE, APP_MOTTO } from "typometer/utils"
 
-        div('.ta-main', [
 
-          div('.ta-header', [
+export default function view(textStatusEditing$, textStatusKO$, textStatusOK$, contentVDom$, replayVDom$, metricsVDom$) {
+  return xs.combine(textStatusEditing$, textStatusKO$, textStatusOK$, contentVDom$, replayVDom$, metricsVDom$)
+    .map(([textStatusEditing, textStatusKO, textStatusOK, content, replaySettings, metrics]) => {
+      return div('.typing-app.ta', {
+        class: {
+          'ta-text-status--editing': textStatusEditing,
+          'ta-text-status--failed': textStatusKO,
+          'ta-text-status--success': textStatusOK
+        }
+      }, [
+        div('.ta-header', [
+          div('.ta-header-spacer'),
+          div('.ta-welcome', [
+            h1('.ta-title', APP_TITLE),
+            p('.ta-motto', APP_MOTTO)
+          ]),
+          div('.ta-metrics-area', [
             metrics
-
-            // div(classnames('.ta-progress .ta-progress--done', {'.u-wip': !attributes.done}), ' Done!')
-
-          ]), // .ta-header
-
+          ])
+        ]),
+        div('.ta-main', [
+          div('.ta-settings', [
+            replaySettings
+          ]),
           content
-
-        ]) // .ta-main
-
-      ]) // .ta
+        ])
+      ])
     })
 }
