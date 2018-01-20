@@ -12,10 +12,7 @@ export default function Model(state: AppState): SuperState {
 
 
 class SuperState {
-  state: AppState
-
-  constructor(state: AppState) {
-    this.state = state
+  constructor(readonly state: AppState) {
   }
 
   public newCharMutation(char: string): AppState {
