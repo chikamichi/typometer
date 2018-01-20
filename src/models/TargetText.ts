@@ -3,12 +3,7 @@ import xs, { Stream } from "xstream"
 import { AppState, CharState } from "typometer/types"
 
 export default class TargetText {
-  text: string
-  state: AppState
-
-  constructor(text: string, state: AppState) {
-    this.text = text
-    this.state = state
+  constructor(readonly text: string, readonly state: AppState) {
   }
 
   // TODO: the logic in as_stream() and wrap() doesn't really belong to
