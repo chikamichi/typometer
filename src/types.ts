@@ -5,7 +5,7 @@ import { AppState } from "typometer/types"
 
 type Reducer = (prev?: AppState) => AppState | undefined
 
-interface Sources {
+export interface Sources {
   DOM: DOMSource,
   onion: Stream<Reducer>
 }
