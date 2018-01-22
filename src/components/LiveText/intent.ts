@@ -1,5 +1,6 @@
 import { Sources } from "typometer/types"
 
+
 export default function intent(sources: Sources) {
   return {
     newChar$: sources.DOM
