@@ -3,11 +3,13 @@
   "scripts": {
     "clean": "rm -rf dist",
     "build": "npm run build:js",
-    "build:js": "jspm bundle typometer.ts dist/index.js",
+    "build:js": "jspm build typometer.ts dist/assets/javascript/index.js",
     "env": "env",
-    "prebuild": "npm run clean -s && mkdir dist",
-    "postbuild": "cp -r assets/ dist && cp index.bundle.html dist/index.html",
+    "prebuild": "npm run clean -s && mkdir -p dist/assets/javascript/",
+    "postbuild": "cp -r assets/ dist/ && cp index.bundle.html dist/index.html",
+    "serve": "http-server dist/ -c-1 -S -C cert.pem -K key.pem -o",
     "serve:dev": "http-server -c-1 -S -C cert.pem -K key.pem -o",
+    "start": "npm run build && npm run serve",
     "start:dev": "npm run serve:dev",
     "test": "echo 'Bad scoundrel meself :('"
   },
