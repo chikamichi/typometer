@@ -3,3 +3,5 @@ jspm_packages
 node_modules
 key.pem
 cert.pem
+dist/
+index.js.map

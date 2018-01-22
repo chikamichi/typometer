@@ -1,6 +1,17 @@
 {
+  "name": "typometer",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "npm run build:js",
+    "build:js": "jspm bundle typometer.ts dist/index.js",
+    "env": "env",
+    "prebuild": "npm run clean -s && mkdir dist",
+    "postbuild": "cp -r assets/ dist && cp index.bundle.html dist/index.html",
+    "serve:dev": "http-server -c-1 -S -C cert.pem -K key.pem -o",
+    "start:dev": "npm run serve:dev",
+    "test": "echo 'Bad scoundrel meself :('"
+  },
   "jspm": {
-    "name": "typometer",
     "main": "typometer.js",
     "dependencies": {
       "@cycle/dom": "npm:@cycle/dom@^20.1.0",
