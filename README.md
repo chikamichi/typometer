@@ -3,7 +3,8 @@ Typometer
 
 **A silly micro-app to teach myself some FRP using Cycle.js.**
 
-First few commits are based upon https://egghead.io/lessons/rxjs-separate-logic-from-effects-in-cycle-js.
+* Demo: https://typometer.netlify.com/
+* Keybindings: ESC to retry, Ctrl+Enter or F2 to edit text.
 
 ## Synopsis
 
