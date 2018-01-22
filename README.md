@@ -9,7 +9,7 @@ First few commits are based upon https://egghead.io/lessons/rxjs-separate-logic-
 
 ``` sh
 # Follow instructions under the "Installation" section, then:
-http-server -c-1 -S -C cert.pem -K key.pem -o # Go to https://0.0.0.0:8080/
+npm start:dev
 ```
 
 ## Installation
@@ -144,5 +144,13 @@ Might help with debugging generated JS but shouldn't be needed as SystemJS will 
 So as to run the local web server at https://localhost:8080/.
 
 ``` sh
-http-server -c-1 -S -C cert.pem -K key.pem -o
+npm start:dev
 ```
+
+## Build
+
+``` sh
+npm run build
+```
+
+Bundled application is available in the dist/ directory.
