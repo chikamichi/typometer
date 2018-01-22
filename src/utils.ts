@@ -4,7 +4,7 @@ export const APP_TITLE = "typometer"
 
 export const APP_MOTTO = "Can you type that fast?"
 
-export const DEFAULT_TEXT: string = "Ils se trouvaient dans la salle de radio - dont l'appareillage, par mille détails subtils, donnait déjà l'impression d'être démodé pour être resté inutilisé pendant dix ans avant leur arrivée. Oui, dix ans, sur le plan technique, cela comptait énormément. Il suffisait de comparer Speedy au modèle de 2005. Mais on en était arrivé au stade où les robots se perfectionnaient à une allure ultrarapide. Powell posa un doigt hésitant sur une surface métallique qui avait conservé son poli. L'atmosphère d’abandon qui imprégnait tous les objets contenus dans la pièce - et la Station tout entière - avait quelque chose d’infiniment déprimant."
+export const DEFAULT_TEXT: string = "Quelle est la planète dont les habitants ne préfèreraient pas une croyance confortable, douillette et bien rodée, si illogique soit-elle, aux vents frisquets de l'incertitude ?"
 // export const DEFAULT_TEXT: string = "test"
 
 // A word is 5 consecutive characters. WPM convention.
