@@ -1,6 +1,13 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "typometer/*": ["src/*"]
+    },
+    "outDir": "./dist/",
+    "module": "es6",
     "target": "es2015",
+    "allowJs": true,
     "moduleResolution": "node",
     "removeComments": true,
     "sourceMap": true,
@@ -12,7 +19,11 @@
     "experimentalDecorators": true
   },
   "exclude": [
-    "node_modules",
-    "jspm_packages"
-  ]
+    "node_modules"
+  ],
+  "awesomeTypescriptLoaderOptions": {
+    "useBabel": true,
+    "babelCore": "@babel/core",
+    "useCache": true
+  }
 }

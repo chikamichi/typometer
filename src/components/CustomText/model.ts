@@ -46,7 +46,7 @@ export default function model(actions): Stream<Reducer> {
       }
     })
 
-  return xs.merge(
+  return <Stream<Reducer>>xs.merge(
     focusChange$,
     blur$,
     toggleEditor$

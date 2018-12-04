@@ -12,18 +12,18 @@
 
 import { makeDOMDriver } from "@cycle/dom"
 import { run } from "@cycle/run"
-import onionify from "cycle-onionify"
+import { withState } from "@cycle/state"
 
 import Core from "typometer/components/Core"
 
 
-const main = onionify(Core)
+const main = withState(Core)
 
 
 // Drivers: raw events streams hooked with the intent layer through main().
 const drivers = {
-  DOM: makeDOMDriver('.ta-app')
+  dom: makeDOMDriver('.ta-app')
 }
 
 
-run(main, drivers);
+run(main, drivers)

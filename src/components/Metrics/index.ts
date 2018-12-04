@@ -1,15 +1,14 @@
 import xs from "xstream"
 
-import Model from "typometer/models/Model"
 import { Sources, Sinks } from "typometer/types"
 import view from "./view"
 
 
 export default function Metrics(sources: Sources): Sinks {
-  const vdom$ = view(sources.onion.state$)
+  const vdom$ = view(sources.state.stream)
 
   return {
-    DOM: vdom$,
-    onion: xs.create()
+    dom: vdom$,
+    state: xs.create()
   }
 }

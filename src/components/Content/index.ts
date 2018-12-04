@@ -1,42 +1,39 @@
-import xs from "xstream"
+import xs, { Stream } from "xstream"
 import isolate from "@cycle/isolate"
 
-import { Sources, Sinks } from "typometer/types"
-import Model from "typometer/models/Model"
+import { Sources, Sinks, Reducer } from "typometer/types"
 import CustomText from "typometer/components/CustomText"
 import LiveText from "typometer/components/LiveText"
 import view from "./view"
 
 
-export default function LiveText(sources: Sources): Sinks {
-  const state$ = sources.onion.state$
-
+export default function Content(sources: Sources): Sinks {
   // CustomText
   const CustomTextLens = {
     get: (state) => state,
     set: (_, componentState) => componentState
   }
-  const customTextSinks = isolate(CustomText, {onion: CustomTextLens})(sources)
+  const customTextSinks = isolate(CustomText, {state: CustomTextLens})(sources)
 
   // LiveText
   const LiveTextLens = {
     get: (state) => state,
     set: (_, componentState) => componentState
   }
-  const liveTextSinks = isolate(LiveText, {onion: LiveTextLens})(sources)
+  const liveTextSinks = isolate(LiveText, {state: LiveTextLens})(sources)
 
   const componentsReducer$ = xs.merge(
-    customTextSinks.onion,
-    liveTextSinks.onion
+    customTextSinks.state,
+    liveTextSinks.state
   )
 
   const vdom$ = view(
-    liveTextSinks.DOM,
-    customTextSinks.DOM
+    liveTextSinks.dom,
+    customTextSinks.dom
   )
 
   return {
-    DOM: vdom$,
-    onion: componentsReducer$
+    dom: vdom$,
+    state: <Stream<Reducer>>componentsReducer$
   }
 }

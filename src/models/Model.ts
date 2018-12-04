@@ -1,6 +1,4 @@
-import xs from "xstream"
-
-import { AppState, DecoratedAppState } from "typometer/types"
+import { AppState, DecoratedAppState, DecoratedRunMetrics } from "typometer/types"
 import Metrics from "typometer/models/Metrics"
 
 
@@ -11,7 +9,7 @@ export default function Model(state: AppState): SuperState {
 }
 
 
-class SuperState {
+export class SuperState {
   constructor(readonly state: AppState) {
   }
 
@@ -70,6 +68,7 @@ class SuperState {
   }
 
   public isNew(): boolean {
+    // if (!this.state) return true
     const m = this.state.metrics
     return !m.start && !m.stop
   }
@@ -128,7 +127,7 @@ class SuperState {
 
   public decorate(): DecoratedAppState {
     const newMetrics = Metrics.Current(this.state)
-    const metrics = {
+    const metrics = <DecoratedRunMetrics>{
       ...this.state.metrics,
       accuracy: newMetrics.accuracy,
       wpm: newMetrics.wpm

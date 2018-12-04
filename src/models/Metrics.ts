@@ -1,4 +1,4 @@
-import { Stream } from "@cycle/dom"
+import { Stream } from "xstream"
 
 import { WORD_LENGTH } from "typometer/utils"
 import { AppState, TypingRecords } from "typometer/types"
@@ -16,6 +16,7 @@ export default { // Metrics
 
   Current: function(state: AppState): TypingRecords {
     return {
+      pending: false, // FIXME: ajouté mais pas présent à la base
       accuracy: computeAccuracy(state),
       wpm: computeWPM(state)
     }
@@ -43,10 +44,10 @@ function computeAccuracy(state: AppState): number {
   return Math.round((1 - state.metrics.errors_nb / state.metrics.keystrokes_nb) * 100)
 }
 
-function computeWPM(state?: AppState): number {
+function computeWPM(state: AppState): number {
   const model = Model(state)
   if (!model.isSuccess()) return 0
   const nb_words = state.metrics.keystrokes_nb / WORD_LENGTH
-  const elapsed = (state.metrics.stop.getTime() - state.metrics.start.getTime()) / 1000.0 / 60.0 // ms -> mn
+  const elapsed = (state.metrics.stop!.getTime() - state.metrics.start!.getTime()) / 1000.0 / 60.0 // ms -> mn
   return Math.round(nb_words / elapsed)
 }

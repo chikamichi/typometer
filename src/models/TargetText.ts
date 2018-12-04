@@ -1,5 +1,3 @@
-import xs, { Stream } from "xstream"
-
 import { AppState, CharState } from "typometer/types"
 
 export default class TargetText {
@@ -24,7 +22,7 @@ export default class TargetText {
   }
 
   public map(callback: (CharState) => any): CharState[] {
-    const chars = []
+    const chars: CharState[] = []
     for (let char of this) chars.push(callback(char))
     return chars
   }

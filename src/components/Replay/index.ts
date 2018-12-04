@@ -1,13 +1,13 @@
 import xs, { Stream } from "xstream"
 
-import { Sources, Sinks } from "typometer/types"
+import { Sources, Sinks, Reducer } from "typometer/types"
 import Model from "typometer/models/Model"
 import BeatManager from "typometer/components/BeatManager"
 import view from "./view"
 
 
 export default function Replay(sources: Sources): Sinks {
-  const state$ = sources.onion.state$
+  const state$ = sources.state.stream
   // Beat source. Starts as a "Null Object".
   let source$ = xs.create()
   // A subscription to the beat source. Start as a no-op on the null object.
@@ -52,7 +52,7 @@ export default function Replay(sources: Sources): Sinks {
   const vdom$ = view({state$, wpm$})
 
   return {
-    DOM: vdom$,
-    onion: reducer$
+    dom: vdom$,
+    state: <Stream<Reducer>>reducer$
   }
 }

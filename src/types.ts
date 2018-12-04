@@ -1,18 +1,20 @@
-import { DOMSource, Stream, VNode } from "@cycle/dom"
+import { Stream } from "xstream"
+import { DOMSource, VNode } from "@cycle/dom"
+import { StateSource } from "@cycle/state"
 
 import { AppState } from "typometer/types"
 
 
-type Reducer = (prev?: AppState) => AppState | undefined
+export type Reducer = (prev?: AppState) => AppState | undefined
 
 export interface Sources {
-  DOM: DOMSource,
-  onion: Stream<Reducer>
+  dom: DOMSource,
+  state: StateSource<AppState>
 }
 
 export type Sinks = {
-  DOM: Stream<VNode>
-  onion: Stream<Reducer>
+  dom: Stream<VNode>
+  state: Stream<Reducer>
 }
 
 export interface Text {

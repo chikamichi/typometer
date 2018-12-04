@@ -13,7 +13,7 @@ export default function intent(domSource: DOMSource) {
     focus$: domSource.select('textarea').events('focus').mapTo(true),
 
     blur$: domSource.select('textarea').events('blur')
-      .map(e => e.target.value),
+      .map(e => (<HTMLInputElement>e.target).value),
 
     toggleEditor$: xs.merge(toggleEditorWithKeyboard$, toggleEditorByClicking$)
       .fold((toggling, _) => (!toggling), false)

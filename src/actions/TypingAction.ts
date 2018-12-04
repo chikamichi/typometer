@@ -1,5 +1,3 @@
-import xs from "xstream"
-
 import Model from "typometer/models/Model"
 import { AppState } from "typometer/types"
 import { INITIAL_APP_STATE } from "typometer/utils"

@@ -1,7 +1,8 @@
-import xs from "xstream"
+import xs, { Stream } from "xstream"
+import { VNode } from "@cycle/dom"
 import isolate from "@cycle/isolate"
 
-import { Sources, Sinks } from "typometer/types"
+import { Sources, Sinks, Reducer } from "typometer/types"
 import Model from "typometer/models/Model"
 import Content from "typometer/components/Content"
 import Replay from "typometer/components/Replay"
@@ -13,7 +14,7 @@ import nap from "./nap"
 // Main: wires everything up using circular streams.
 // Note: next-action-predicates bypass the intent() layer by design.
 export default function Core(sources: Sources): Sinks {
-  const state$ = sources.onion.state$
+  const state$ = sources.state.stream
   const parentReducer$ = model()
   const napReducer$ = nap(state$)
 
@@ -43,7 +44,7 @@ export default function Core(sources: Sources): Sinks {
     get: (state) => state,
     set: (_, componentState) => componentState
   }
-  const contentSinks = isolate(Content, {onion: ContentLens})(sources)
+  const contentSinks = isolate(Content, {state: ContentLens})(sources)
 
   // Replay
   // TODO: "replay" is actually not a good naming, for it's not a, well, replay
@@ -52,19 +53,19 @@ export default function Core(sources: Sources): Sinks {
     get: (state) => state,
     set: (_, componentState) => componentState
   }
-  const replaySinks = isolate(Replay, {onion: ReplayLens})(sources)
+  const replaySinks = isolate(Replay, {state: ReplayLens})(sources)
 
   // Metrics
   const MetricsLens = {
     get: (state) => state,
     set: (_, componentState) => componentState
   }
-  const metricsSinks = isolate(Metrics, {onion: MetricsLens})(sources)
+  const metricsSinks = isolate(Metrics, {state: MetricsLens})(sources)
 
   const componentsReducer$ = xs.merge(
-    contentSinks.onion,
-    replaySinks.onion,
-    metricsSinks.onion
+    contentSinks.state,
+    replaySinks.state,
+    metricsSinks.state
 
   )
 
@@ -78,13 +79,13 @@ export default function Core(sources: Sources): Sinks {
     textStatusEditing$,
     textStatusKO$,
     textStatusOK$,
-    contentSinks.DOM,
-    replaySinks.DOM,
-    metricsSinks.DOM
+    contentSinks.dom,
+    replaySinks.dom,
+    metricsSinks.dom
   )
 
   return {
-    DOM: vdom$,
-    onion: reducer$
+    dom: <Stream<VNode>>vdom$,
+    state: <Stream<Reducer>>reducer$
   }
 }

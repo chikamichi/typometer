@@ -1,5 +1,6 @@
 import classnames from "classnames"
-import { p, span, Stream, VNode } from "@cycle/dom"
+import { p, span, VNode } from "@cycle/dom"
+import { Stream } from "xstream"
 
 import { AppState, CharState } from "typometer/types"
 import TargetText from "typometer/models/TargetText"
