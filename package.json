@@ -1,5 +1,6 @@
 {
   "name": "typometer",
+  "main": "typometer.js",
   "scripts": {
     "clean": "rm -rf dist",
     "build": "npm run build:js",
@@ -13,90 +14,20 @@
     "start:dev": "npm run serve:dev",
     "test": "echo 'Bad scoundrel meself :('"
   },
-  "jspm": {
-    "main": "typometer.js",
-    "dependencies": {
-      "@cycle/dom": "npm:@cycle/dom@^20.1.0",
-      "@cycle/http": "npm:@cycle/http@^14.8.0",
-      "@cycle/isolate": "npm:@cycle/isolate@^3.2.0",
-      "@cycle/run": "npm:@cycle/run@^4.1.0",
-      "classnames": "npm:classnames@^2.2.5",
-      "cycle-onionify": "npm:cycle-onionify@^5.0.0",
-      "xstream": "npm:xstream@^11.1.0"
-    },
-    "devDependencies": {
-      "plugin-typescript": "github:frankwallis/plugin-typescript@^8.0.0"
-    },
-    "peerDependencies": {
-      "assert": "npm:jspm-nodelibs-assert@^0.2.0",
-      "buffer": "npm:jspm-nodelibs-buffer@^0.2.0",
-      "constants": "npm:jspm-nodelibs-constants@^0.2.0",
-      "crypto": "npm:jspm-nodelibs-crypto@^0.2.0",
-      "events": "npm:jspm-nodelibs-events@^0.2.0",
-      "fs": "npm:jspm-nodelibs-fs@^0.2.0",
-      "http": "npm:jspm-nodelibs-http@^0.2.0",
-      "https": "npm:jspm-nodelibs-https@^0.2.0",
-      "module": "npm:jspm-nodelibs-module@^0.2.0",
-      "net": "npm:jspm-nodelibs-net@^0.2.0",
-      "os": "npm:jspm-nodelibs-os@^0.2.0",
-      "path": "npm:jspm-nodelibs-path@^0.2.0",
-      "process": "npm:jspm-nodelibs-process@^0.2.0",
-      "querystring": "npm:jspm-nodelibs-querystring@^0.2.0",
-      "stream": "npm:jspm-nodelibs-stream@^0.2.0",
-      "string_decoder": "npm:jspm-nodelibs-string_decoder@^0.2.0",
-      "tty": "npm:jspm-nodelibs-tty@^0.2.0",
-      "typescript": "npm:typescript@^2.4.0",
-      "url": "npm:jspm-nodelibs-url@^0.2.0",
-      "util": "npm:jspm-nodelibs-util@^0.2.0",
-      "vm": "npm:jspm-nodelibs-vm@^0.2.0",
-      "zlib": "npm:jspm-nodelibs-zlib@^0.2.0"
-    },
-    "overrides": {
-      "npm:browserify-zlib@0.1.4": {
-        "dependencies": {
-          "readable-stream": "^2.0.2",
-          "pako": "~0.2.0"
-        },
-        "map": {
-          "_stream_transform": "readable-stream/transform"
-        }
-      },
-      "npm:inherits@2.0.3": {
-        "ignore": [
-          "test.js"
-        ]
-      },
-      "npm:pbkdf2@3.0.14": {
-        "main": "browser.js"
-      },
-      "npm:safe-buffer@5.1.1": {
-        "browser": "index.js"
-      },
-      "npm:typescript@2.6.2": {
-        "browser": {},
-        "map": {
-          "buffer": "@empty",
-          "child_process": "@empty",
-          "fs": "@empty",
-          "path": "@empty",
-          "process": "@empty",
-          "readline": "@empty"
-        },
-        "dependencies": {
-          "source-map-support": "*"
-        }
-      }
-    }
-  },
+  "dependencies": {},
   "devDependencies": {
-    "browserify": "^14.5.0",
-    "gulp": "^3.9.1",
-    "gulp-typescript": "^3.2.3",
-    "jspm": "^0.17.0-beta.47",
-    "jspm-dev-server": "^0.4.1",
-    "systemjs": "^0.20.19",
-    "tsify": "^3.0.4",
+    "@cycle/dom": "npm:@cycle/dom@^22.0.0",
+    "@cycle/http": "npm:@cycle/http@^15.0.0",
+    "@cycle/isolate": "npm:@cycle/isolate@^4.1.0",
+    "@cycle/run": "npm:@cycle/run@^5.1.0",
+    "browserify": "^16.2.3",
+    "classnames": "npm:classnames@^2.2.6",
+    "cycle-onionify": "npm:cycle-onionify@^6.1.0",
+    "most": "npm:most@^1.0.1",
+    "tsify": "^4.0.1",
+    "tslint-eslint-rules": "^5.4.0",
     "typescript": "^2.6.2",
-    "vinyl-source-stream": "^2.0.0"
+    "vinyl-source-stream": "^2.0.0",
+    "xstream": "npm:xstream@^11.7.0"
   }
 }

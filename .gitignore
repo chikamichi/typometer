@@ -5,3 +5,4 @@ key.pem
 cert.pem
 dist/
 index.js.map
+.awcache
