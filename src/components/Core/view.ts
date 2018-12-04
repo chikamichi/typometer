@@ -1,10 +1,10 @@
-import xs from "xstream"
-import { h1, p, div } from "@cycle/dom"
+import xs, { Stream } from "xstream"
+import { VNode, h1, p, div } from "@cycle/dom"
 
 import { APP_TITLE, APP_MOTTO } from "typometer/utils"
 
 
-export default function view(textStatusEditing$, textStatusKO$, textStatusOK$, contentVDom$, replayVDom$, metricsVDom$) {
+export default function view(textStatusEditing$, textStatusKO$, textStatusOK$, contentVDom$, replayVDom$, metricsVDom$): Stream<VNode> {
   return xs.combine(textStatusEditing$, textStatusKO$, textStatusOK$, contentVDom$, replayVDom$, metricsVDom$)
     .map(([textStatusEditing, textStatusKO, textStatusOK, content, replaySettings, metrics]) => {
       return div('.typing-app.ta', {

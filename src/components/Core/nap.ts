@@ -1,7 +1,7 @@
 import { Stream } from "xstream"
 import delay from "xstream/extra/delay"
 
-import { AppState } from "typometer/types"
+import { AppState, Reducer } from "typometer/types"
 import Model from "typometer/models/Model"
 import Metrics from "typometer/models/Metrics"
 
@@ -17,7 +17,7 @@ import Metrics from "typometer/models/Metrics"
 // As next-action-predicates listen for state$, they have the potential for
 // unleashing infinite loop doom: proceed with caution, use restrictive safe
 // guards in the form of .filter() statements.
-export default function nap(state$): Stream<AppState> {
+export default function nap(state$: Stream<AppState>): Stream<Reducer> {
   // NOTE: return xs.merge(…) if multiple reducers.
   return state$
     // NOTE: we're interested in inspecting state$ upon a specific event from

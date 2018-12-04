@@ -3,20 +3,18 @@ import { AppState } from "typometer/types"
 import { INITIAL_APP_STATE } from "typometer/utils"
 
 
-export default function TypingAction(char: string, state: AppState): AppState {
-  if (state.text.editing) return state
-  switch (char) {
-    case 'Backspace':
-      return processBackspace(state)
-    case 'Escape':
-      return processEscape(state)
-    default:
-      return processLetter(char, state)
-  }
+const mapping = {
+  Backspace: processBackspace,
+  Escape: processEscape
 }
 
 
-function processLetter(char: string, state: AppState): AppState {
+export default function TypingAction(char: string, state: AppState): AppState {
+  return (mapping[char] || processLetter)(state, char)
+}
+
+
+function processLetter(state: AppState, char: string): AppState {
   // TODO: Model(state).mutations.newChar(char)
   const mutation = Model(state).newCharMutation(char)
   return {...state, ...mutation}

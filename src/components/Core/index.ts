@@ -1,5 +1,4 @@
 import xs, { Stream } from "xstream"
-import { VNode } from "@cycle/dom"
 import isolate from "@cycle/isolate"
 
 import { Sources, Sinks, Reducer } from "typometer/types"
@@ -18,6 +17,14 @@ export default function Core(sources: Sources): Sinks {
   const parentReducer$ = model()
   const napReducer$ = nap(state$)
 
+
+  /**
+   * Internal event streams
+   * 
+   * TODO: should be handled in ./nap.ts instead
+   */
+
+  // Triggers "true" when the user is done typing the whole text \o/
   const textStatusOK$ = state$
     .map(state => {
       const model = Model(state)
@@ -25,6 +32,7 @@ export default function Core(sources: Sources): Sinks {
     })
     .startWith(false)
 
+  // Triggers "true" when the user made a(t least one) mistake while typing the text.
   const textStatusKO$ = state$
     .map(state => {
       const model = Model(state)
@@ -32,12 +40,27 @@ export default function Core(sources: Sources): Sinks {
     })
     .startWith(false)
 
+  // Triggers "true" when the user starts typing the text.
   const textStatusEditing$ = state$
     .map(state => {
       const model = Model(state)
       return !!model.textBeingEdited()
     })
     .startWith(false)
+
+
+  /**
+   * Lenses
+   * 
+   * TODO: just sharing the whole state with child components for the time
+   * being, must check what's really required and scope accordingly; may
+   * not be possible though because of Model(state) calls ("state decorator").
+   * Would require changing the architecture to handle a stream of 
+   * DecoratedAppState objects, starting with ./model.ts here.
+   *
+   * Using SAM, that would be the output of the State function, aka. a state
+   * representation => currently known as SuperState actually.
+   */
 
   // Content
   const ContentLens = {
@@ -47,8 +70,6 @@ export default function Core(sources: Sources): Sinks {
   const contentSinks = isolate(Content, {state: ContentLens})(sources)
 
   // Replay
-  // TODO: "replay" is actually not a good naming, for it's not a, well, replay
-  // but merely an tick-based IA.
   const ReplayLens = {
     get: (state) => state,
     set: (_, componentState) => componentState
@@ -62,18 +83,26 @@ export default function Core(sources: Sources): Sinks {
   }
   const metricsSinks = isolate(Metrics, {state: MetricsLens})(sources)
 
+
+  /**
+   * Sink: state reducer
+   */
+
   const componentsReducer$ = xs.merge(
     contentSinks.state,
     replaySinks.state,
     metricsSinks.state
-
   )
 
-  const reducer$ = xs.merge(
+  const reducer$ = <Stream<Reducer>>xs.merge(
     parentReducer$,
     napReducer$,
     componentsReducer$
   )
+
+  /**
+   * Sink: virtual DOM
+   */
 
   const vdom$ = view(
     textStatusEditing$,
@@ -85,7 +114,7 @@ export default function Core(sources: Sources): Sinks {
   )
 
   return {
-    dom: <Stream<VNode>>vdom$,
-    state: <Stream<Reducer>>reducer$
+    dom: vdom$,
+    state: reducer$
   }
 }

@@ -21,9 +21,10 @@ export default function view(state$: Stream<AppState>): Stream<VNode> {
   return state$.map(state => {
     const text = new TargetText(state)
     const chars = text.map(build_char)
+    // Re-rendering all characters (made efficient by the virtual DOM engine).
     return p('.ta-target-text', {
-      style: {display: state.text.editing ? 'none' : 'initial' },
-      attrs: {tabindex: 0}
+      style: { display: state.text.editing ? 'none' : 'initial' },
+      attrs: { tabindex: 0 }
     }, chars)
   })
 }

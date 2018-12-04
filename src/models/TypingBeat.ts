@@ -1,6 +1,7 @@
 import { WORD_LENGTH } from "typometer/utils"
 
 
+// TODO: rename to TickProducer
 export default class TypingBeat {
   period: number // ms
   duration: number
@@ -20,7 +21,6 @@ export default class TypingBeat {
   get producer() {
     return {
       start: listener => {
-        listener.next(this.counter++)
         this._uuid = setInterval(() => {
           this.counter++
           if (this.counter >= this.duration) clearInterval(this._uuid)

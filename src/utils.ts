@@ -4,7 +4,8 @@ export const APP_TITLE = "typometer"
 
 export const APP_MOTTO = "Can you type that fast?"
 
-export const DEFAULT_TEXT: string = "Quelle est la planète dont les habitants ne préfèreraient pas une croyance confortable, douillette et bien rodée, si illogique soit-elle, aux vents frisquets de l'incertitude ?"
+// export const DEFAULT_TEXT: string = "Quelle est la planète dont les habitants ne préfèreraient pas une croyance confortable, douillette et bien rodée, si illogique soit-elle, aux vents frisquets de l'incertitude ?"
+export const DEFAULT_TEXT: string = "A major part of software engineering is building components that not only have well-defined and consistent APIs, but are also reusable."
 // export const DEFAULT_TEXT: string = "test"
 
 // A word is 5 consecutive characters. WPM convention.
