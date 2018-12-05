@@ -3,6 +3,9 @@ import 'mocha'
 
 const expect = chai.expect
 
+/**
+ * Dummy testing function
+ */
 function hello() {
   return 'Hello World!'
 }
