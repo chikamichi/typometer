@@ -1,0 +1,6 @@
+job1:
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq nodejs yarn
+  script:
+    - yarn
+    - yarn test
