@@ -1,8 +1,14 @@
 {
   "extends": [
-    "tslint-eslint-rules"
+    "tslint-eslint-rules-recommended"
   ],
-  "rules": {
-    "no-constant-condition": true
+  "rulesDirectory": [
+    "node_modules/tslint-eslint-rules/dist/rules"
+  ],
+  "linterOptions": {
+    "exclude": [
+      "node_modules/*",
+      "**/*.js"
+    ]
   }
 }

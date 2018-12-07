@@ -5,20 +5,28 @@
       "typometer/*": ["src/*"]
     },
     "outDir": "./dist/",
-    "module": "es6",
-    "target": "es2015",
-    "allowJs": true,
+    "target": "esnext",
     "moduleResolution": "node",
+    "module": "es6",
+    "allowJs": true,
+    "noEmit": true,
+    "esModuleInterop": true,
     "removeComments": true,
     "sourceMap": true,
-    "strictNullChecks": true,
-    "noImplicitThis": true,
+
+    "strict": true,
+    "noImplicitAny": false,
+    "strictFunctionTypes": false,
+    "strictPropertyInitialization": false,
+
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
   },
   "exclude": [
+    ".awcache",
+    "dist",
     "node_modules"
   ],
   "awesomeTypescriptLoaderOptions": {

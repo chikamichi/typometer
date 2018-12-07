@@ -14,13 +14,20 @@ module.exports = {
       // TypeScript / JavaScript
       {
         test: /\.tsx?$/,
-        loader: 'awesome-typescript-loader',
-        exclude: /node_modules/
+        // loader: 'awesome-typescript-loader',
+        loader: 'babel-loader',
+        exclude: [
+          /node_modules/,
+          /webpack/
+        ]
       },
       {
         test: /\.js$/,
         loader: "source-map-loader",
-        enforce: "pre"
+        enforce: "pre",
+        exclude: [
+          /node_modules/,
+        ]
       },
 
       // CSS / SASS / SCSS
