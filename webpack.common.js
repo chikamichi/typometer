@@ -1,12 +1,11 @@
 const path = require('path');
-const { CheckerPlugin } = require('awesome-typescript-loader');
-const { TsConfigPathsPlugin } = require('awesome-typescript-loader');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   entry: [
-    'typometer.ts',
+    'src/index.ts',
     'assets/stylesheets/theme.css',
   ],
   module: {
@@ -14,7 +13,6 @@ module.exports = {
       // TypeScript / JavaScript
       {
         test: /\.tsx?$/,
-        // loader: 'awesome-typescript-loader',
         loader: 'babel-loader',
         exclude: [
           /node_modules/,
@@ -48,7 +46,7 @@ module.exports = {
   resolve: {
     extensions: [ '.tsx', '.ts', '.jsx', '.js' ],
     plugins: [
-      new TsConfigPathsPlugin()
+      new TsconfigPathsPlugin()
     ]
   },
   output: {
@@ -56,7 +54,6 @@ module.exports = {
     path: path.resolve(__dirname, 'dist')
   },
   plugins: [
-    new CheckerPlugin(),
     new HtmlWebPackPlugin({
       template: 'src/index.html',
       filename: 'index.html',
