@@ -1,6 +1,12 @@
 {
   "name": "typometer",
-  "main": "typometer.js",
+  "description": "Can you type that fast?",
+  "version": "0.2.0",
+  "license": "MIT",
+  "main": "src/index.ts",
+  "homepage": "https://github.com/chikamichi/typometer#readme",
+  "repository": "https://github.com/chikamichi/typometer",
+  "bugs": "https://github.com/chikamichi/typometer/issues",
   "scripts": {
     "clean": "rm -rf dist",
     "start": "webpack-dev-server --open --config webpack.dev.js",
