@@ -1,0 +1,43 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: circleci/node:10.13.0
+      
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          - v1-dependencies-
+
+      - run: yarn install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+        
+      - run: yarn test
+
+      - add_ssh_keys:
+          fingerprints:
+            # ssh-keygen -lf ~/.ssh/id_rsa.circleci.pub
+            # - "SHA256:QhnbTlNkmI8s4ygpKcwoiO+a3nkdDmUHc4s27LSoNdE"
+            # ssh-keygen -E md5 -lf ~/.ssh/id_rsa.circleci.pub
+            # - "MD5:7c:f1:c7:d9:3a:8d:fc:36:41:df:e3:42:a9:73:78:86"
+            - "7c:f1:c7:d9:3a:8d:fc:36:41:df:e3:42:a9:73:78:86"
+
+      - run:
+          name: Add production server to known hosts
+          command: ssh-keyscan -H nico.oclock.io >> ~/.ssh/known_hosts
+          
+      - run:
+          name: Deploy to production server
+          command: |
+            git remote add production dokku@nico.oclock.io:typometer
+            git push -f production master
