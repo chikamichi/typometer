@@ -1,7 +1,12 @@
+import { Stream } from "xstream"
 import { Sources } from "typometer/types"
 
 
-export default function intent(sources: Sources) {
+export interface LiveTextActions {
+  newChar$: Stream<string>
+}
+
+export default function intent(sources: Sources): LiveTextActions {
   return {
     newChar$: sources.dom
       .select('document').events('keydown')
