@@ -23,19 +23,20 @@ export default { // Metrics
   }
 }
 
-function getMax(state$, metric: string, f?: (attributes: AppState) => number): number {
-  let record, lastRecord
+function getMax(state$: Stream<AppState>, metric: string, f?: (attributes: AppState) => number): number {
+  let record: unknown
+  let lastRecord: unknown
   state$
     .subscribe({next: lastState => lastRecord = lastState.records[metric]})
     .unsubscribe()
   state$
-    .fold((max, state) => {
+    .fold((max: number, state: AppState) => {
       const new_val = f ? f(state) : state.metrics[metric]
       return new_val > max ? new_val : max
     }, lastRecord || 0)
     .subscribe({next: value => record = value})
     .unsubscribe()
-  return record
+  return record as number
 }
 
 function computeAccuracy(state: AppState): number {

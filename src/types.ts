@@ -31,12 +31,14 @@ export interface RunMetrics {
   errors_nb: number,
   replay_nb: number,
   error: string|undefined
+  [key: string]: any
 }
 
 export interface TypingRecords {
   pending: boolean,
   accuracy: number|undefined,
-  wpm: number|undefined
+  wpm: number|undefined,
+  [key: string]: any
 }
 
 export interface AppState {
