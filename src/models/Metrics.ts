@@ -30,9 +30,9 @@ function getMax(state$: Stream<AppState>, metric: string, f?: (attributes: AppSt
     .subscribe({next: lastState => lastRecord = lastState.records[metric]})
     .unsubscribe()
   state$
-    .fold((max: number, state: AppState) => {
+    .fold((max, state: AppState) => {
       const new_val = f ? f(state) : state.metrics[metric]
-      return new_val > max ? new_val : max
+      return new_val > (max as number) ? new_val : max
     }, lastRecord || 0)
     .subscribe({next: value => record = value})
     .unsubscribe()
