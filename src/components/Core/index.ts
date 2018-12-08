@@ -1,7 +1,7 @@
 import xs, { Stream } from "xstream"
 import isolate from "@cycle/isolate"
 
-import { Sources, Sinks, Reducer } from "typometer/types"
+import { Sources, Sinks, Reducer, AppState } from "typometer/types"
 import Model from "typometer/models/Model"
 import Content from "typometer/components/Content"
 import Replay from "typometer/components/Replay"
@@ -62,22 +62,27 @@ export default function Core(sources: Sources): Sinks {
    * representation => currently known as SuperState actually.
    */
 
+  interface ComponentLens {
+    get: (state: AppState) => AppState,
+    set: (parentState: AppState, childState: AppState) => AppState
+  }
+
   // Content
-  const ContentLens = {
+  const ContentLens: ComponentLens = {
     get: (state) => state,
     set: (_, componentState) => componentState
   }
   const contentSinks = isolate(Content, {state: ContentLens})(sources)
 
   // Replay
-  const ReplayLens = {
+  const ReplayLens: ComponentLens = {
     get: (state) => state,
     set: (_, componentState) => componentState
   }
   const replaySinks = isolate(Replay, {state: ReplayLens})(sources)
 
   // Metrics
-  const MetricsLens = {
+  const MetricsLens: ComponentLens = {
     get: (state) => state,
     set: (_, componentState) => componentState
   }
@@ -94,24 +99,27 @@ export default function Core(sources: Sources): Sinks {
     metricsSinks.state
   )
 
-  const reducer$ = <Stream<Reducer>>xs.merge(
+  const reducer$ = xs.merge(
     parentReducer$,
     napReducer$,
     componentsReducer$
-  )
+  ) as Stream<Reducer>
 
   /**
    * Sink: virtual DOM
    */
 
-  const vdom$ = view(
+  const contentVDom$ = contentSinks.dom;
+  const replayVDom$ = replaySinks.dom;
+  const metricsVDom$ = metricsSinks.dom;
+  const vdom$ = view({
     textStatusEditing$,
     textStatusKO$,
     textStatusOK$,
-    contentSinks.dom,
-    replaySinks.dom,
-    metricsSinks.dom
-  )
+    contentVDom$,
+    replayVDom$,
+    metricsVDom$
+  })
 
   return {
     dom: vdom$,

@@ -4,7 +4,17 @@ import { VNode, h1, p, div } from "@cycle/dom"
 import { APP_TITLE, APP_MOTTO } from "typometer/utils"
 
 
-export default function view(textStatusEditing$, textStatusKO$, textStatusOK$, contentVDom$, replayVDom$, metricsVDom$): Stream<VNode> {
+interface sources {
+  textStatusEditing$: Stream<boolean>
+  textStatusKO$: Stream<boolean>
+  textStatusOK$: Stream<boolean>
+  contentVDom$: Stream<VNode>
+  replayVDom$: Stream<VNode>
+  metricsVDom$: Stream<VNode>
+}
+
+export default function view(sources: sources): Stream<VNode> {
+  const { textStatusEditing$, textStatusKO$, textStatusOK$, contentVDom$, replayVDom$, metricsVDom$ } = sources
   return xs.combine(textStatusEditing$, textStatusKO$, textStatusOK$, contentVDom$, replayVDom$, metricsVDom$)
     .map(([textStatusEditing, textStatusKO, textStatusOK, content, replaySettings, metrics]) => {
       return div('.typing-app.ta', {
