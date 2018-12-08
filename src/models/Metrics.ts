@@ -16,7 +16,7 @@ export default { // Metrics
 
   Current: function(state: AppState): TypingRecords {
     return {
-      pending: false, // FIXME: ajouté mais pas présent à la base
+      pending: false,
       accuracy: computeAccuracy(state),
       wpm: computeWPM(state)
     }
