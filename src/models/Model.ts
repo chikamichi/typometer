@@ -34,7 +34,6 @@ export class SuperState {
 
     if (this.isValidChar(char)) {
       metricsMutation['valid_nb'] = m.valid_nb + 1
-      if (this.isAboutDone()) metricsMutation['stop'] = new Date()
     } else {
       metricsMutation['errors_nb'] = m.errors_nb + 1
       metricsMutation['error'] = m.error
@@ -89,25 +88,31 @@ export class SuperState {
 
   // Basically done successfully and halted, but on next "frame" update.
   // Useful in edge cases.
-  public isAboutDone(): boolean {
-    const t = this.state.text
-    const m = this.state.metrics
-    return t.raw.length == m.valid_nb + 1 && !m.stop
-  }
+  // public isAboutDone(): boolean {
+  //   const t = this.state.text
+  //   const m = this.state.metrics
+  //   return t.raw.length == m.valid_nb + 1 && !m.stop
+  // }
 
-  // Done successfully and halted.
+  // Done successfully, no matter if halted or not.
   public isSuccess(): boolean {
     const t = this.state.text
     const m = this.state.metrics
     return t.raw.length == m.valid_nb
   }
 
-  // Done successfully but not yet halted.
+  // Done successfully, yet not halted yet.
   public isDone(): boolean {
     const m = this.state.metrics
     return this.isSuccess() && !m.stop
   }
 
+  // Done successfully and halted.
+  public isDoneDone(): boolean {
+    return this.isSuccess() && this.hasStopped()
+  }
+
+  // Text is currently being edited.
   public textBeingEdited(): boolean {
     return this.state.text.editing
   }
@@ -115,10 +120,14 @@ export class SuperState {
   // Halted, no matter the outcome.
   public hasStopped(): boolean {
     const m = this.state.metrics
-    return !!m.start && !!m.stop // !! Date -> boolean logic
+    return !!m.start && !!m.stop
   }
 
+  // Done successfully, yet no stats computed yet.
   public hasNoStats(): boolean {
+    // const m = this.state.metrics
+    // const r = this.state.records
+    // return this.isSuccess() && !!m.stop && r.pending
     return this.state.records.pending
   }
 

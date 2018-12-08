@@ -2,7 +2,6 @@ import xs, { Stream } from "xstream"
 import isolate from "@cycle/isolate"
 
 import { Sources, Sinks, Reducer, ComponentLens } from "typometer/types"
-import Model from "typometer/models/Model"
 import Content from "typometer/components/Content"
 import Replay from "typometer/components/Replay"
 import Metrics from "typometer/components/Metrics"
@@ -14,39 +13,8 @@ import nap from "./nap"
 // Note: next-action-predicates bypass the intent() layer by design.
 export default function Core(sources: Sources): Sinks {
   const state$ = sources.state.stream
-  const parentReducer$ = model()
-  const napReducer$ = nap(state$)
-
-
-  /**
-   * Internal event streams
-   * 
-   * TODO: should be handled in ./nap.ts instead
-   */
-
-  // Triggers "true" when the user is done typing the whole text \o/
-  const textStatusOK$ = state$
-    .map(state => {
-      const model = Model(state)
-      return !!model.isSuccess()
-    })
-    .startWith(false)
-
-  // Triggers "true" when the user made a(t least one) mistake while typing the text.
-  const textStatusKO$ = state$
-    .map(state => {
-      const model = Model(state)
-      return !!model.hasError()
-    })
-    .startWith(false)
-
-  // Triggers "true" when the user starts typing the text.
-  const textStatusEditing$ = state$
-    .map(state => {
-      const model = Model(state)
-      return !!model.textBeingEdited()
-    })
-    .startWith(false)
+  const actions = nap(state$) // no actions derived from external intents atm
+  const ownReducer$ = model(actions)
 
 
   /**
@@ -95,10 +63,10 @@ export default function Core(sources: Sources): Sinks {
   )
 
   const reducer$ = xs.merge(
-    parentReducer$,
-    napReducer$,
+    ownReducer$,
     componentsReducer$
   ) as Stream<Reducer>
+
 
   /**
    * Sink: virtual DOM
@@ -108,13 +76,12 @@ export default function Core(sources: Sources): Sinks {
   const replayVDom$ = replaySinks.dom;
   const metricsVDom$ = metricsSinks.dom;
   const vdom$ = view({
-    textStatusEditing$,
-    textStatusKO$,
-    textStatusOK$,
+    state$,
     contentVDom$,
     replayVDom$,
     metricsVDom$
   })
+
 
   return {
     dom: vdom$,

@@ -47,7 +47,7 @@ function computeAccuracy(state: AppState): number {
 
 function computeWPM(state: AppState): number {
   const model = Model(state)
-  if (!model.isSuccess()) return 0
+  if (!model.isDoneDone()) return 0
   const nb_words = state.metrics.keystrokes_nb / WORD_LENGTH
   const elapsed = (state.metrics.stop!.getTime() - state.metrics.start!.getTime()) / 1000.0 / 60.0 // ms -> mn
   return Math.round(nb_words / elapsed)
