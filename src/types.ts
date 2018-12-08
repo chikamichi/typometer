@@ -63,3 +63,8 @@ export interface DecoratedRunMetrics extends RunMetrics {
 export interface DecoratedAppState extends AppState {
   metrics: DecoratedRunMetrics
 }
+
+export interface ComponentLens {
+  get: (state: AppState) => AppState,
+  set: (parentState: AppState, childState: AppState) => AppState
+}

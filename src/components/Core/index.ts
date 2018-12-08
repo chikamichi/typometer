@@ -1,7 +1,7 @@
 import xs, { Stream } from "xstream"
 import isolate from "@cycle/isolate"
 
-import { Sources, Sinks, Reducer, AppState } from "typometer/types"
+import { Sources, Sinks, Reducer, ComponentLens } from "typometer/types"
 import Model from "typometer/models/Model"
 import Content from "typometer/components/Content"
 import Replay from "typometer/components/Replay"
@@ -61,11 +61,6 @@ export default function Core(sources: Sources): Sinks {
    * Using SAM, that would be the output of the State function, aka. a state
    * representation => currently known as SuperState actually.
    */
-
-  interface ComponentLens {
-    get: (state: AppState) => AppState,
-    set: (parentState: AppState, childState: AppState) => AppState
-  }
 
   // Content
   const ContentLens: ComponentLens = {

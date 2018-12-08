@@ -1,7 +1,14 @@
 import xs, { Stream } from "xstream"
 import { div, VNode } from "@cycle/dom"
 
-export default function view(liveTextVDom$, customTextVDom$): Stream<VNode> {
+
+interface sources {
+  liveTextVDom$: Stream<VNode>,
+  customTextVDom$: Stream<VNode>,
+}
+
+export default function view(sources: sources): Stream<VNode> {
+  const { liveTextVDom$, customTextVDom$ } = sources
   return xs.combine(liveTextVDom$, customTextVDom$)
     .map(([liveText, customText]) => {
       return div('.ta-content', {
