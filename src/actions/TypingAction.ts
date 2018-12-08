@@ -1,12 +1,12 @@
 import Model from "typometer/models/Model"
-import { AppState } from "typometer/types"
+import { AppState, KeyMapping } from "typometer/types"
 import { INITIAL_APP_STATE } from "typometer/utils"
 
 
 const mapping = {
   Backspace: processBackspace,
   Escape: processEscape
-}
+} as KeyMapping
 
 
 export default function TypingAction(char: string, state: AppState): AppState {

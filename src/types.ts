@@ -68,3 +68,7 @@ export interface ComponentLens {
   get: (state: AppState) => AppState,
   set: (parentState: AppState, childState: AppState) => AppState
 }
+
+export interface KeyMapping {
+  [key: string]: (state: AppState, char?: string) => AppState
+}
