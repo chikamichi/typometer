@@ -13,12 +13,7 @@
     "esModuleInterop": true,
     "removeComments": true,
     "sourceMap": true,
-
     "strict": true,
-    "noImplicitAny": true,
-    "strictFunctionTypes": false,
-    "strictPropertyInitialization": false,
-
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "emitDecoratorMetadata": true,
