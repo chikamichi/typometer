@@ -15,7 +15,7 @@ export default function BeatManager(sources: Sources) {
 
   const beat$$ = xs.combine(wpm$, run$)
     .map(([wpm, state]) => {
-      const beat = new TypingBeat(wpm, state.text.raw.length)
+      const beat = new TypingBeat(+wpm, state.text.raw.length)
       return xs.create(beat.producer)
     })
 

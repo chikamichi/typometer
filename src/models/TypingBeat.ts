@@ -12,7 +12,7 @@ export default class TypingBeat {
   // rythm to compete against own previous run's replay
   // => but that would be averaged, it'd be more interesting to have a replica
   // of rythm on top of mean speed => different technic required
-  constructor(wpm, duration) {
+  constructor(wpm: number, duration: number) {
     this.period = Math.round(60000 / (wpm * WORD_LENGTH))
     this.duration = duration // expressed in "characters" unit
     this.counter = 0
