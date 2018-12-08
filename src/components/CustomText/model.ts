@@ -1,16 +1,18 @@
 import xs, { Stream } from "xstream"
 
-import { Reducer, AppState } from "typometer/types"
+import { Reducer } from "typometer/types"
 import { INITIAL_APP_STATE } from "typometer/utils"
 import Model from "typometer/models/Model"
 import { CustomTextActions } from "./intent"
+import { isAppState } from "typometer/utils/guards";
 
 
 export default function model(actions: CustomTextActions): Stream<Reducer> {
   const reducers: Stream<Reducer>[] = []
 
   reducers.push(actions.focus$
-    .map(_ => function focusChange(state: AppState) {
+    .map(_ => function focusChange(state) {
+      if (!isAppState(state)) return state
       const text = {
         ...state.text,
         editing: true
@@ -19,11 +21,11 @@ export default function model(actions: CustomTextActions): Stream<Reducer> {
         ...state,
         text
       }
-    })
+    } as Reducer)
   )
 
   reducers.push(actions.blur$
-    .map(newText => function blur(_: AppState) {
+    .map(newText => function blur(_) {
       newText = newText.trim()
       if (!newText.length) return INITIAL_APP_STATE
       const text = {
@@ -34,11 +36,12 @@ export default function model(actions: CustomTextActions): Stream<Reducer> {
         ...INITIAL_APP_STATE,
         text
       }
-    })
+    } as Reducer)
   )
 
   reducers.push(actions.toggleEditor$
-    .map(toggling => function openEditor(state: AppState) {
+    .map(toggling => function openEditor(state) {
+      if (!isAppState(state)) return state
       const model = Model(state)
       if (!model.isNew()) return state
       const text = {
@@ -49,7 +52,7 @@ export default function model(actions: CustomTextActions): Stream<Reducer> {
         ...state,
         text
       }
-    })
+    } as Reducer)
   )
 
   return xs.merge(...reducers)
