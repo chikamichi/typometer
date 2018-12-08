@@ -4,6 +4,7 @@ import delay from "xstream/extra/delay"
 import { AppState, Reducer } from "typometer/types"
 import Model from "typometer/models/Model"
 import Metrics from "typometer/models/Metrics"
+import { isAppState } from "typometer/utils/guards";
 
 
 // Next-action-predicate aka. internal side-effect handler.
@@ -34,11 +35,13 @@ export default function nap(state$: Stream<AppState>): Stream<Reducer> {
     .compose(delay(0)) // Fancy seeing you here, setTimeout(0).
     .map(_ => Metrics.Records(state$))
     .map(records => {
-      return (prevState: AppState) => {
+      const reducer: Reducer = (prevState) => {
+        if (!isAppState(prevState)) return prevState
         return {
           ...prevState,
           records
         }
       }
+      return reducer
     })
 }

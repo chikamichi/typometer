@@ -6,7 +6,7 @@ export default class TypingBeat {
   period: number // ms
   duration: number
   counter: number
-  _uuid: NodeJS.Timeout 
+  _uuid!: NodeJS.Timeout 
 
   // TODO: take in an AppState and use start/stop metrics to compute the ideal
   // rythm to compete against own previous run's replay

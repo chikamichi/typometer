@@ -1,9 +1,10 @@
 import xs, { Stream } from "xstream"
 
-import { Sources, Sinks, Reducer } from "typometer/types"
+import { Sources, Sinks, AppState, Reducer } from "typometer/types"
 import Model from "typometer/models/Model"
 import BeatManager from "typometer/components/BeatManager"
 import view from "./view"
+import { isAppState } from "typometer/utils/guards";
 
 // TODO: this is no replay of the user's last run! Let's rename. It's a
 // non-graphical component that updates the state based on a click (beat)
@@ -22,7 +23,7 @@ export default function Replay(sources: Sources): Sinks {
   // A subscription boolean flag for the beat source. Helps with filtering events.
   let subscribed = true
   // Component's reducer tasked with mutating the app state with latest tick.
-  const reducer$ = xs.create()
+  const reducer$ = xs.create() as Stream<Reducer>
 
   // The Beat manager exposes two streams:
   // - a stream of beats (ie. each value is itself a stream of ticks, aka. a beat)
@@ -50,12 +51,12 @@ export default function Replay(sources: Sources): Sinks {
       next: _ => {
         subscription = source$.subscribe({
           next: tick => {
-            reducer$.shamefullySendNext(
-              (prevState) => {
-                const metrics = {...prevState.metrics, replay_nb: tick}
-                return {...prevState, metrics}
-              }
-            )
+            const reducer: Reducer = (prevState) => {
+              if (!isAppState(prevState)) return prevState
+              const metrics = {...prevState.metrics, replay_nb: tick}
+              return {...prevState, metrics} as AppState
+            }
+            reducer$.shamefullySendNext(reducer)
           }
         })
         subscribed = true
@@ -66,6 +67,6 @@ export default function Replay(sources: Sources): Sinks {
 
   return {
     dom: vdom$,
-    state: <Stream<Reducer>>reducer$
+    state: reducer$
   }
 }

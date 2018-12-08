@@ -24,14 +24,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
   },
-  "exclude": [
-    ".awcache",
-    "dist",
-    "node_modules"
-  ],
-  "awesomeTypescriptLoaderOptions": {
-    "useBabel": true,
-    "babelCore": "@babel/core",
-    "useCache": true
-  }
+  "include": [
+    "src"
+  ]
 }

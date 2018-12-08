@@ -23,8 +23,8 @@ export default function Content(sources: Sources): Sinks {
   const liveTextSinks = isolate(LiveText, {state: LiveTextLens})(sources)
 
   const componentsReducer$ = xs.merge(
-    customTextSinks.state,
-    liveTextSinks.state
+    customTextSinks.state as Stream<Reducer>,
+    liveTextSinks.state as Stream<Reducer>
   )
 
   const vdom$ = view(
@@ -34,6 +34,6 @@ export default function Content(sources: Sources): Sinks {
 
   return {
     dom: vdom$,
-    state: <Stream<Reducer>>componentsReducer$
+    state: componentsReducer$
   }
 }

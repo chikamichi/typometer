@@ -23,7 +23,7 @@ export default { // Metrics
   }
 }
 
-function getMax(state$, metric: string, f?: (attributes?: AppState) => number): number {
+function getMax(state$, metric: string, f?: (attributes: AppState) => number): number {
   let record, lastRecord
   state$
     .subscribe({next: lastState => lastRecord = lastState.records[metric]})

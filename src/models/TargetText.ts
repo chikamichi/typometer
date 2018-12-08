@@ -2,7 +2,7 @@ import { AppState, CharState } from "typometer/types"
 
 export default class TargetText {
   private _index: number
-  private _fullText: string[]
+  private _fullText!: string[]
 
   constructor(readonly state: AppState) {
     this._index = 0
