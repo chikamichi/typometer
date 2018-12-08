@@ -1,12 +1,17 @@
-import xs from "xstream"
+import xs, { Stream } from "xstream"
 import { div, span, h3, a, input } from "@cycle/dom"
 
 import { AppState } from "typometer/types"
 import Model, { SuperState } from "typometer/models/Model"
 
 
-export default function view(sources) {
-  return xs.combine(sources.state$, sources.wpm$)
+interface sources {
+  state$: Stream<AppState>,
+  wpm$: Stream<string>
+}
+
+export default function view({ state$, wpm$ }: sources) {
+  return xs.combine(state$, wpm$)
     .map(([state, wpm]) => [Model(<AppState>state), wpm])
     .map(([state, wpm]) =>
       div('.ta-setting  .ta-replay-settings', [
