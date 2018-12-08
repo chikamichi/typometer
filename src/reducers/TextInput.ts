@@ -16,14 +16,12 @@ export default function TextInput(state: AppState, char: string): AppState {
 
 
 function processLetter(state: AppState, char: string): AppState {
-  const mutation = Model(state).newCharMutation(char)
-  return {...state, ...mutation}
+  return Model(state).newCharMutation(char)
 }
 
 
 function processBackspace(state: AppState): AppState {
-  const mutation = Model(state).eraseCharMutation()
-  return {...state, ...mutation}
+  return Model(state).eraseCharMutation()
 }
 
 
