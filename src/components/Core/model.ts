@@ -1,17 +1,12 @@
 import xs, { Stream } from "xstream"
 
-import { Reducer, AppState } from "typometer/types"
-import { INITIAL_APP_STATE } from "typometer/utils"
+import { Reducer } from "typometer/types"
 import { CoreActions } from './nap'
+import InitialStateReducer from 'typometer/reducers/InitialState'
 
 // Model: map actions to state reducers.
 export default function model(actions: CoreActions) {
-  const initialState$ = xs.of(function initialReducer(prevState: AppState) {
-    if (prevState)
-      return prevState
-    else
-      return INITIAL_APP_STATE
-  } as Reducer)
+  const initialState$ = xs.of(InitialStateReducer)
 
   // Triggers when the user is done typing the whole text \o/
   // const textStatusOK$ = actions.textStatusOK$

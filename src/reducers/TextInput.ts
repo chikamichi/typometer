@@ -1,5 +1,5 @@
 import Model from "typometer/models/Model"
-import { AppState, KeyMapping } from "typometer/types"
+import { AppState, Reducer, KeyMapping } from "typometer/types"
 import { INITIAL_APP_STATE } from "typometer/utils"
 
 
@@ -9,10 +9,10 @@ const mapping = {
 } as KeyMapping
 
 
-export default function TextInput(state: AppState, char: string): AppState {
+export default (function(state: AppState, char: string): AppState {
   if (Model(state).textBeingEdited()) return state
   return (mapping[char] || processLetter)(state, char)
-}
+}) as Reducer
 
 
 function processLetter(state: AppState, char: string): AppState {
