@@ -17,13 +17,27 @@ import { isAppState } from "typometer/utils/guards";
 export default function Replay(sources: Sources): Sinks {
   const state$ = sources.state.stream
   // Beat source. Starts as a "Null Object".
-  let source$ = xs.create()
+  let source$: Stream<number> = xs.create()
   // A subscription to the beat source. Start as a no-op on the null object.
   let subscription = source$.subscribe({})
   // A subscription boolean flag for the beat source. Helps with filtering events.
   let subscribed = true
   // Component's reducer tasked with mutating the app state with latest tick.
   const reducer$ = xs.create() as Stream<Reducer>
+
+  // See usage below.
+  const refreshSubscription = () => {
+    subscription = source$.subscribe({ next: updateTick })
+    subscribed = true
+  }
+  const updateTick = (tick: number) => {
+    const reducer: Reducer = (prevState) => {
+      if (!isAppState(prevState)) return prevState
+      const metrics = {...prevState.metrics, replay_nb: tick}
+      return {...prevState, metrics} as AppState
+    }
+    reducer$.shamefullySendNext(reducer)
+  }
 
   // The Beat manager exposes two streams:
   // - a stream of beats (ie. each value is itself a stream of ticks, aka. a beat)
@@ -47,21 +61,7 @@ export default function Replay(sources: Sources): Sinks {
   // effectively starts the beat's tick producer.
   state$
     .filter(state => Model(state).hasJustStarted() && !subscribed)
-    .addListener({
-      next: _ => {
-        subscription = source$.subscribe({
-          next: tick => {
-            const reducer: Reducer = (prevState) => {
-              if (!isAppState(prevState)) return prevState
-              const metrics = {...prevState.metrics, replay_nb: tick}
-              return {...prevState, metrics} as AppState
-            }
-            reducer$.shamefullySendNext(reducer)
-          }
-        })
-        subscribed = true
-      }
-    })
+    .addListener({ next: refreshSubscription })
 
   const vdom$ = view({state$, wpm$})
 
