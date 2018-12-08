@@ -25,7 +25,7 @@ export const INITIAL_APP_STATE: AppState = {
     valid_nb: 0,
     errors_nb: 0,
     replay_nb: 0,
-    error: undefined
+    error: ''
   },
   records: {
     pending: true,

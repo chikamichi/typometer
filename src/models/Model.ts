@@ -1,4 +1,5 @@
 import { AppState, DecoratedAppState, DecoratedRunMetrics } from "typometer/types"
+import { INITIAL_APP_STATE } from "typometer/utils"
 import Metrics from "typometer/models/Metrics"
 
 
@@ -29,18 +30,14 @@ export class SuperState {
     metricsMutation['current_char'] = char
     metricsMutation['keystrokes_nb'] = m.keystrokes_nb + 1
 
-    if (this.isNew())
-      metricsMutation['start'] = new Date()
+    if (this.isNew()) metricsMutation['start'] = new Date()
 
     if (this.isValidChar(char)) {
       metricsMutation['valid_nb'] = m.valid_nb + 1
-
-      if (this.isAboutDone())
-        metricsMutation['stop'] = new Date()
-
+      if (this.isAboutDone()) metricsMutation['stop'] = new Date()
     } else {
       metricsMutation['errors_nb'] = m.errors_nb + 1
-      metricsMutation['error'] = m.error || ''
+      metricsMutation['error'] = m.error
       metricsMutation['error'] += char
     }
 
@@ -55,9 +52,9 @@ export class SuperState {
     if (this.hasStopped())
       return this.state
 
-    if (m.error) {
+    if (this.hasError()) {
       const new_error = m.error.substring(0, m.error.length-1)
-      metricsMutation['error'] = new_error.length ? new_error : undefined
+      metricsMutation['error'] = new_error.length ? new_error : INITIAL_APP_STATE.metrics.error
     } else {
       metricsMutation['valid_nb'] = m.valid_nb > 0 ? m.valid_nb - 1 : 0
     }
@@ -67,9 +64,10 @@ export class SuperState {
   }
 
   public isValidChar(char: string): boolean {
+    if (this.hasError()) return false
     const t = this.state.text
     const m = this.state.metrics
-    return t.raw[m.valid_nb] == char && m.error == undefined
+    return t.raw[m.valid_nb] == char
   }
 
   public isNew(): boolean {
@@ -126,8 +124,7 @@ export class SuperState {
 
   // Running, has error(s).
   public hasError(): boolean {
-    const m = this.state.metrics
-    return !!m.error
+    return !!this.state.metrics.error
   }
 
   public decorate(): DecoratedAppState {

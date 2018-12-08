@@ -33,20 +33,19 @@ export default class TargetText {
     const text = this.state.text.raw
     return (this._fullText = [
       ...text.substring(0, m.valid_nb),
-      ...(m.error||''),
+      ...m.error,
       ...text.substring(m.valid_nb, text.length)
     ])
   }
 
   private charStateAt(index: number): CharState {
     const m = this.state.metrics
-    const error = m.error || '' // FIXME: undefined as a default value is cumbersome
     return {
       char: this._fullText[index],
       isValid: index < m.valid_nb,
-      isError: index >= m.valid_nb && index < m.valid_nb + error.length,
-      isReplayed: index < m.replay_nb + error.length,
-      isNext: index == m.valid_nb + error.length
+      isError: index >= m.valid_nb && index < m.valid_nb + m.error.length,
+      isReplayed: index < m.replay_nb + m.error.length,
+      isNext: index == m.valid_nb + m.error.length
     }
   }
 }

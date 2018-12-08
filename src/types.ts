@@ -30,7 +30,7 @@ export interface RunMetrics {
   valid_nb: number,
   errors_nb: number,
   replay_nb: number,
-  error: string|undefined
+  error: string
   [key: string]: any
 }
 
