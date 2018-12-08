@@ -1,3 +1,4 @@
+import { Listener } from "xstream"
 import { WORD_LENGTH } from "typometer/utils"
 
 
@@ -18,14 +19,16 @@ export default class TypingBeat {
     this.counter = 0
   }
 
+  // https://github.com/staltz/xstream#producer
   get producer() {
     return {
-      start: listener => {
-        this._uuid = setInterval(() => {
+      start: (listener: Listener<number>) => {
+        const nextTick = () => {
           this.counter++
           if (this.counter >= this.duration) clearInterval(this._uuid)
           listener.next(this.counter)
-        }, this.period)
+        }
+        this._uuid = setInterval(nextTick, this.period)
       },
       stop: () => {
         clearInterval(this._uuid)
