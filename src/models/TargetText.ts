@@ -21,9 +21,9 @@ export default class TargetText {
     }
   }
 
-  public map(callback: (CharState) => any): CharState[] {
+  public map(callback: (charState: CharState) => any): CharState[] {
     const chars: CharState[] = []
-    for (let char of this) chars.push(callback(char))
+    for (let char of this) chars.push(callback(char!))
     return chars
   }
 
