@@ -8,6 +8,11 @@ export default function Model(state: AppState): SuperState {
   return new SuperState(state)
 }
 
+// A mutation is described as a free-form object… for now.
+// TODO: define specific interfaces for each supported mutations.
+interface Mutation {
+  [key: string]: any
+}
 
 export class SuperState {
   constructor(readonly state: AppState) {
@@ -15,7 +20,7 @@ export class SuperState {
 
   public newCharMutation(char: string): AppState {
     let m = this.state.metrics
-    let metricsMutation = {}
+    let metricsMutation = {} as Mutation
 
     if (this.hasStopped()) {
       return this.state
@@ -45,7 +50,7 @@ export class SuperState {
 
   public eraseCharMutation(): AppState {
     let m = this.state.metrics
-    let metricsMutation = {}
+    let metricsMutation = {} as Mutation
 
     if (this.hasStopped())
       return this.state
