@@ -26,7 +26,7 @@ module.exports = merge(common, {
     stats: 'minimal', // Infos en console limitées
     progress: true, // progression du build en console
     inline: true, // Rechargement du navigateur en cas de changement
-    open: true, // on ouvre le navigateur
+    open: false, // on n'ouvre pas le navigateur automatiquement
     historyApiFallback: true,
     host: host,
     port: port,
