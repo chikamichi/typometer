@@ -1,7 +1,14 @@
-import xs from "xstream"
+import xs, { Stream } from "xstream"
 import { DOMSource } from "@cycle/dom"
 
-export default function intent(domSource: DOMSource) {
+
+export interface CustomTextActions {
+  focus$: Stream<boolean>,
+  blur$: Stream<string>,
+  toggleEditor$: Stream<boolean>
+}
+
+export default function intent(domSource: DOMSource): CustomTextActions {
   const toggleEditorWithKeyboard$ = domSource
     .select('document').events('keydown')
     .filter(e => (e.key == "F2") || (e.key == "Enter" && e.ctrlKey))
