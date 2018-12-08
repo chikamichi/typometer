@@ -9,13 +9,13 @@ const mapping = {
 } as KeyMapping
 
 
-export default function TypingAction(char: string, state: AppState): AppState {
+export default function TextInput(state: AppState, char: string): AppState {
+  if (Model(state).textBeingEdited()) return state
   return (mapping[char] || processLetter)(state, char)
 }
 
 
 function processLetter(state: AppState, char: string): AppState {
-  // TODO: Model(state).mutations.newChar(char)
   const mutation = Model(state).newCharMutation(char)
   return {...state, ...mutation}
 }
