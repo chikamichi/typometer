@@ -5,7 +5,7 @@ import { DOMSource } from "@cycle/dom"
 export interface EditorActions {
   focus$: Stream<boolean>,
   blur$: Stream<string>,
-  toggleEditor$: Stream<boolean>
+  toggle$: Stream<boolean>
 }
 
 export default function intent(domSource: DOMSource): EditorActions {
@@ -22,7 +22,7 @@ export default function intent(domSource: DOMSource): EditorActions {
     blur$: domSource.select('textarea').events('blur')
       .map(e => (<HTMLInputElement>e.target).value),
 
-    toggleEditor$: xs.merge(toggleEditorWithKeyboard$, toggleEditorByClicking$)
+    toggle$: xs.merge(toggleEditorWithKeyboard$, toggleEditorByClicking$)
       // Note: using fold() triggers an initial UI refresh due to seed value
       .fold((toggling, _) => (!toggling), false)
   }
