@@ -45,7 +45,7 @@ export default class TargetText {
       char: this._fullText[index],
       isValid: index < m.valid_nb,
       isError: index >= m.valid_nb && index < m.valid_nb + m.error.length,
-      isReplayed: index < m.replay_nb + m.error.length,
+      isTick: index < m.ticks + m.error.length,
       isNext: index == m.valid_nb + m.error.length
     }
   }

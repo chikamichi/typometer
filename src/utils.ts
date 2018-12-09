@@ -24,7 +24,7 @@ export const INITIAL_APP_STATE: AppState = {
     keystrokes_nb: 0,
     valid_nb: 0,
     errors_nb: 0,
-    replay_nb: 0,
+    ticks: 0,
     error: ''
   },
   records: {

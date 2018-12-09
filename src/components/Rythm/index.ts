@@ -6,16 +6,11 @@ import BeatManager from "typometer/components/BeatManager"
 import view from "./view"
 
 
-// TODO: this is no replay of the user's last run! Let's rename. It's a
-// non-graphical component that updates the state based on a click (beat)
-// => Rythm
-
-
 /**
  * Listens to a regular beat controlled by the WPM setting, and updates the
  * state to notify about the progression (number of accumulated ticks).
  */
-export default function Replay(sources: ComponentSources): Sinks {
+export default function Rythm(sources: ComponentSources): Sinks {
   const state$ = sources.state$
   // Beat source. Starts as a "Null Object".
   let source$: Stream<number> = xs.create()
@@ -33,7 +28,7 @@ export default function Replay(sources: ComponentSources): Sinks {
   }
   const updateTick = (tick: number) => {
     const reducer = (prevState: State) => {
-      const metrics = {...prevState.data.metrics, replay_nb: tick}
+      const metrics = {...prevState.data.metrics, ticks: tick}
       return State.from({...prevState.data, metrics})
     }
     reducer$.shamefullySendNext(reducer as Reducer)

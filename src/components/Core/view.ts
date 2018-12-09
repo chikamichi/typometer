@@ -8,14 +8,14 @@ import { APP_TITLE, APP_MOTTO } from "typometer/utils"
 interface sources {
   state$: MemoryStream<State>
   contentVDom$: Stream<VNode>
-  replayVDom$: Stream<VNode>
+  rythmVDom$: Stream<VNode>
   metricsVDom$: Stream<VNode>
 }
 
 export default function view(sources: sources): Stream<VNode> {
-  const { state$, contentVDom$, replayVDom$, metricsVDom$ } = sources
-  return xs.combine(state$, contentVDom$, replayVDom$, metricsVDom$)
-    .map(([state, content, replaySettings, metrics]) => {
+  const { state$, contentVDom$, rythmVDom$, metricsVDom$ } = sources
+  return xs.combine(state$, contentVDom$, rythmVDom$, metricsVDom$)
+    .map(([state, content, rythmSettings, metrics]) => {
       return div('.typing-app.ta', {
         class: {
           'ta-text-status--editing': state.textBeingEdited(),
@@ -35,7 +35,7 @@ export default function view(sources: sources): Stream<VNode> {
         ]),
         div('.ta-main', [
           div('.ta-settings', [
-            replaySettings
+            rythmSettings
           ]),
           content
         ])

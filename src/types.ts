@@ -34,7 +34,7 @@ export interface RunMetrics {
   keystrokes_nb: number,
   valid_nb: number,
   errors_nb: number,
-  replay_nb: number,
+  ticks: number,
   error: string
   [key: string]: any
 }
@@ -57,7 +57,7 @@ export interface CharState {
   isValid: boolean,
   isError: boolean,
   isNext: boolean,
-  isReplayed: boolean
+  isTick: boolean
 }
 
 export interface DecoratedRunMetrics extends RunMetrics {

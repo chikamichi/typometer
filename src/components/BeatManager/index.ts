@@ -6,7 +6,7 @@ import TypingBeat from "typometer/models/TypingBeat"
 
 export default function BeatManager(sources: ComponentSources) {
   const wpm$ = sources.dom!
-    .select('.ta-replay-settings__range').events('input')
+    .select('.ta-tick-settings__range').events('input')
     .map(e => (<HTMLInputElement>e.target).value)
     .startWith("32") // 1000 ms period ie. 1 char/s
 

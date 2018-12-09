@@ -4,7 +4,7 @@ import isolate from "@cycle/isolate"
 import { Sources, Sinks, Reducer, ComponentLens } from "typometer/types"
 import State from 'typometer/models/State'
 import Content from "typometer/components/Content"
-import Replay from "typometer/components/Replay"
+import Rythm from "typometer/components/Rythm"
 import Metrics from "typometer/components/Metrics"
 import model from "./model"
 import view from "./view"
@@ -38,12 +38,12 @@ export default function Core(sources: Sources): Sinks {
   // }
   // const contentSinks = isolate(Content, {state: ContentLens})(sources)
 
-  // // Replay
-  // const ReplayLens: ComponentLens = {
+  // // Rythm
+  // const RythmLens: ComponentLens = {
   //   get: (state) => state,
   //   set: (_, componentState) => componentState
   // }
-  // const replaySinks = isolate(Replay, {state: ReplayLens})({ state$, dom: sources.dom })
+  // const rythmSinks = isolate(Rythm, {state: RythmLens})({ state$, dom: sources.dom })
 
   // // Metrics
   // const MetricsLens: ComponentLens = {
@@ -54,7 +54,7 @@ export default function Core(sources: Sources): Sinks {
 
   // TODO: check isolate again, is it required?
   const contentSinks = Content({ state$, dom: sources.dom })
-  const replaySinks = Replay({ state$, dom: sources.dom })
+  const rythmSinks = Rythm({ state$, dom: sources.dom })
   const metricsSinks = Metrics({ state$ })
 
 
@@ -64,7 +64,7 @@ export default function Core(sources: Sources): Sinks {
 
   const componentsReducer$ = xs.merge(
     contentSinks.state,
-    replaySinks.state,
+    rythmSinks.state,
     metricsSinks.state
   )
 
@@ -79,12 +79,12 @@ export default function Core(sources: Sources): Sinks {
    */
 
   const contentVDom$ = contentSinks.dom;
-  const replayVDom$ = replaySinks.dom;
+  const rythmVDom$ = rythmSinks.dom;
   const metricsVDom$ = metricsSinks.dom;
   const vdom$ = view({
     state$,
     contentVDom$,
-    replayVDom$,
+    rythmVDom$,
     metricsVDom$
   })
 

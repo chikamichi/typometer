@@ -289,7 +289,7 @@ a, a:visited {
   font-weight: bold;
 }
 
-.ta-char--replay {
+.ta-char--tick {
   border-top: 3px solid lightgrey;
 }
 
@@ -304,7 +304,7 @@ a, a:visited {
   /*font-weight: bold;*/
 }
 
-.ta-char--valid.ta-char--replay {
+.ta-char--valid.ta-char--tick {
   border-top: 3px solid lightgrey;
 }
 
