@@ -1,13 +1,13 @@
-import { Stream } from "xstream"
+import { Stream, MemoryStream } from "xstream"
 import { h, textarea, VNode } from "@cycle/dom"
 
-import { AppState } from "typometer/types"
+import State from 'typometer/models/State'
 
-export default function view(state$: Stream<AppState>): Stream<VNode> {
+export default function view(state$: MemoryStream<State>): Stream<VNode> {
   return state$
     .map(state => {
       return h('div.ta-custom-text', {
-          class: {active: state.text.editing},
+          class: {active: state.data.text.editing},
           hook: {
             update: (_, vnode) => {
               const el = <HTMLElement>vnode.elm
@@ -18,7 +18,7 @@ export default function view(state$: Stream<AppState>): Stream<VNode> {
         }, [
           // h2('.ta-custom-text__edit', 'Edit text'),
           textarea({attrs: {rows: 5, tabindex: 0}}, [
-            state.text.raw
+            state.data.text.raw
           ])
       ])
     })

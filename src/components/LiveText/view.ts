@@ -1,8 +1,9 @@
 import classnames from "classnames"
 import { p, span, VNode } from "@cycle/dom"
-import { Stream } from "xstream"
+import { Stream, MemoryStream } from "xstream"
 
-import { AppState, CharState } from "typometer/types"
+import { CharState } from "typometer/types"
+import State from 'typometer/models/State'
 import TargetText from "typometer/models/TargetText"
 
 
@@ -17,13 +18,16 @@ function build_char(char: CharState): VNode {
 }
 
 
-export default function view(state$: Stream<AppState>): Stream<VNode> {
+export default function view(state$: MemoryStream<State>): Stream<VNode> {
   return state$.map(state => {
-    const text = new TargetText(state)
+    const text = new TargetText(state.data)
     const chars = text.map(build_char)
     // Re-rendering all characters (made efficient by the virtual DOM engine).
+    // TODO: actually, that rendering strategy sucks. Only actually edited characters should be processed.
+    // snabbdom will get the job done browser-wise, but (internally) dataflow-wise its nuts parsing the whole text:
+    // too many events triggered on streams, on each key stroke!
     return p('.ta-target-text', {
-      style: { display: state.text.editing ? 'none' : 'initial' },
+      style: { display: state.data.text.editing ? 'none' : 'initial' },
       attrs: { tabindex: 0 }
     }, chars)
   })

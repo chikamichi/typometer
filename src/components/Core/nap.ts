@@ -2,8 +2,8 @@ import { Stream } from "xstream"
 import delay from "xstream/extra/delay"
 
 import Metrics from "typometer/models/Metrics"
-import { AppState, TypingRecords } from "typometer/types"
-import Model from "typometer/models/Model"
+import { TypingRecords } from "typometer/types"
+import State from "typometer/models/State"
 
 
 export interface CoreActions {
@@ -24,7 +24,7 @@ export interface CoreActions {
 // As next-action-predicates listen for state$, they have the potential for
 // unleashing infinite loop doom: proceed with caution, use restrictive safe
 // guards in the form of .filter() statements.
-export default function nap(state$: Stream<AppState>): CoreActions {
+export default function nap(state$: Stream<State>): CoreActions {
   // Triggers "true" when the user is done typing the whole text \o/
   return {
     // textStatusOK$: state$

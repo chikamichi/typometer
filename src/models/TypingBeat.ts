@@ -9,7 +9,7 @@ export default class TypingBeat {
   counter: number
   _uuid!: NodeJS.Timeout 
 
-  // TODO: take in an AppState and use start/stop metrics to compute the ideal
+  // TODO: take in a State and use start/stop metrics to compute the ideal
   // rythm to compete against own previous run's replay
   // => but that would be averaged, it'd be more interesting to have a replica
   // of rythm on top of mean speed => different technic required

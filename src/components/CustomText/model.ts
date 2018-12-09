@@ -2,25 +2,24 @@ import xs, { Stream } from "xstream"
 
 import { Reducer } from "typometer/types"
 import { INITIAL_APP_STATE } from "typometer/utils"
-import Model from "typometer/models/Model"
+import State from "typometer/models/State"
 import { CustomTextActions } from "./intent"
-import { isAppState } from "typometer/utils/guards";
 
 
 export default function model(actions: CustomTextActions): Stream<Reducer> {
   const reducers: Stream<Reducer>[] = []
 
+  // TODO: extract reducing functions to src/reducers/
   reducers.push(actions.focus$
-    .map(_ => function focusChange(state) {
-      if (!isAppState(state)) return state
+    .map(_ => function focusChange(state: State) {
       const text = {
-        ...state.text,
+        ...state.data.text,
         editing: true
       }
-      return {
-        ...state,
+      return State.from({
+        ...state.data,
         text
-      }
+      })
     } as Reducer)
   )
 
@@ -32,26 +31,24 @@ export default function model(actions: CustomTextActions): Stream<Reducer> {
         ...INITIAL_APP_STATE.text,
         raw: newText
       }
-      return {
+      return State.from({
         ...INITIAL_APP_STATE,
         text
-      }
+      })
     } as Reducer)
   )
 
   reducers.push(actions.toggleEditor$
-    .map(toggling => function openEditor(state) {
-      if (!isAppState(state)) return state
-      const model = Model(state)
-      if (!model.isNew()) return state
+    .map(toggling => function openEditor(state: State) {
+      if (!state.isNew()) return state
       const text = {
-        ...state.text,
+        ...state.data.text,
         editing: toggling
       }
-      return {
-        ...state,
+      return State.from({
+        ...state.data,
         text
-      }
+      })
     } as Reducer)
   )
 

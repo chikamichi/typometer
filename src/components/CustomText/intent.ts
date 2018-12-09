@@ -23,6 +23,7 @@ export default function intent(domSource: DOMSource): CustomTextActions {
       .map(e => (<HTMLInputElement>e.target).value),
 
     toggleEditor$: xs.merge(toggleEditorWithKeyboard$, toggleEditorByClicking$)
+      // Note: using fold() triggers an initial UI refresh due to seed value
       .fold((toggling, _) => (!toggling), false)
   }
 }

@@ -1,5 +1,5 @@
-import Model from "typometer/models/Model"
-import { AppState, Reducer, KeyMapping } from "typometer/types"
+import { Reducer, KeyMapping } from "typometer/types"
+import State from "typometer/models/State"
 import { INITIAL_APP_STATE } from "typometer/utils"
 
 
@@ -9,35 +9,34 @@ const mapping = {
 } as KeyMapping
 
 
-export default (function(state: AppState, char: string): AppState {
-  if (Model(state).textBeingEdited()) return state
+export default (function TextInput(state: State, char: string): State {
+  if (state.textBeingEdited()) return state
   return (mapping[char] || processLetter)(state, char)
 }) as Reducer
 
 
-function processLetter(state: AppState, char: string): AppState {
-  return Model(state).newCharMutation(char)
+function processLetter(state: State, char: string): State {
+  return state.newCharMutation(char)
 }
 
 
-function processBackspace(state: AppState): AppState {
-  return Model(state).eraseCharMutation()
+function processBackspace(state: State, _: string): State {
+  return state.eraseCharMutation()
 }
 
 
-function processEscape(state: AppState): AppState {
-  let t = state.text
-  return {
+function processEscape(state: State, _: string): State {
+  return State.from({
     ...INITIAL_APP_STATE,
     ...{
       text: {
         ...INITIAL_APP_STATE.text,
-        raw: t.raw
+        raw: state.data.text.raw
       },
       records: {
-        ...state.records,
+        ...state.data.records,
         pending: true
       }
     }
-  }
+  })
 }

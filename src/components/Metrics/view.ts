@@ -1,12 +1,12 @@
-import { Stream } from "xstream"
+import { Stream, MemoryStream } from "xstream"
 import { table, thead, tbody, tr, th, td, VNode } from "@cycle/dom"
 
-import { AppState } from "typometer/types"
-import Model from "typometer/models/Model"
+import State from 'typometer/models/State'
 
-export default function view(state$: Stream<AppState>): Stream<VNode> {
+
+export default function view(state$: MemoryStream<State>): Stream<VNode> {
   return state$
-    .map(state => Model(state).decorate())
+    .map(state => state.decorate())
     .map(state => {
       return table('.ta-metrics', [
         thead('.ta-metrics__types', [

@@ -17,5 +17,5 @@ export default function view(sources: sources): Stream<VNode> {
         liveText,
         customText
       ])
-  })
+    })
 }

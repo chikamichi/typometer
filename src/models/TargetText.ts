@@ -4,7 +4,7 @@ export default class TargetText {
   private _index: number
   private _fullText!: string[]
 
-  constructor(readonly state: AppState) {
+  constructor(readonly data: AppState) {
     this._index = 0
   }
 
@@ -28,9 +28,10 @@ export default class TargetText {
   }
 
   public get fullText(): string[] {
+    // console.log('fullText', this._index, this.data)
     if (this._fullText) return this._fullText
-    const m = this.state.metrics
-    const text = this.state.text.raw
+    const m = this.data.metrics
+    const text = this.data.text.raw
     return (this._fullText = [
       ...text.substring(0, m.valid_nb),
       ...m.error,
@@ -39,7 +40,7 @@ export default class TargetText {
   }
 
   private charStateAt(index: number): CharState {
-    const m = this.state.metrics
+    const m = this.data.metrics
     return {
       char: this._fullText[index],
       isValid: index < m.valid_nb,

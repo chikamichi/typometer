@@ -1,15 +1,20 @@
-import { Stream } from "xstream"
+import { Stream, MemoryStream } from "xstream"
 import { DOMSource, VNode } from "@cycle/dom"
 import { StateSource } from "@cycle/state"
 
-import { AppState } from "typometer/types"
+import State from "typometer/models/State"
 
 
-export type Reducer = (prev?: AppState) => AppState | undefined
+export type Reducer = (prev?: State) => State | undefined
 
 export interface Sources {
   dom: DOMSource,
-  state: StateSource<AppState>
+  state: StateSource<State>
+}
+
+export interface ComponentSources {
+  dom?: DOMSource,
+  state$: MemoryStream<State>
 }
 
 export type Sinks = {
@@ -65,10 +70,10 @@ export interface DecoratedAppState extends AppState {
 }
 
 export interface ComponentLens {
-  get: (state: AppState) => AppState,
-  set: (parentState: AppState, childState: AppState) => AppState
+  get: (state: State) => State,
+  set: (parentState: State, childState: State) => State
 }
 
 export interface KeyMapping {
-  [key: string]: (state: AppState, char?: string) => AppState
+  [key: string]: (state: State, char?: string) => State
 }

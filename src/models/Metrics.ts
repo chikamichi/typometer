@@ -1,12 +1,12 @@
-import { Stream } from "xstream"
+import { MemoryStream } from "xstream"
 
 import { WORD_LENGTH } from "typometer/utils"
-import { AppState, TypingRecords } from "typometer/types"
-import Model from "typometer/models/Model"
+import { TypingRecords } from "typometer/types"
+import State from "typometer/models/State"
 
 
 export default { // Metrics
-  Records: function(state$: Stream<AppState>): TypingRecords {
+  Records: function(state$: MemoryStream<State>): TypingRecords {
     return {
       pending: false,
       accuracy: getMax(state$, 'accuracy', computeAccuracy),
@@ -14,7 +14,7 @@ export default { // Metrics
     }
   },
 
-  Current: function(state: AppState): TypingRecords {
+  Current: function(state: State): TypingRecords {
     return {
       pending: false,
       accuracy: computeAccuracy(state),
@@ -23,15 +23,15 @@ export default { // Metrics
   }
 }
 
-function getMax(state$: Stream<AppState>, metric: string, f?: (attributes: AppState) => number): number {
+function getMax(state$: MemoryStream<State>, metric: string, f?: (attributes: State) => number): number {
   let record: unknown
   let lastRecord: unknown
   state$
-    .subscribe({next: lastState => lastRecord = lastState.records[metric]})
+    .subscribe({next: lastState => lastRecord = lastState.data.records[metric]})
     .unsubscribe()
   state$
-    .fold((max, state: AppState) => {
-      const new_val = f ? f(state) : state.metrics[metric]
+    .fold((max, state: State) => {
+      const new_val = f ? f(state) : state.data.metrics[metric]
       return new_val > (max as number) ? new_val : max
     }, lastRecord || 0)
     .subscribe({next: value => record = value})
@@ -39,16 +39,14 @@ function getMax(state$: Stream<AppState>, metric: string, f?: (attributes: AppSt
   return record as number
 }
 
-function computeAccuracy(state: AppState): number {
-  const model = Model(state)
-  if (model.isNew()) return 0
-  return Math.round((1 - state.metrics.errors_nb / state.metrics.keystrokes_nb) * 100)
+function computeAccuracy(state: State): number {
+  if (state.isNew()) return 0
+  return Math.round((1 - state.data.metrics.errors_nb / state.data.metrics.keystrokes_nb) * 100)
 }
 
-function computeWPM(state: AppState): number {
-  const model = Model(state)
-  if (!model.isDoneDone()) return 0
-  const nb_words = state.metrics.keystrokes_nb / WORD_LENGTH
-  const elapsed = (state.metrics.stop!.getTime() - state.metrics.start!.getTime()) / 1000.0 / 60.0 // ms -> mn
+function computeWPM(state: State): number {
+  if (!state.isDoneDone()) return 0
+  const nb_words = state.data.metrics.keystrokes_nb / WORD_LENGTH
+  const elapsed = (state.data.metrics.stop!.getTime() - state.data.metrics.start!.getTime()) / 1000.0 / 60.0 // ms -> mn
   return Math.round(nb_words / elapsed)
 }

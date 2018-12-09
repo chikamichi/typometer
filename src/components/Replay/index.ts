@@ -1,21 +1,22 @@
 import xs, { Stream } from "xstream"
 
-import { Sources, Sinks, AppState, Reducer } from "typometer/types"
-import Model from "typometer/models/Model"
+import { Sinks, Reducer, ComponentSources } from "typometer/types"
+import State from "typometer/models/State"
 import BeatManager from "typometer/components/BeatManager"
 import view from "./view"
-import { isAppState } from "typometer/utils/guards";
+
 
 // TODO: this is no replay of the user's last run! Let's rename. It's a
 // non-graphical component that updates the state based on a click (beat)
 // => Rythm
 
+
 /**
  * Listens to a regular beat controlled by the WPM setting, and updates the
  * state to notify about the progression (number of accumulated ticks).
  */
-export default function Replay(sources: Sources): Sinks {
-  const state$ = sources.state.stream
+export default function Replay(sources: ComponentSources): Sinks {
+  const state$ = sources.state$
   // Beat source. Starts as a "Null Object".
   let source$: Stream<number> = xs.create()
   // A subscription to the beat source. Start as a no-op on the null object.
@@ -31,12 +32,11 @@ export default function Replay(sources: Sources): Sinks {
     subscribed = true
   }
   const updateTick = (tick: number) => {
-    const reducer: Reducer = (prevState) => {
-      if (!isAppState(prevState)) return prevState
-      const metrics = {...prevState.metrics, replay_nb: tick}
-      return {...prevState, metrics} as AppState
+    const reducer = (prevState: State) => {
+      const metrics = {...prevState.data.metrics, replay_nb: tick}
+      return State.from({...prevState.data, metrics})
     }
-    reducer$.shamefullySendNext(reducer)
+    reducer$.shamefullySendNext(reducer as Reducer)
   }
 
   // The Beat manager exposes two streams:
@@ -60,7 +60,7 @@ export default function Replay(sources: Sources): Sinks {
   // Upon the user getting started typing, subscribe to the current beat, which
   // effectively starts the beat's tick producer.
   state$
-    .filter(state => Model(state).hasJustStarted() && !subscribed)
+    .filter(state => state.hasJustStarted() && !subscribed)
     .addListener({ next: refreshSubscription })
 
   const vdom$ = view({state$, wpm$})

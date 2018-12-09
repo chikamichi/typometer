@@ -1,14 +1,14 @@
 import { Stream } from "xstream"
-import { Sources } from "typometer/types"
+import { DOMSource } from "@cycle/dom"
 
 
 export interface LiveTextActions {
   newChar$: Stream<string>
 }
 
-export default function intent(sources: Sources): LiveTextActions {
+export default function intent(domSource: DOMSource): LiveTextActions {
   return {
-    newChar$: sources.dom
+    newChar$: domSource
       .select('document').events('keydown')
       .filter(e => !/^(Dead|F2)/.test(e.key))
       .filter(e => !/^(Tab|Control|Alt|Shift|Meta).*/.test(e.code))

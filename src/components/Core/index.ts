@@ -2,6 +2,7 @@ import xs, { Stream } from "xstream"
 import isolate from "@cycle/isolate"
 
 import { Sources, Sinks, Reducer, ComponentLens } from "typometer/types"
+import State from 'typometer/models/State'
 import Content from "typometer/components/Content"
 import Replay from "typometer/components/Replay"
 import Metrics from "typometer/components/Metrics"
@@ -27,29 +28,34 @@ export default function Core(sources: Sources): Sinks {
    * DecoratedAppState objects, starting with ./model.ts here.
    *
    * Using SAM, that would be the output of the State function, aka. a state
-   * representation => currently known as SuperState actually.
+   * representation => currently known as State actually.
    */
 
   // Content
-  const ContentLens: ComponentLens = {
-    get: (state) => state,
-    set: (_, componentState) => componentState
-  }
-  const contentSinks = isolate(Content, {state: ContentLens})(sources)
+  // const ContentLens: ComponentLens = {
+  //   get: (state) => state,
+  //   set: (_, componentState) => componentState
+  // }
+  // const contentSinks = isolate(Content, {state: ContentLens})(sources)
 
-  // Replay
-  const ReplayLens: ComponentLens = {
-    get: (state) => state,
-    set: (_, componentState) => componentState
-  }
-  const replaySinks = isolate(Replay, {state: ReplayLens})(sources)
+  // // Replay
+  // const ReplayLens: ComponentLens = {
+  //   get: (state) => state,
+  //   set: (_, componentState) => componentState
+  // }
+  // const replaySinks = isolate(Replay, {state: ReplayLens})({ state$, dom: sources.dom })
 
-  // Metrics
-  const MetricsLens: ComponentLens = {
-    get: (state) => state,
-    set: (_, componentState) => componentState
-  }
-  const metricsSinks = isolate(Metrics, {state: MetricsLens})(sources)
+  // // Metrics
+  // const MetricsLens: ComponentLens = {
+  //   get: (state) => state,
+  //   set: (_, componentState) => componentState
+  // }
+  // const metricsSinks = isolate(Metrics, {state: MetricsLens})(state$)
+
+  // TODO: check isolate again, is it required?
+  const contentSinks = Content({ state$, dom: sources.dom })
+  const replaySinks = Replay({ state$, dom: sources.dom })
+  const metricsSinks = Metrics({ state$ })
 
 
   /**
@@ -65,7 +71,7 @@ export default function Core(sources: Sources): Sinks {
   const reducer$ = xs.merge(
     ownReducer$,
     componentsReducer$
-  ) as Stream<Reducer>
+  )
 
 
   /**
