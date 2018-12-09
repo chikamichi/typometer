@@ -3,10 +3,10 @@ import xs, { Stream } from "xstream"
 import { Reducer } from "typometer/types"
 import { INITIAL_APP_STATE } from "typometer/utils"
 import State from "typometer/models/State"
-import { CustomTextActions } from "./intent"
+import { EditorActions } from "./intent"
 
 
-export default function model(actions: CustomTextActions): Stream<Reducer> {
+export default function model(actions: EditorActions): Stream<Reducer> {
   const reducers: Stream<Reducer>[] = []
 
   // TODO: extract reducing functions to src/reducers/
