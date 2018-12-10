@@ -7,6 +7,8 @@ import State from "typometer/models/State"
 
 export type Reducer = (prev?: State) => State | undefined
 
+export type Action = () => Reducer
+
 export interface Sources {
   dom: DOMSource,
   state: StateSource<State>

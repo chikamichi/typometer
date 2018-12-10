@@ -1,5 +1,4 @@
 import { Stream, MemoryStream } from "xstream"
-import delay from "xstream/extra/delay"
 
 import Metrics from "typometer/models/Metrics"
 import { TypingRecords } from "typometer/types"
@@ -9,7 +8,7 @@ import State from "typometer/models/State"
 export interface CoreActions {
   // textStatusEditing$: Stream<boolean>
   // textStatusKO$: Stream<boolean>
-  textStatusOK$: Stream<boolean>,
+  success$: Stream<boolean>,
   computeRecords$: Stream<TypingRecords>
 }
 
@@ -25,13 +24,11 @@ export interface CoreActions {
 // unleashing infinite loop doom: proceed with caution, use restrictive safe
 // guards in the form of .filter() statements.
 export default function nap(state$: MemoryStream<State>): CoreActions {
-  // Triggers "true" when the user is done typing the whole text \o/
   return {
-    textStatusOK$: state$
-      .filter(state => {
-        return state.isDone() && state.hasNoStats()
-      })
-      .map(_=> true),
+    // Triggers "true" when the user is done typing the whole text \o/
+    success$: state$
+      .filter(state => state.isDone() && state.hasNoStats())
+      .map(_ => true),
       
     // // Triggers "true" when the user made a(t least one) mistake while typing the text.
     // textStatusKO$: state$
@@ -58,15 +55,11 @@ export default function nap(state$: MemoryStream<State>): CoreActions {
     // // be aware of that potential pitfall and the likely need for a better
     // // strategy/fix here.
     computeRecords$: state$
-      .filter(state => {
-        return state.isDoneDone() && state.hasNoStats()
-      })
+      .filter(state => state.isDoneDone() && state.hasNoStats())
       .map(_ => {
         // TODO: not the best design sending the whole track of AppState objects.
         // Best would be to accumulate and compare only current run with current record.
         return Metrics.Records(state$)
       })
-      // .compose(delay(0)) // Fancy seeing you here, setTimeout(0).
-      // .take(1)
   }
 }
