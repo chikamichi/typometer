@@ -1,6 +1,6 @@
 import xs, { Stream } from "xstream"
 
-import { Sinks, Reducer, ComponentSources } from "typometer/types"
+import { Sinks, Reducer, Sources } from "typometer/types"
 import State from "typometer/models/State"
 import BeatManager from "typometer/components/BeatManager"
 import view from "./view"
@@ -10,8 +10,8 @@ import view from "./view"
  * Listens to a regular beat controlled by the WPM setting, and updates the
  * state to notify about the progression (number of accumulated ticks).
  */
-export default function Rythm(sources: ComponentSources): Sinks {
-  const state$ = sources.state$
+export default function Rythm(sources: Sources): Sinks {
+  const state$ = sources.state.stream
   // Beat source. Starts as a "Null Object".
   let source$: Stream<number> = xs.create()
   // A subscription to the beat source. Start as a no-op on the null object.

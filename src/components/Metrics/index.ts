@@ -1,11 +1,11 @@
-import xs, { Stream, MemoryStream } from "xstream"
+import xs, { Stream } from "xstream"
 
-import { ComponentSources, Sinks, Reducer } from "typometer/types"
+import { Sources, Sinks, Reducer } from "typometer/types"
 import view from "./view"
 
 
-export default function Metrics(sources: ComponentSources): Sinks {
-  const vdom$ = view(sources.state$)
+export default function Metrics(sources: Sources): Sinks {
+  const vdom$ = view(sources.state.stream)
 
   return {
     dom: vdom$,

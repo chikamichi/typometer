@@ -1,4 +1,4 @@
-import { Stream, MemoryStream } from "xstream"
+import { Stream } from "xstream"
 import { DOMSource, VNode } from "@cycle/dom"
 import { StateSource } from "@cycle/state"
 
@@ -12,15 +12,12 @@ export interface Sources {
   state: StateSource<State>
 }
 
-export interface ComponentSources {
-  dom?: DOMSource,
-  state$: MemoryStream<State>
-}
-
 export type Sinks = {
   dom: Stream<VNode>
   state: Stream<Reducer>
 }
+
+export type Component = (sources: Sources) => Sinks
 
 export interface Text {
   raw: string,

@@ -1,16 +1,16 @@
 import xs from "xstream"
 
-import { ComponentSources } from 'typometer/types'
+import { Sources } from 'typometer/types'
 import TypingBeat from "typometer/models/TypingBeat"
 
 
-export default function BeatManager(sources: ComponentSources) {
-  const wpm$ = sources.dom!
+export default function BeatManager(sources: Sources) {
+  const wpm$ = sources.dom
     .select('.ta-tick-settings__range').events('input')
     .map(e => (<HTMLInputElement>e.target).value)
     .startWith("32") // 1000 ms period ie. 1 char/s
 
-  const run$ = sources.state$
+  const run$ = sources.state.stream
     .filter(state => state.isNew() || state.isSuccess())
 
   const beat$$ = xs.combine(wpm$, run$)

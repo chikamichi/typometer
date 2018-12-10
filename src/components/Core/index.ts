@@ -1,8 +1,7 @@
-import xs, { Stream } from "xstream"
-import isolate from "@cycle/isolate"
+import xs from "xstream"
 
-import { Sources, Sinks, Reducer, ComponentLens } from "typometer/types"
-import State from 'typometer/models/State'
+import { Sources, Sinks } from "typometer/types"
+import isolateComponent from 'typometer/utils/isolateComponent'
 import Content from "typometer/components/Content"
 import Rythm from "typometer/components/Rythm"
 import Metrics from "typometer/components/Metrics"
@@ -19,43 +18,12 @@ export default function Core(sources: Sources): Sinks {
 
 
   /**
-   * Lenses
-   * 
-   * TODO: just sharing the whole state with child components for the time
-   * being, must check what's really required and scope accordingly; may
-   * not be possible though because of Model(state) calls ("state decorator").
-   * Would require changing the architecture to handle a stream of 
-   * DecoratedAppState objects, starting with ./model.ts here.
-   *
-   * Using SAM, that would be the output of the State function, aka. a state
-   * representation => currently known as State actually.
+   * Children components
    */
 
-  // Content
-  // const ContentLens: ComponentLens = {
-  //   get: (state) => state,
-  //   set: (_, componentState) => componentState
-  // }
-  // const contentSinks = isolate(Content, {state: ContentLens})(sources)
-
-  // // Rythm
-  // const RythmLens: ComponentLens = {
-  //   get: (state) => state,
-  //   set: (_, componentState) => componentState
-  // }
-  // const rythmSinks = isolate(Rythm, {state: RythmLens})({ state$, dom: sources.dom })
-
-  // // Metrics
-  // const MetricsLens: ComponentLens = {
-  //   get: (state) => state,
-  //   set: (_, componentState) => componentState
-  // }
-  // const metricsSinks = isolate(Metrics, {state: MetricsLens})(state$)
-
-  // TODO: check isolate again, is it required?
-  const contentSinks = Content({ state$, dom: sources.dom })
-  const rythmSinks = Rythm({ state$, dom: sources.dom })
-  const metricsSinks = Metrics({ state$ })
+  const contentSinks = isolateComponent(Content, sources)
+  const rythmSinks = isolateComponent(Rythm, sources)
+  const metricsSinks = isolateComponent(Metrics, sources)
 
 
   /**
