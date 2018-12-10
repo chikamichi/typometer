@@ -102,10 +102,9 @@ export default class State {
     return t.raw.length == m.valid_nb
   }
 
-  // Done successfully, yet not halted yet.
+  // Done successfully, yet not halted.
   public isDone(): boolean {
-    const m = this.data.metrics
-    return this.isSuccess() && !m.stop
+    return this.isSuccess() && !this.hasStopped()
   }
 
   // Done successfully and halted.
@@ -124,19 +123,17 @@ export default class State {
     return !!m.start && !!m.stop
   }
 
-  // Done successfully, yet no stats computed yet.
+  // Stats pending
   public hasNoStats(): boolean {
-    // const m = this.state.metrics
-    // const r = this.state.records
-    // return this.isSuccess() && !!m.stop && r.pending
     return this.data.records.pending
   }
 
-  // Running, has error(s).
+  // Check whether has error(s).
   public hasError(): boolean {
     return !!this.data.metrics.error
   }
 
+  // TODO: remove the decorating layer.
   public decorate(): DecoratedAppState {
     const newMetrics = Metrics.Current(this)
     const metrics = <DecoratedRunMetrics>{

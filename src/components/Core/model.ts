@@ -1,21 +1,22 @@
 import xs, { Stream } from "xstream"
 
 import { Reducer } from "typometer/types"
+import State from 'typometer/models/State'
 import { CoreActions } from './nap'
 import InitialStateReducer from 'typometer/reducers/InitialState'
 
 // Model: map actions to state reducers.
-export default function model(actions: CoreActions) {
+export default function model(actions: CoreActions): Stream<Reducer> {
   const initialState$ = xs.of(InitialStateReducer)
 
   // Triggers when the user is done typing the whole text \o/
-  // const textStatusOK$ = actions.textStatusOK$
-  //   .map(_ => {
-  //     return ((prevState: AppState) => {
-  //       const metrics = {...prevState.metrics, stop: new Date()}
-  //       return {...prevState, metrics}
-  //     }) as Reducer
-  //   })
+  const textStatusOK$ = actions.textStatusOK$
+    .map(_ => {
+      return ((prevState: State) => {
+        const metrics = {...prevState.data.metrics, stop: new Date()}
+        return State.from({...prevState.data, metrics})
+      }) as Reducer
+    })
 
   // // Triggers when the user made a(t least one) mistake while typing the text.
   // const textStatusKO$ = actions.textStatusKO$
@@ -33,24 +34,24 @@ export default function model(actions: CoreActions) {
   //     }) as Reducer
   //   })
 
-  // const computeRecords$ = actions.computeRecords$
-  //   .map(records => {
-  //     console.log('REDUCER computeRecords$', records)
-  //     return ((prevState: AppState) => {
-  //       return {
-  //         ...prevState,
-  //         records
-  //       }
-  //     }) as Reducer
-  //   })
+  const computeRecords$ = actions.computeRecords$
+    .map(records => {
+      console.log('REDUCER computeRecords$', records)
+      return ((prevState: State) => {
+        return State.from({
+          ...prevState.data,
+          records
+        })
+      }) as Reducer
+    })
 
   const reducers: Stream<Reducer>[] = []
   reducers.push(
     initialState$,
-    // textStatusOK$,
+    textStatusOK$,
     // textStatusKO$,
     // textStatusEditing$,
-    // computeRecords$
+    computeRecords$
   )
   return xs.merge(...reducers)
 }
