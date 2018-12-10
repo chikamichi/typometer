@@ -2,10 +2,8 @@ import { reduce } from 'ramda'
 
 import State from 'typometer/models/State'
 import * as fn from 'typometer/models/Metrics'
-import { Reducer, TypingRecords, RecordComputation } from 'typometer/types'
+import { Reducer, TypingRecords, MetricComputation, MetricsObject } from 'typometer/types'
 
-
-type Records = Record<string, number> // Record aka. Object ^^
 
 /**
  * Run is over and records must be computed.
@@ -18,24 +16,22 @@ type Records = Record<string, number> // Record aka. Object ^^
  * - records: default/latest value -> new value (if need be, for each record)
  */
 function ComputeRecords(state: State, latestRecords: TypingRecords): State {
-  const recordMetrics = Object.keys(latestRecords)
-  let records: TypingRecords // updated records, to be computed below
-
-  function updateRecord(acc: Records, metric: string): Records {
+  function updateRecord(acc: MetricsObject, metric: string): MetricsObject {
     const fnName = 'compute' + metric[0].toUpperCase() + metric.substring(1, metric.length)
-    const recordComputation = fn[fnName] as RecordComputation
-    if (!recordComputation) return acc
-    const newVal = recordComputation(state)
-    if (newVal > latestRecords[metric]) acc[metric] = newVal
+    const metricComputation = fn[fnName] as MetricComputation
+    if (metricComputation) {
+      const newVal = metricComputation(state)
+      if (newVal > latestRecords[metric]) acc[metric] = newVal
+    }
     return acc
   }
 
-  const newValues = reduce(updateRecord , {} as Records, recordMetrics)
-  records = { ...latestRecords, ...newValues, pending: false }
+  const recordMetrics = Object.keys(latestRecords)
+  const newValues = reduce(updateRecord , {} as MetricsObject, recordMetrics)
 
   return State.from({
     ...state.data,
-    records
+    records: { ...latestRecords, ...newValues, pending: false } as TypingRecords
   })
 }
 

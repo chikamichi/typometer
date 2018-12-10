@@ -25,7 +25,9 @@ export type Sinks = {
 
 export type Component = (sources: Sources) => Sinks
 
-export type RecordComputation = (state: State) => number
+export type MetricComputation = (state: State) => number
+
+export type MetricsObject = Record<string, number>
 
 
 /**

@@ -6,7 +6,7 @@ import State from 'typometer/models/State'
 
 export default function view(state$: MemoryStream<State>): Stream<VNode> {
   return state$
-    .map(state => state.decorate())
+    .map(state => state.decorate().data)
     .map(state => {
       return table('.ta-metrics', [
         thead('.ta-metrics__types', [

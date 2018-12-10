@@ -1,6 +1,6 @@
 import { AppState, DecoratedAppState, DecoratedRunMetrics } from "typometer/types"
 import { INITIAL_APP_STATE } from "typometer/utils"
-import Metrics from "typometer/models/Metrics"
+import withExtendedMetrics from "typometer/reducers/Metrics/withExtendedMetrics"
 
 
 // A mutation is described as a free-form object… for now.
@@ -133,18 +133,10 @@ export default class State {
     return !!this.data.metrics.error
   }
 
-  // TODO: remove the decorating layer.
-  public decorate(): DecoratedAppState {
-    const newMetrics = Metrics.Current(this)
-    const metrics = <DecoratedRunMetrics>{
-      ...this.data.metrics,
-      accuracy: newMetrics.accuracy,
-      wpm: newMetrics.wpm
-    }
-    return {
-      // ...State.from(this.data).data,
-      ...this.data,
-      metrics
-    }
+  /**
+   * Compute derived data on state that needs not to be persisted.
+   */
+  public decorate(): State {
+    return withExtendedMetrics(this)
   }
 }
