@@ -1,5 +1,9 @@
 import { AppState } from "typometer/types"
 
+
+export { default as addComponents } from './addComponents'
+export { default as isolateComponent } from './isolateComponent'
+
 export const APP_TITLE = "typometer"
 
 export const APP_MOTTO = "Can you type that fast?"

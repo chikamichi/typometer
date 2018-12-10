@@ -1,8 +1,7 @@
-import xs, { Stream } from "xstream"
-import pluck from 'ramda/src/pluck'
+import xs from "xstream"
 
-import { Sources, Sinks, Reducer } from "typometer/types"
-import isolateComponent from 'typometer/utils/isolateComponent'
+import { Sources, Sinks } from "typometer/types"
+import { addComponents } from 'typometer/utils'
 import Content from "typometer/components/Content"
 import Rythm from "typometer/components/Rythm"
 import Metrics from "typometer/components/Metrics"
@@ -17,48 +16,14 @@ export default function Core(sources: Sources): Sinks {
   const actions = nap(state$) // no actions derived from external intents atm
   const ownReducer$ = model(actions)
 
+  const components = addComponents(Content, Rythm, Metrics)(sources)
 
-  /**
-   * Children components
-   */
-
-  const components = {
-    contentSinks: isolateComponent(Content, sources),
-    rythmSinks: isolateComponent(Rythm, sources),
-    metricsSinks: isolateComponent(Metrics, sources)
-  }
-
-
-  /**
-   * Sink: state reducer
-   */
-
-  const componentsState = pluck('state')(Object.values(components))
-  const componentsReducer$ = xs.merge(...componentsState) as Stream<Reducer>
   const reducer$ = xs.merge(
     ownReducer$,
-    componentsReducer$
+    components.reducers$
   )
 
-
-  /**
-   * Sink: virtual DOM
-   */
-
-  const contentVDom$ = components.contentSinks.dom
-  const rythmVDom$ = components.rythmSinks.dom
-  const metricsVDom$ = components.metricsSinks.dom
-  const vdom$ = view({
-    state$,
-    contentVDom$,
-    rythmVDom$,
-    metricsVDom$
-  })
-
-
-  /**
-   * Core's sinks
-   */
+  const vdom$ = view({ state$, ...components.dom$ })
 
   return {
     dom: vdom$,

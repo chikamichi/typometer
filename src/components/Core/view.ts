@@ -7,15 +7,15 @@ import { APP_TITLE, APP_MOTTO } from "typometer/utils"
 
 interface sources {
   state$: MemoryStream<State>
-  contentVDom$: Stream<VNode>
-  rythmVDom$: Stream<VNode>
-  metricsVDom$: Stream<VNode>
+  ContentVDom$: Stream<VNode>
+  RythmVDom$: Stream<VNode>
+  MetricsVDom$: Stream<VNode>
 }
 
 export default function view(sources: sources): Stream<VNode> {
-  const { state$, contentVDom$, rythmVDom$, metricsVDom$ } = sources
-  return xs.combine(state$, contentVDom$, rythmVDom$, metricsVDom$)
-    .map(([state, content, rythmSettings, metrics]) => {
+  const { state$, ContentVDom$, RythmVDom$, MetricsVDom$ } = sources
+  return xs.combine(state$, ContentVDom$, RythmVDom$, MetricsVDom$)
+    .map(([state, Content, Rythm, Metrics]) => {
       return div('.typing-app.ta', {
         class: {
           'ta-text-status--editing': state.textBeingEdited(),
@@ -30,14 +30,14 @@ export default function view(sources: sources): Stream<VNode> {
             p('.ta-motto', APP_MOTTO)
           ]),
           div('.ta-metrics-area', [
-            metrics
+            Metrics
           ])
         ]),
         div('.ta-main', [
           div('.ta-settings', [
-            rythmSettings
+            Rythm
           ]),
-          content
+          Content
         ])
       ])
     })

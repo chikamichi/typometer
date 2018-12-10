@@ -13,6 +13,7 @@ export interface Sources {
 }
 
 export type Sinks = {
+  name?: Stream<string>
   dom: Stream<VNode>
   state: Stream<Reducer>
 }

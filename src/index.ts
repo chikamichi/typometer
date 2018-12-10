@@ -16,7 +16,6 @@ import { withState } from "@cycle/state"
 
 import Core from "typometer/components/Core"
 
-
 const main = withState(Core)
 
 

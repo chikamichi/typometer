@@ -61,6 +61,7 @@ export default function Rythm(sources: Sources): Sinks {
   const vdom$ = view({state$, wpm$})
 
   return {
+    name: xs.of('Rythm'),
     dom: vdom$,
     state: reducer$
   }
