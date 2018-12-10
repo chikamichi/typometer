@@ -13,7 +13,6 @@ export default function Content(sources: Sources): Sinks {
   const vdom$ = view(components.dom$)
 
   return {
-    name: xs.of('Content'),
     dom: vdom$,
     state: components.reducers$
   }

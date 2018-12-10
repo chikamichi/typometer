@@ -8,7 +8,6 @@ export default function Metrics(sources: Sources): Sinks {
   const vdom$ = view(sources.state.stream)
 
   return {
-    name: xs.of('Metrics'),
     dom: vdom$,
     state: xs.create() as Stream<Reducer>
   }
