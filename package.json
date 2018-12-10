@@ -21,6 +21,7 @@
     "@cycle/run": "^5.1.0",
     "@cycle/state": "^1.0.0",
     "classnames": "^2.2.6",
+    "ramda": "^0.26.1",
     "xstream": "^11.7.0"
   },
   "devDependencies": {
@@ -33,6 +34,7 @@
     "@types/chai": "^4.1.7",
     "@types/classnames": "^2.2.6",
     "@types/mocha": "^5.2.5",
+    "@types/ramda": "types/npm-ramda#dist",
     "@types/webpack": "^4.4.20",
     "@types/webpack-dev-server": "^3.1.1",
     "@types/webpack-env": "^1.13.6",

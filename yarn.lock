@@ -794,6 +794,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.12.tgz#e15a9d034d9210f00320ef718a50c4a799417c47"
   integrity sha512-Pr+6JRiKkfsFvmU/LK68oBRCQeEg36TyAbPhc2xpez24OOZZCuoIhWGTd39VZy6nGafSbxzGouFPTFD/rR1A0A==
 
+"@types/ramda@types/npm-ramda#dist":
+  version "0.25.0"
+  resolved "https://codeload.github.com/types/npm-ramda/tar.gz/9529aa3c8ff70ff84afcbc0be83443c00f30ea90"
+
 "@types/range-parser@*":
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.2.tgz#fa8e1ad1d474688a757140c91de6dace6f4abc8d"
@@ -4319,6 +4323,11 @@ quicktask@1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/quicktask/-/quicktask-1.1.0.tgz#70795fd5922fb122100e662118c73a06aadd7352"
   integrity sha512-b3w19IEXnt5auacLAbePVsqPyVQUwmuhJQrrWnVhm4pP8PAMg2U9vFHbAD9XYXXbMDjdLJs0x5NLqwTV8uFK4g==
+
+ramda@^0.26.1:
+  version "0.26.1"
+  resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.26.1.tgz#8d41351eb8111c55353617fc3bbffad8e4d35d06"
+  integrity sha512-hLWjpy7EnsDBb0p+Z3B7rPi3GDeRG5ZtiI33kJhTt+ORCd38AbAIjB/9zRIUoeTbE/AVX5ZkU7m6bznsvrf8eQ==
 
 randombytes@^2.0.0, randombytes@^2.0.1, randombytes@^2.0.5:
   version "2.0.6"
