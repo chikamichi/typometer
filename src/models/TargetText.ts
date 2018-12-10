@@ -28,7 +28,6 @@ export default class TargetText {
   }
 
   public get fullText(): string[] {
-    // console.log('fullText', this._index, this.data)
     if (this._fullText) return this._fullText
     const m = this.data.metrics
     const text = this.data.text.raw

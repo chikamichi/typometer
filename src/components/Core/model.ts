@@ -36,7 +36,6 @@ export default function model(actions: CoreActions): Stream<Reducer> {
 
   const computeRecords$ = actions.computeRecords$
     .map(records => {
-      console.log('REDUCER computeRecords$', records)
       return ((prevState: State) => {
         return State.from({
           ...prevState.data,

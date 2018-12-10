@@ -60,12 +60,9 @@ export default function nap(state$: MemoryStream<State>): CoreActions {
     computeRecords$: state$
       .filter(state => {
         const res = state.isDoneDone() && state.hasNoStats()
-        console.log(state.isDoneDone(), state.hasNoStats())
-        console.log('ACTION computeRecords$', state, res)
         return res
       })
       .map(_ => {
-        console.log('computing records')
         // TODO: not the best design sending the whole track of AppState objects.
         // Best would be to accumulate and compare only current run with current record.
         return Metrics.Records(state$)
