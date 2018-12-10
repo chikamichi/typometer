@@ -59,8 +59,7 @@ export default function nap(state$: MemoryStream<State>): CoreActions {
     // // strategy/fix here.
     computeRecords$: state$
       .filter(state => {
-        const res = state.isDoneDone() && state.hasNoStats()
-        return res
+        return state.isDoneDone() && state.hasNoStats()
       })
       .map(_ => {
         // TODO: not the best design sending the whole track of AppState objects.

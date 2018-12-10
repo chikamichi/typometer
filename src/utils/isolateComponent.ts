@@ -16,5 +16,5 @@ export const componentLens: ComponentLens = {
 }
 
 export default function(component: Component, sources: Sources) {
-  return isolate(component, {state: componentLens})(sources);
+  return isolate(component, {state: componentLens})(sources)
 }

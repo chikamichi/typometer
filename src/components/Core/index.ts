@@ -46,9 +46,9 @@ export default function Core(sources: Sources): Sinks {
    * Sink: virtual DOM
    */
 
-  const contentVDom$ = contentSinks.dom;
-  const rythmVDom$ = rythmSinks.dom;
-  const metricsVDom$ = metricsSinks.dom;
+  const contentVDom$ = contentSinks.dom
+  const rythmVDom$ = rythmSinks.dom
+  const metricsVDom$ = metricsSinks.dom
   const vdom$ = view({
     state$,
     contentVDom$,
