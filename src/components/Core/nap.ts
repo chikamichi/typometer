@@ -9,7 +9,7 @@ export interface CoreActions {
   // textStatusEditing$: Stream<boolean>
   // textStatusKO$: Stream<boolean>
   success$: Stream<boolean>,
-  computeRecords$: Stream<TypingRecords>
+  computeRecords$: Stream<boolean>
 }
 
 // Next-action-predicate aka. internal side-effect handler.
@@ -56,10 +56,11 @@ export default function nap(state$: MemoryStream<State>): CoreActions {
     // // strategy/fix here.
     computeRecords$: state$
       .filter(state => state.isDoneDone() && state.hasNoStats())
-      .map(_ => {
-        // TODO: not the best design sending the whole track of AppState objects.
-        // Best would be to accumulate and compare only current run with current record.
-        return Metrics.Records(state$)
-      })
+      .map(_ => true)
+      // .map(_ => {
+      //   // TODO: not the best design sending the whole track of AppState objects.
+      //   // Best would be to accumulate and compare only current run with current record.
+      //   return Metrics.Records(state$)
+      // })
   }
 }

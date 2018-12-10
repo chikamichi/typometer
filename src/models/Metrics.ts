@@ -10,7 +10,7 @@ export default { // Metrics
     return {
       pending: false,
       accuracy: getMax(state$, 'accuracy', computeAccuracy),
-      wpm: getMax(state$, 'wpm', computeWPM)
+      wpm: getMax(state$, 'wpm', computeWpm)
     }
   },
 
@@ -18,7 +18,7 @@ export default { // Metrics
     return {
       pending: false,
       accuracy: computeAccuracy(state),
-      wpm: computeWPM(state)
+      wpm: computeWpm(state)
     }
   }
 }
@@ -39,12 +39,12 @@ function getMax(state$: MemoryStream<State>, metric: string, f?: (attributes: St
   return record as number
 }
 
-function computeAccuracy(state: State): number {
+export function computeAccuracy(state: State): number {
   if (state.isNew()) return 0
   return Math.round((1 - state.data.metrics.errors_nb / state.data.metrics.keystrokes_nb) * 100)
 }
 
-function computeWPM(state: State): number {
+export function computeWpm(state: State): number {
   if (!state.isDoneDone()) return 0
   const nb_words = state.data.metrics.keystrokes_nb / WORD_LENGTH
   const elapsed = (state.data.metrics.stop!.getTime() - state.data.metrics.start!.getTime()) / 1000.0 / 60.0 // ms -> mn

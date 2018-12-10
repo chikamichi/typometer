@@ -5,6 +5,10 @@ import { StateSource } from "@cycle/state"
 import State from "typometer/models/State"
 
 
+/**
+ * Types
+ */
+
 export type Action = (...args: unknown[]) => Reducer
 
 export type Reducer = (prev?: State, ...args: unknown[]) => State|undefined
@@ -20,6 +24,13 @@ export type Sinks = {
 }
 
 export type Component = (sources: Sources) => Sinks
+
+export type RecordComputation = (state: State) => number
+
+
+/**
+ * Interfaces
+ */
 
 export interface Text {
   raw: string,

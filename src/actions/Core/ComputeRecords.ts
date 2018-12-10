@@ -6,9 +6,11 @@ import ComputeRecords from 'typometer/reducers/Core/ComputeRecords'
 /**
  * Triggered when the user is done typing the whole text successfully.
  */
-const action = (records: TypingRecords) => {
+const action = (latestRecords: TypingRecords) => {
+  console.log('Action ComputeRecords, latestRecords:', latestRecords)
   return function (prevState: State) {
-    return ComputeRecords(prevState, records)
+    console.log('Reducer ComputeRecords, prevState:', prevState)
+    return ComputeRecords(prevState, latestRecords)
   }
 }
 
