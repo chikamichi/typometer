@@ -13,7 +13,7 @@ import nap from "./nap"
 // Note: next-action-predicates bypass the intent() layer by design.
 export default function Core(sources: Sources): Sinks {
   const state$ = sources.state.stream
-  const actions = nap(state$) // no actions derived from external intents atm
+  const actions = nap(state$)
   const ownReducer$ = model(actions, state$)
 
   const components = addComponents(Content, Rythm, Metrics)(sources)
