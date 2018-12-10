@@ -5,9 +5,9 @@ import { StateSource } from "@cycle/state"
 import State from "typometer/models/State"
 
 
-export type Reducer = (prev?: State) => State | undefined
+export type Action = (...args: unknown[]) => Reducer
 
-export type Action = () => Reducer
+export type Reducer = (prev?: State, ...args: unknown[]) => State|undefined
 
 export interface Sources {
   dom: DOMSource,
