@@ -1,7 +1,7 @@
 import xs, { Stream } from "xstream"
 
 import { Sinks, Reducer, Sources } from "typometer/types"
-import State from "typometer/models/State"
+import { Tick } from "typometer/actions/Rythm"
 import BeatManager from "typometer/components/BeatManager"
 import view from "./view"
 
@@ -26,13 +26,7 @@ export default function Rythm(sources: Sources): Sinks {
     subscription = source$.subscribe({ next: updateTick })
     subscribed = true
   }
-  const updateTick = (tick: number) => {
-    const reducer = (prevState: State) => {
-      const metrics = {...prevState.data.metrics, ticks: tick}
-      return State.from({...prevState.data, metrics})
-    }
-    reducer$.shamefullySendNext(reducer as Reducer)
-  }
+  const updateTick = (tick: number) => reducer$.shamefullySendNext(Tick(tick))
 
   // The Beat manager exposes two streams:
   // - a stream of beats (ie. each value is itself a stream of ticks, aka. a beat)
