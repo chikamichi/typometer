@@ -15,7 +15,7 @@ import { Reducer, TypingRecords, MetricComputation, MetricsObject } from 'typome
  * Mutations:
  * - records: default/latest value -> new value (if need be, for each record)
  */
-const ComputeRecords: Reducer = (state, latestRecords: TypingRecords) => {
+const ComputeRecords: Reducer = (state) => {
   function updateRecord(acc: MetricsObject, metric: string): MetricsObject {
     const fnName = 'compute' + metric[0].toUpperCase() + metric.substring(1, metric.length)
     const metricComputation = fn[fnName] as MetricComputation
@@ -26,6 +26,7 @@ const ComputeRecords: Reducer = (state, latestRecords: TypingRecords) => {
     return acc
   }
 
+  const latestRecords = state!.data.records
   const recordMetrics = Object.keys(latestRecords)
   const newValues = reduce(updateRecord , {} as MetricsObject, recordMetrics)
 

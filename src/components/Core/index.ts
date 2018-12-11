@@ -6,16 +6,13 @@ import Content from "typometer/components/Content"
 import Rythm from "typometer/components/Rythm"
 import Metrics from "typometer/components/Metrics"
 import intent from './intent'
-import nap from "./nap"
 import model from "./model"
 import view from "./view"
 
 
-// Main: wires everything up using circular streams.
-// Note: next-action-predicates bypass the intent() layer by design.
 const Core: Component = (sources) => {
-  const state$ = sources.state.stream.debug()
-  const actions = { ...intent(sources.dom), ...nap(state$) }
+  const state$ = sources.state.stream
+  const actions = intent(sources.dom)
   const ownReducer$ = model(actions, state$)
 
   const components = addComponents(Content, Rythm, Metrics)(sources)
