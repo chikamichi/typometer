@@ -69,6 +69,7 @@ a {
 
 a:hover {
   text-decoration: underline;
+  cursor: pointer;
 }
 
 a, a:visited {
@@ -181,6 +182,11 @@ a, a:visited {
   background: white;
 }
 
+.ta-header a,
+.ta-header a:visited {
+  color: black;
+}
+
 .ta-welcome {
   width: 13rem;
   text-align: center;
@@ -264,6 +270,10 @@ a, a:visited {
   color: green;
   font-weight: bold;
   margin-left: 0.2em;
+}
+
+.ta-metric-reset a {
+  color: #bbb;
 }
 
 .ta-char {
