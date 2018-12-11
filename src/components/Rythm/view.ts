@@ -1,6 +1,7 @@
 import xs, { Stream, MemoryStream } from "xstream"
 import { div, span, h3, a, input, VNode } from "@cycle/dom"
 
+import { View } from 'typometer/types'
 import State from "typometer/models/State"
 
 
@@ -9,7 +10,7 @@ interface RythmSources {
   wpm$: Stream<string>
 }
 
-export default function view(sources: RythmSources): Stream<VNode> {
+const view: View = (sources: RythmSources) => {
   return xs.combine(sources.state$, sources.wpm$)
     .map(([state, wpm]) =>
       div('.ta-setting  .ta-tick-settings', [
@@ -32,3 +33,5 @@ export default function view(sources: RythmSources): Stream<VNode> {
       ])
     )
 }
+
+export default view

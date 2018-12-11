@@ -1,6 +1,6 @@
 import { Stream } from "xstream"
 
-import { Reducer } from "typometer/types"
+import { Model } from "typometer/types"
 import TypingAction from "typometer/actions/Typing"
 
 
@@ -8,6 +8,8 @@ export interface LiveTextActions {
   newChar$: Stream<string>
 }
 
-export default function model(actions: LiveTextActions): Stream<Reducer> {
+const model: Model = (actions: LiveTextActions) => {
   return actions.newChar$.map(TypingAction)
 }
+
+export default model

@@ -1,5 +1,6 @@
 import xs, { Stream } from "xstream"
-import { DOMSource } from "@cycle/dom"
+
+import { Intent } from 'typometer/types'
 
 
 export interface EditorActions {
@@ -8,7 +9,7 @@ export interface EditorActions {
   toggle$: Stream<boolean>
 }
 
-export default function intent(domSource: DOMSource): EditorActions {
+const intent: Intent = (domSource) => {
   const toggleEditorWithKeyboard$ = domSource
     .select('document').events('keydown')
     .filter(e => (e.key == "F2") || (e.key == "Enter" && e.ctrlKey))
@@ -27,3 +28,5 @@ export default function intent(domSource: DOMSource): EditorActions {
       .fold((toggling, _) => (!toggling), false)
   }
 }
+
+export default intent

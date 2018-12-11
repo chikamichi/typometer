@@ -1,10 +1,10 @@
-import xs, { Stream } from "xstream"
-import { DOMSource } from "@cycle/dom"
+import xs from "xstream"
 
+import { Intent } from 'typometer/types'
 import { LiveTextActions } from './model'
 
 
-export default function intent(domSource: DOMSource): LiveTextActions {
+const intent: Intent = (domSource): LiveTextActions => {
   const doc = domSource.select('document')
   return {
     newChar$: xs.merge(
@@ -13,3 +13,5 @@ export default function intent(domSource: DOMSource): LiveTextActions {
     ).map(e => e.key)
   }
 }
+
+export default intent

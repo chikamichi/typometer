@@ -1,9 +1,29 @@
-import { Stream } from "xstream"
-import { DOMSource } from "@cycle/dom"
+import { Stream, MemoryStream } from "xstream"
+import { DOMSource, VNode } from "@cycle/dom"
 import { StateSource } from "@cycle/state"
 
 import State from "typometer/models/State"
 
+
+export interface Actions {
+  [key: string]: Stream<any>
+}
+
+export interface Model {
+  (actions: any, state$?: MemoryStream<State>): Stream<Reducer>
+}
+
+export interface View {
+  (sources: any): Stream<VNode>
+}
+
+export interface Intent {
+  (domSource: DOMSource): Actions
+}
+
+export interface NAP {
+  (state$: MemoryStream<State>): Actions
+}
 
 export interface Action {
   (...args: unknown[]): Reducer
@@ -22,7 +42,7 @@ export interface MetricsObject {
 }
 
 export interface Sources {
-  dom: DOMSource,
+  dom?: DOMSource,
   state: StateSource<State>
 }
 
@@ -30,8 +50,6 @@ export interface Sinks {
   [key: string]: Stream<any>
 }
 
-// export type Component = (sources: Sources) => Sinks
-// http://www.typescriptlang.org/docs/handbook/interfaces.html#function-types
 export interface Component {
   (sources: Sources): Sinks
   cname: string // mandatory component name that's not uglified by code minifiers

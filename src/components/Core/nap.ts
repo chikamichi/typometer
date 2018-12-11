@@ -1,6 +1,4 @@
-import { MemoryStream } from "xstream"
-
-import State from "typometer/models/State"
+import { NAP } from 'typometer/types'
 import { CoreActions } from 'typometer/components/Core/model'
 
 
@@ -15,7 +13,7 @@ import { CoreActions } from 'typometer/components/Core/model'
 // As next-action-predicates listen for state$, they have the potential for
 // unleashing infinite loop doom: proceed with caution, use restrictive safe
 // guards in the form of .filter() statements.
-export default function nap(state$: MemoryStream<State>): CoreActions {
+const nap: NAP = (state$): CoreActions => {
   return {
     success$: state$
       .filter(state => state.isDone() && state.hasNoStats())
@@ -26,3 +24,5 @@ export default function nap(state$: MemoryStream<State>): CoreActions {
       .map(_ => true)
   }
 }
+
+export default nap

@@ -1,10 +1,11 @@
-import { Stream, MemoryStream } from "xstream"
-import { table, thead, tbody, tr, th, td, VNode } from "@cycle/dom"
+import { MemoryStream } from "xstream"
+import { table, thead, tbody, tr, th, td } from "@cycle/dom"
 
+import { View } from 'typometer/types'
 import State from 'typometer/models/State'
 
 
-export default function view(state$: MemoryStream<State>): Stream<VNode> {
+const view: View = (state$: MemoryStream<State>) => {
   return state$
     .map(state => state.decorate().data)
     .map(state => {
@@ -30,4 +31,6 @@ export default function view(state$: MemoryStream<State>): Stream<VNode> {
         ])
       ])
     })
-  }
+}
+
+export default view

@@ -1,9 +1,10 @@
-import { Stream, MemoryStream } from "xstream"
-import { h, textarea, VNode } from "@cycle/dom"
+import { MemoryStream } from 'xstream'
+import { h, textarea } from "@cycle/dom"
 
+import { View } from 'typometer/types'
 import State from 'typometer/models/State'
 
-export default function view(state$: MemoryStream<State>): Stream<VNode> {
+const view: View = (state$: MemoryStream<State>) => {
   return state$
     .map(state => {
       return h('div.ta-custom-text', {
@@ -23,3 +24,5 @@ export default function view(state$: MemoryStream<State>): Stream<VNode> {
       ])
     })
 }
+
+export default view

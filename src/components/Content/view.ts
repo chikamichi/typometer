@@ -1,13 +1,15 @@
 import xs, { Stream } from "xstream"
 import { div, VNode } from "@cycle/dom"
 
+import { View } from 'typometer/types'
 
-interface sources {
+
+interface ContentViewSources {
   LiveTextVDom$: Stream<VNode>,
-  EditorVDom$: Stream<VNode>,
+  EditorVDom$: Stream<VNode>
 }
 
-export default function view(sources: sources): Stream<VNode> {
+const view: View = (sources: ContentViewSources) => {
   const { LiveTextVDom$, EditorVDom$ } = sources
   return xs.combine(LiveTextVDom$, EditorVDom$)
     .map(([LiveText, Editor]) => {
@@ -19,3 +21,5 @@ export default function view(sources: sources): Stream<VNode> {
       ])
     })
 }
+
+export default view

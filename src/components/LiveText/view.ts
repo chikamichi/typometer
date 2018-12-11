@@ -1,8 +1,8 @@
-import classnames from "classnames"
+import { MemoryStream } from "xstream"
 import { p, span, VNode } from "@cycle/dom"
-import { Stream, MemoryStream } from "xstream"
+import classnames from "classnames"
 
-import { CharState } from "typometer/types"
+import { View, CharState } from "typometer/types"
 import State from 'typometer/models/State'
 import TargetText from "typometer/models/TargetText"
 
@@ -17,8 +17,7 @@ function build_char(char: CharState): VNode {
   return span(kls, char.char)
 }
 
-
-export default function view(state$: MemoryStream<State>): Stream<VNode> {
+const view: View = (state$: MemoryStream<State>) => {
   return state$.map(state => {
     const text = new TargetText(state.data)
     const chars = text.map(build_char)
@@ -29,3 +28,5 @@ export default function view(state$: MemoryStream<State>): Stream<VNode> {
     }, chars)
   })
 }
+
+export default view

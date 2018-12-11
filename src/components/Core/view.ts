@@ -1,18 +1,19 @@
 import xs, { Stream, MemoryStream } from "xstream"
 import { VNode, h1, p, div } from "@cycle/dom"
 
+import { View } from 'typometer/types'
 import State from "typometer/models/State"
 import { APP_TITLE, APP_MOTTO } from "typometer/utils"
 
 
-interface sources {
+interface CoreViewSources {
   state$: MemoryStream<State>
   ContentVDom$: Stream<VNode>
   RythmVDom$: Stream<VNode>
   MetricsVDom$: Stream<VNode>
 }
 
-export default function view(sources: sources): Stream<VNode> {
+const view: View = (sources: CoreViewSources) => {
   const { state$, ContentVDom$, RythmVDom$, MetricsVDom$ } = sources
   return xs.combine(state$, ContentVDom$, RythmVDom$, MetricsVDom$)
     .map(([state, Content, Rythm, Metrics]) => {
@@ -42,3 +43,5 @@ export default function view(sources: sources): Stream<VNode> {
       ])
     })
 }
+
+export default view
