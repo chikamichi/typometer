@@ -1,17 +1,15 @@
-import { Stream } from "xstream"
+import xs, { Stream } from "xstream"
 import { DOMSource } from "@cycle/dom"
 
+import { LiveTextActions } from './model'
 
-export interface LiveTextActions {
-  newChar$: Stream<string>
-}
 
 export default function intent(domSource: DOMSource): LiveTextActions {
+  const doc = domSource.select('document')
   return {
-    newChar$: domSource
-      .select('document').events('keydown')
-      .filter(e => !/^(Dead|F2)/.test(e.key))
-      .filter(e => !/^(Tab|Control|Alt|Shift|Meta).*/.test(e.code))
-      .map(e => e.key)
+    newChar$: xs.merge(
+      doc.events('keypress'),
+      doc.events('keydown').filter(e => /^(Escape|Backspace).*/.test(e.code))
+    ).map(e => e.key)
   }
 }
