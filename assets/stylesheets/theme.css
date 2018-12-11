@@ -267,11 +267,10 @@ a, a:visited {
 }
 
 .ta-char {
-  /*display: inline-block;
-  min-width: 0.75em;
+  display: inline-block;
+  min-width: 0.5em;
   min-height: 1.5em;
-  margin-bottom: 0.1em;
-  vertical-align: bottom;*/
+  vertical-align: middle;
   font-family: 'FiraMono';
   border-top: 3px solid transparent;
 }
