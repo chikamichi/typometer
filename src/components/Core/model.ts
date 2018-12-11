@@ -9,7 +9,8 @@ import * as Actions from 'typometer/actions/Core'
 
 export interface CoreActions {
   success$: Stream<boolean>,
-  computeRecords$: Stream<boolean>
+  computeRecords$: Stream<boolean>,
+  reset$: Stream<boolean>
 }
 
 type Tuple = [any, State] 
@@ -18,6 +19,8 @@ const model: Model = (actions: CoreActions, state$) => {
   const initialState$ = xs.of(InitialStateReducer)
 
   const success$ = actions.success$.map(Actions.Success)
+
+  const reset$ = actions.reset$.map(Actions.Reset)
 
   const computeRecords$ = actions.computeRecords$
     .compose(sampleCombine(state$!))
@@ -28,6 +31,7 @@ const model: Model = (actions: CoreActions, state$) => {
   reducers.push(
     initialState$,
     success$,
+    reset$,
     computeRecords$
   )
   return xs.merge(...reducers)

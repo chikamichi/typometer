@@ -9,7 +9,7 @@ const intent: Intent = (domSource): LiveTextActions => {
   return {
     newChar$: xs.merge(
       doc.events('keypress'),
-      doc.events('keydown').filter(e => /^(Escape|Backspace).*/.test(e.code))
+      doc.events('keydown').filter(e => /^(Backspace).*/.test(e.code))
     ).map(e => e.key)
   }
 }
