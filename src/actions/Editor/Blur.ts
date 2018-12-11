@@ -1,5 +1,5 @@
 import { Action } from "typometer/types"
-import { Blur } from "typometer/reducers/Editor"
+import Blur from "typometer/reducers/Editor/Blur"
 
 
 const action: Action = (newText: string) => {

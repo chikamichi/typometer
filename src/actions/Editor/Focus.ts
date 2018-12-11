@@ -1,5 +1,5 @@
 import { Action } from "typometer/types"
-import { Focus } from "typometer/reducers/Editor"
+import Focus from "typometer/reducers/Editor/Focus"
 
 
 const action: Action = () => {
