@@ -26,11 +26,11 @@ export interface NAP {
 }
 
 export interface Action {
-  (...args: unknown[]): Reducer
+  (...args: any[]): Reducer
 }
 
 export interface Reducer {
-  (prev?: State, ...args: unknown[]): State|undefined
+  (prev?: State, ...args: any[]): State|undefined
 }
 
 export interface MetricComputation {

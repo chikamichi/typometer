@@ -1,10 +1,12 @@
-import { Reducer } from "typometer/types"
-import State from 'typometer/models/State'
+import { Action } from "typometer/types"
 import { Focus } from "typometer/reducers/Editor"
 
 
-export default function EditorFocus(_: boolean) {
-  return function EditorFocusReducer(prevState: State) {
-    return Focus(prevState)
-  } as Reducer
+const action: Action = (_: any) => {
+  return function(state) {
+    if (!state) return
+    return Focus(state)
+  }
 }
+
+export default action

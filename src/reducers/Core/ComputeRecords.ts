@@ -15,12 +15,12 @@ import { Reducer, TypingRecords, MetricComputation, MetricsObject } from 'typome
  * Mutations:
  * - records: default/latest value -> new value (if need be, for each record)
  */
-function ComputeRecords(state: State, latestRecords: TypingRecords): State {
+const ComputeRecords: Reducer = (state, latestRecords: TypingRecords) => {
   function updateRecord(acc: MetricsObject, metric: string): MetricsObject {
     const fnName = 'compute' + metric[0].toUpperCase() + metric.substring(1, metric.length)
     const metricComputation = fn[fnName] as MetricComputation
     if (metricComputation) {
-      const newVal = metricComputation(state)
+      const newVal = metricComputation(state!)
       if (newVal > latestRecords[metric]) acc[metric] = newVal
     }
     return acc
@@ -30,9 +30,9 @@ function ComputeRecords(state: State, latestRecords: TypingRecords): State {
   const newValues = reduce(updateRecord , {} as MetricsObject, recordMetrics)
 
   return State.from({
-    ...state.data,
+    ...state!.data,
     records: { ...latestRecords, ...newValues, pending: false } as TypingRecords
   })
 }
 
-export default ComputeRecords as Reducer
+export default ComputeRecords

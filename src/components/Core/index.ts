@@ -14,7 +14,7 @@ import view from "./view"
 // Main: wires everything up using circular streams.
 // Note: next-action-predicates bypass the intent() layer by design.
 const Core: Component = (sources) => {
-  const state$ = sources.state.stream
+  const state$ = sources.state.stream.debug()
   const actions = { ...intent(sources.dom), ...nap(state$) }
   const ownReducer$ = model(actions, state$)
 

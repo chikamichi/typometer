@@ -1,10 +1,11 @@
-import { Reducer } from "typometer/types"
-import State from 'typometer/models/State'
+import { Action } from "typometer/types"
 import { Blur } from "typometer/reducers/Editor"
 
 
-export default function EditorBlur(newText: string) {
-  return function EditorBlurReducer(_: State) {
-    return Blur(newText)
-  } as Reducer
+const action: Action = (newText: string) => {
+  return function(state) {
+    return Blur(state, newText)
+  }
 }
+
+export default action

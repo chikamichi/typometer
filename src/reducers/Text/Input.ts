@@ -7,10 +7,11 @@ const mapping = {
 } as KeyMapping
 
 
-export default (function TextInput(state: State, char: string): State {
-  if (state.textBeingEdited()) return state
-  return (mapping[char] || processLetter)(state, char)
-}) as Reducer
+const TextInput: Reducer = (state, char) => {
+  return (mapping[char] || processLetter)(state!, char)
+}
+
+export default TextInput
 
 
 function processLetter(state: State, char: string): State {

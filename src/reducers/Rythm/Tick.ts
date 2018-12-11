@@ -8,9 +8,9 @@ import { Reducer } from 'typometer/types'
  * Mutations:
  * - records: default values -> computed values
  */
-function Tick(prevState: State, tick: number): State {
-  const metrics = {...prevState.data.metrics, ticks: tick}
-  return State.from({...prevState.data, metrics})
+const Tick: Reducer = (state, tick: number) => {
+  const metrics = {...state!.data.metrics, ticks: tick}
+  return State.from({...state!.data, metrics})
 }
 
-export default Tick as Reducer
+export default Tick

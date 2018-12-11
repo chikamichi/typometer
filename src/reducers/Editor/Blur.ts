@@ -1,8 +1,9 @@
+import { Reducer } from 'typometer/types'
 import State from 'typometer/models/State'
 import { INITIAL_APP_STATE } from 'typometer/utils'
 
 
-export default function Blur(newText: string): State {
+const Blur: Reducer = (_, newText: string) => {
   newText = newText.trim()
 
   if (!newText.length) return State.from(INITIAL_APP_STATE)
@@ -17,3 +18,5 @@ export default function Blur(newText: string): State {
     text
   })
 }
+
+export default Blur

@@ -1,10 +1,13 @@
-import { Reducer } from "typometer/types"
-import State from 'typometer/models/State'
+import { Action } from "typometer/types"
 import { Toggle } from "typometer/reducers/Editor"
 
 
-export default function EditorToggle(toggling: boolean) {
-  return function EditorToggleReducer(prevState: State) {
-    return Toggle(prevState, toggling)
-  } as Reducer
+const EditorToggle: Action = (toggling: boolean) => {
+  return function EditorToggleReducer(state) {
+    if (!state) return
+    if (state.isRunning()) return state
+    return Toggle(state, toggling)
+  }
 }
+
+export default EditorToggle

@@ -1,5 +1,4 @@
 import { NAP } from 'typometer/types'
-import { CoreActions } from 'typometer/components/Core/model'
 
 
 // Next-action-predicate aka. internal side-effect handler.
@@ -13,7 +12,7 @@ import { CoreActions } from 'typometer/components/Core/model'
 // As next-action-predicates listen for state$, they have the potential for
 // unleashing infinite loop doom: proceed with caution, use restrictive safe
 // guards in the form of .filter() statements.
-const nap: NAP = (state$): CoreActions => {
+const nap: NAP = state$ => {
   return {
     success$: state$
       .filter(state => state.isDone() && state.hasNoStats())

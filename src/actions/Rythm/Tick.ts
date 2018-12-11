@@ -1,15 +1,15 @@
 import { Action } from 'typometer/types'
-import State from 'typometer/models/State'
 import Tick from 'typometer/reducers/Rythm/Tick'
 
 
 /**
  * Triggered when the user is done typing the whole text successfully.
  */
-const action = (tick: number) => {
-  return function (prevState: State) {
-    return Tick(prevState, tick)
+const action: Action = (tick: number) => {
+  return function (state) {
+    if (!state) return
+    return Tick(state, tick)
   }
 }
 
-export default action as Action
+export default action

@@ -1,16 +1,17 @@
+import { Reducer } from 'typometer/types'
 import State from 'typometer/models/State'
 
 
-export default function Toggle(state: State, toggling: boolean): State {
-  if (state.isRunning()) return state
-
+const Toggle: Reducer = (state, toggling: boolean) => {
   const text = {
-    ...state.data.text,
+    ...state!.data.text,
     editing: toggling
   }
 
   return State.from({
-    ...state.data,
+    ...state!.data,
     text
   })
 }
+
+export default Toggle
