@@ -69,18 +69,19 @@ export default class State {
     return t.raw[m.valid_nb] == char
   }
 
+  // Run has not started yet.
   public isNew(): boolean {
-    // if (!this.state) return true
     const m = this.data.metrics
     return !m.start && !m.stop
   }
 
-  // public isRunning(): boolean {
-  //   const m = this.state.metrics
-  //   return !!m.start && !m.stop
-  // }
+  // Run is ongoing.
+  public isRunning(): boolean {
+    const m = this.data.metrics
+    return !!m.start && !m.stop
+  }
 
-  // // Upon first character
+  // Upon first character
   public hasJustStarted(): boolean {
     const m = this.data.metrics
     return !!m.start && m.keystrokes_nb == 1
@@ -122,7 +123,7 @@ export default class State {
     return !!m.start && !!m.stop
   }
 
-  // Stats pending
+  // Stats pending.
   public hasNoStats(): boolean {
     return this.data.records.pending
   }

@@ -2,7 +2,7 @@ import State from 'typometer/models/State'
 
 
 export default function Toggle(state: State, toggling: boolean): State {
-  if (!state.isNew()) return state
+  if (state.isRunning()) return state
 
   const text = {
     ...state.data.text,
