@@ -1,26 +1,25 @@
 import { Stream } from "xstream"
-import { DOMSource, VNode } from "@cycle/dom"
+import { DOMSource } from "@cycle/dom"
 import { StateSource } from "@cycle/state"
 
 import State from "typometer/models/State"
 
 
-/**
- * Types
- */
+export interface Action {
+  (...args: unknown[]): Reducer
+}
 
-export type Action = (...args: unknown[]) => Reducer
+export interface Reducer {
+  (prev?: State, ...args: unknown[]): State|undefined
+}
 
-export type Reducer = (prev?: State, ...args: unknown[]) => State|undefined
+export interface MetricComputation {
+  (state: State): number
+}
 
-export type MetricComputation = (state: State) => number
-
-export type MetricsObject = Record<string, number>
-
-
-/**
- * Interfaces
- */
+export interface MetricsObject {
+  [key: string]: number
+}
 
 export interface Sources {
   dom: DOMSource,
