@@ -13,18 +13,6 @@ export type Action = (...args: unknown[]) => Reducer
 
 export type Reducer = (prev?: State, ...args: unknown[]) => State|undefined
 
-export interface Sources {
-  dom: DOMSource,
-  state: StateSource<State>
-}
-
-export type Sinks = {
-  dom: Stream<VNode>
-  state: Stream<Reducer>
-}
-
-export type Component = (sources: Sources) => Sinks
-
 export type MetricComputation = (state: State) => number
 
 export type MetricsObject = Record<string, number>
@@ -33,6 +21,22 @@ export type MetricsObject = Record<string, number>
 /**
  * Interfaces
  */
+
+export interface Sources {
+  dom: DOMSource,
+  state: StateSource<State>
+}
+
+export interface Sinks {
+  [key: string]: Stream<any>
+}
+
+// export type Component = (sources: Sources) => Sinks
+// http://www.typescriptlang.org/docs/handbook/interfaces.html#function-types
+export interface Component {
+  (sources: Sources): Sinks
+  cname: string // mandatory component name that's not uglified by code minifiers
+}
 
 export interface Text {
   raw: string,

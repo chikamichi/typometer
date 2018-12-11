@@ -1,10 +1,10 @@
-import { Sources, Sinks } from "typometer/types"
+import { Component } from "typometer/types"
 import intent from "./intent"
 import model from "./model"
 import view from "./view"
 
 
-export default function Editor(sources: Sources): Sinks {
+const Editor: Component = (sources) => {
   const actions = intent(sources.dom)
   const reducer$ = model(actions)
   const vdom$ = view(sources.state.stream)
@@ -14,3 +14,7 @@ export default function Editor(sources: Sources): Sinks {
     state: reducer$
   }
 }
+
+Editor.cname = 'Editor'
+
+export default Editor

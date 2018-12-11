@@ -7,6 +7,7 @@ import { isolateComponent } from 'typometer/utils'
 
 
 type ComponentsList = Record<string, Component>
+type VNode$List = Record<string, Stream<VNode>>
 
 type ComponentsBinder = (sources: Sources) => ComponentsProxy
 
@@ -30,8 +31,8 @@ class ComponentsProxy {
 
   get dom$(): Record<string, Stream<VNode>> {
     return reduce(
-      (VDom$: ComponentsList, component: Component) => {
-        VDom$[component.name + 'VDom$'] = this.list[component.name].dom
+      (VDom$: VNode$List, component: Component) => {
+        VDom$[component.cname + 'VDom$'] = this.list[component.name].dom
         return VDom$
       },
       {},

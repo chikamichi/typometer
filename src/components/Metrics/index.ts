@@ -1,10 +1,10 @@
 import xs, { Stream } from "xstream"
 
-import { Sources, Sinks, Reducer } from "typometer/types"
+import { Component, Reducer } from "typometer/types"
 import view from "./view"
 
 
-export default function Metrics(sources: Sources): Sinks {
+const Metrics: Component = (sources) => {
   const vdom$ = view(sources.state.stream)
 
   return {
@@ -12,3 +12,7 @@ export default function Metrics(sources: Sources): Sinks {
     state: xs.create() as Stream<Reducer>
   }
 }
+
+Metrics.cname = 'Metrics'
+
+export default Metrics

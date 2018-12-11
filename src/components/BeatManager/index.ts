@@ -1,10 +1,10 @@
 import xs from "xstream"
 
-import { Sources } from 'typometer/types'
+import { Component } from 'typometer/types'
 import TypingBeat from "typometer/models/TypingBeat"
 
 
-export default function BeatManager(sources: Sources) {
+const BeatManager: Component = (sources) => {
   const wpm$ = sources.dom
     .select('.ta-tick-settings__range').events('input')
     .map(e => (<HTMLInputElement>e.target).value)
@@ -24,3 +24,7 @@ export default function BeatManager(sources: Sources) {
     BEAT: beat$$
   }
 }
+
+BeatManager.cname = 'BeatManager'
+
+export default BeatManager

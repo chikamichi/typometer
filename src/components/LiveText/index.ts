@@ -1,10 +1,10 @@
-import { Sources, Sinks } from "typometer/types"
+import { Component } from "typometer/types"
 import intent from "./intent"
 import model from "./model"
 import view from "./view"
 
 
-export default function LiveText(sources: Sources): Sinks {
+const LiveText: Component = (sources) => {
   const actions = intent(sources.dom)
   const reducer$ = model(actions)
   const vdom$ = view(sources.state.stream)
@@ -14,3 +14,7 @@ export default function LiveText(sources: Sources): Sinks {
     state: reducer$
   }
 }
+
+LiveText.cname = 'LiveText'
+
+export default LiveText

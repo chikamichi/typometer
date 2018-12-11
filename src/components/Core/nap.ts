@@ -1,7 +1,5 @@
 import { Stream, MemoryStream } from "xstream"
 
-import Metrics from "typometer/models/Metrics"
-import { TypingRecords } from "typometer/types"
 import State from "typometer/models/State"
 
 
