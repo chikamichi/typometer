@@ -23,9 +23,6 @@ export default function view(state$: MemoryStream<State>): Stream<VNode> {
     const text = new TargetText(state.data)
     const chars = text.map(build_char)
     // Re-rendering all characters (made efficient by the virtual DOM engine).
-    // TODO: actually, that rendering strategy sucks. Only actually edited characters should be processed.
-    // snabbdom will get the job done browser-wise, but (internally) dataflow-wise its nuts parsing the whole text:
-    // too many events triggered on streams, on each key stroke!
     return p('.ta-target-text', {
       style: { display: state.data.text.editing ? 'none' : 'initial' },
       attrs: { tabindex: 0 }

@@ -4,7 +4,6 @@ import withExtendedMetrics from "typometer/reducers/Metrics/withExtendedMetrics"
 
 
 // A mutation is described as a free-form object… for now.
-// TODO: define specific interfaces for each supported mutations.
 interface Mutation {
   [key: string]: any
 }

@@ -7,9 +7,6 @@ export function computeAccuracy(state: State): number {
   return Math.round((1 - state.data.metrics.errors_nb / state.data.metrics.keystrokes_nb) * 100)
 }
 
-// TODO: currently relies on metrics.stop, so can only be computed if
-// state.isDoneDone() but it would be nice to compute at soon as 5 chars have
-// been succesfully typed in ("validated"), and refresh on every keystroke then.
 export function computeWpm(state: State): number {
   if (!state.isDoneDone()) return 0
   const nb_words = state.data.metrics.keystrokes_nb / WORD_LENGTH
